@@ -1,0 +1,55 @@
+Metadados
+bin /
+tmp /
+* .tmp
+* .bak
+* .swp
+* ~ .nib
+local.properties
+.settings /
+.loadpath
+.recommensadores
+
+# Construtores de ferramentas externas
+.externalToolBuilders /
+
+# Armazenado localmente "configurações de ativação do Eclipse"
+* .launch
+
+# PyDev específico (IDE do Python para Eclipse)
+* .pydevproject
+
+# CDT-specific (Ferramentas de desenvolvimento C / C ++)
+.cproject
+
+# CDT- autotools
+.autotools
+
+# Processador de anotação de Java (APT)
+.factorypath
+
+# PDT-specific (PHP Development Tools)
+.buildpath
+
+# plugin sbteclipse
+.alvo
+
+# Plugin Tern
+.tern-project
+
+# Plugin do TeXlipse
+.texlipse
+
+# STS (Spring Tool Suite)
+.springBeans
+
+# Code Recommenders
+.recommensores /
+
+# Processamento de anotação
+.apt_generated /
+
+# Scala IDE specific (desenvolvimento de Scala e Java para Eclipse)
+.cache-main
+.scala_dependencies
+.worksheet
