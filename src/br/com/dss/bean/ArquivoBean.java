@@ -33,7 +33,7 @@ public class ArquivoBean {
 			retorno = "Existe";
 		}
 		
-		flash.put("nomeDoArquivo",filtro);
+		flash.put("nomeDoArquivo","O Arquivo " + filtro);
 		flash.put("existe", retorno);
 		
 		return "result?faces-redirect=true";
