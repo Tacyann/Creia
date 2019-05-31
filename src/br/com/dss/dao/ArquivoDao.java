@@ -61,7 +61,7 @@ public class ArquivoDao {
 		}
 	}
 
-	private String Obter(String filtro) {
+	public String Obter(String filtro) {
 		String sql = "select * from arquivo where nomearquivo = '" + filtro + "'";		
 		String nome = null;
 
@@ -84,7 +84,7 @@ public class ArquivoDao {
 		}
 	}
 
-	public List<Lote> ArquivoXml() throws Exception {		
+	public List<Lote> ListarLotes() throws Exception {		
 		SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
 		Integer numeroLotePrestador = 0;
 		Integer numeroProtocolo = 0;

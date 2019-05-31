@@ -5,7 +5,7 @@ public class TesteDao {
 	public static void main(String[] args) {
 		ArquivoDao c =new ArquivoDao();
 		try {
-			var a = c.ArquivoXml();
+			var a = c.ListarLotes();
 			for(var item : a) {
 				System.out.println(item.getProtocolo());
 				for(var item2 : item.getGuia()) {

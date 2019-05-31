@@ -1,27 +1,19 @@
 package br.com.dss.servico;
 
-import java.util.List;
+import br.com.dss.dao.ArquivoDao;
 
-import br.com.dss.modelo.Lote;
-
-public class ServiceArquivo implements IServiceArquivo {
+public class ServiceArquivo implements IExisteDados {
 
 	@Override
-	public List<Lote> getLotes() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean isExistArquivo() {
-		// TODO Auto-generated method stub
+	public boolean isExist(String filtro) {
+		ArquivoDao a = new ArquivoDao();
+		var existe = a.Obter(filtro);
+		
+		if(existe != null) {
+			return true;
+		}
+		
 		return false;
-	}
-
-	@Override
-	public void setLote(Lote lote) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

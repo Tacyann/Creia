@@ -19,5 +19,9 @@
 			pagamentos, que na atualidade &eacute; efetuado por m&eacute;dia, sem
 			par&acirc;metros concretos.</p>
 	</div>
+	<h:form>
+		Filtro: <h:inputText value="#{arquivoBean.filtro}" />
+		<h:commandButton value="Processar" action="#{arquivoBean.Existe}" />
+	</h:form>
 </body>
 </html>
