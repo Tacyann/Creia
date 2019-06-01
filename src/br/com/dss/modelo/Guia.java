@@ -2,8 +2,9 @@ package br.com.dss.modelo;
 
 import java.util.Calendar;
 
-public class Guia {
+public class Guia extends Lote{
 
+	private int id;
 	private int prestador;
 	private int operadora;
 	private int senha;
@@ -11,13 +12,17 @@ public class Guia {
 	private String carteira;
 	private Calendar dataIni;
 	private int situacao;
-	private Calendar dataRealizacao;
-	private int procedimento;
 	private double valorInformado;
 	private double valorProcessado;
 	private double valorLiberado;
 	private DetalheGuia detalheGuia;
 	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public int getPrestador() {
 		return prestador;
 	}
@@ -59,18 +64,6 @@ public class Guia {
 	}
 	public void setSituacao(int situacao) {
 		this.situacao = situacao;
-	}
-	public Calendar getDataRealizacao() {
-		return dataRealizacao;
-	}
-	public void setDataRealizacao(Calendar dataRealizacao) {
-		this.dataRealizacao = dataRealizacao;
-	}
-	public int getProcedimento() {
-		return procedimento;
-	}
-	public void setProcedimento(int procedimento) {
-		this.procedimento = procedimento;
 	}
 	public double getValorInformado() {
 		return valorInformado;

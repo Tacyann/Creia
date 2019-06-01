@@ -6,8 +6,8 @@ public class ServiceArquivo implements IExisteDados {
 
 	@Override
 	public boolean isExist(String filtro) {
-		ArquivoDao a = new ArquivoDao();
-		var existe = a.Obter(filtro);
+		ArquivoDao arquivo = new ArquivoDao();
+		var existe = arquivo.Obter(filtro);
 		
 		if(existe != null) {
 			return true;

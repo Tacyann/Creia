@@ -21,4 +21,7 @@ public class Beneficiario {
 	public int getId() {
 		return Id;
 	}
+	public void setId(int id) {
+		this.Id = id;
+	}
 }

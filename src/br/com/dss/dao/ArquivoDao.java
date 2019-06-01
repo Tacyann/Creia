@@ -101,7 +101,7 @@ public class ArquivoDao {
 		Integer codigoTabela = 0;
 		Integer codigoProcedimento = 0;
 		String descricaoProcedimento = "";
-		String grauParticipacao = "";
+		Integer grauParticipacao = 0;
 		Double valorInformado = 0.0;
 		Integer qtdExecutada = 0;
 		Double valorProcessado = 0.0;
@@ -149,7 +149,7 @@ public class ArquivoDao {
 						codigoTabela = Integer.parseInt(eElement.getElementsByTagName("codigoTabela").item(0).getTextContent());
 						codigoProcedimento = Integer.parseInt(eElement.getElementsByTagName("codigoProcedimento").item(0).getTextContent());
 						descricaoProcedimento = eElement.getElementsByTagName("descricaoProcedimento").item(0).getTextContent();
-						grauParticipacao = eElement.getElementsByTagName("grauParticipacao").item(0).getTextContent();
+						grauParticipacao = Integer.parseInt(eElement.getElementsByTagName("grauParticipacao").item(0).getTextContent());
 						valorInformado = Double.parseDouble(eElement.getElementsByTagName("valorInformado").item(0).getTextContent());
 						qtdExecutada = Integer.parseInt(eElement.getElementsByTagName("qtdExecutada").item(0).getTextContent());
 						valorProcessado = Double.parseDouble(eElement.getElementsByTagName("valorProcessado").item(0).getTextContent());

@@ -2,11 +2,11 @@ package br.com.dss.modelo;
 
 import java.util.Calendar;
 
-public class DetalheGuia {
+public class DetalheGuia extends Guia{
 
 	private Calendar dataRealizacao;
 	private Procedimento procedimento;
-	private String grauParticipacao;
+	private int grauParticipacao;
 	private double valorInformado;
 	private int qtdExecutada;
 	private double valorProcessado;
@@ -24,10 +24,10 @@ public class DetalheGuia {
 	public void setProcedimento(Procedimento procedimento) {
 		this.procedimento = procedimento;
 	}
-	public String getGrauParticipacao() {
+	public int getGrauParticipacao() {
 		return grauParticipacao;
 	}
-	public void setGrauParticipacao(String grauParticipacao) {
+	public void setGrauParticipacao(int grauParticipacao) {
 		this.grauParticipacao = grauParticipacao;
 	}
 	public double getValorInformado() {
