@@ -15,5 +15,4 @@ public class ServiceArquivo implements IExisteDados {
 		
 		return false;
 	}
-
 }

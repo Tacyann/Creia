@@ -5,7 +5,7 @@ import javax.faces.context.Flash;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import br.com.dss.servico.Dados;
+import br.com.dss.servico.Service;
 import br.com.dss.servico.ServiceArquivo;
 
 @Named
@@ -26,7 +26,7 @@ public class ArquivoBean {
 
 	public String ExisteArquivo() {
 		ServiceArquivo s = new ServiceArquivo();
-		Dados d = new Dados();
+		Service d = new Service();
 		var existe = d.Existe(s, filtro);
 		var retorno = "Não existe";
 		if(existe) {
