@@ -1,9 +1,6 @@
 package br.com.dss.dao;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -40,14 +37,12 @@ public class ArquivoDao {
 
 	private boolean Adicionar(Arquivo arquivo) {
 		boolean adicionou;
-		String sql = "insert into arquivo(nomearquivo,xml,dtimportacao)"+
-				"values(?,?,?)";
+		String sql = "insert into arquivo(nomearquivo,dtimportacao) values(?,?)";
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
 
 			stmt.setString(1, arquivo.getNomeArquivo());
-			stmt.setString(2, arquivo.getXml());
-			stmt.setDate(3, new Date(arquivo.getDtImportacao().getTimeInMillis()));
+			stmt.setDate(2, new Date(arquivo.getDtImportacao().getTimeInMillis()));
 
 			stmt.execute();
 			stmt.close();
@@ -84,7 +79,10 @@ public class ArquivoDao {
 		}
 	}
 
-	public List<Lote> ListarLotes() throws Exception {		
+	public List<Lote> LerXmlGerarLotes() throws Exception {	
+		Calendar data = new GregorianCalendar();
+		Date d = new Date(System.currentTimeMillis());
+		data.setTime(d);
 		SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
 		Integer numeroLotePrestador = 0;
 		Integer numeroProtocolo = 0;
@@ -120,6 +118,7 @@ public class ArquivoDao {
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		for(var arquivo : auxDir) {
+			Arquivo arq = new Arquivo();
 			item = Obter(arquivo);
 
 			if(item == null) {
@@ -205,51 +204,11 @@ public class ArquivoDao {
 					lotes.add(lote);
 				}
 			}
-		}
+			arq.setNomeArquivo(arquivo);
+			arq.setDtImportacao(data);
+			Adicionar(arq);
+		}		
 
 		return lotes;
-	}
-
-	public void LerGravaArquivo() {
-		String item = null;
-		File f = new File("D:/ArquivoXml");
-		var auxDir = f.list();
-		Calendar data = new GregorianCalendar();
-		Date d = new Date(System.currentTimeMillis());
-		String linha;
-		data.setTime(d);
-
-		Arquivo c = new Arquivo();
-
-		try {
-			for(var arquivo : auxDir) {
-				item = Obter(arquivo);
-
-				if(item == null) {
-					String file = f.getPath() + "\\" + arquivo;
-					FileReader arq = new FileReader(file);
-					BufferedReader lerArq = new BufferedReader(arq);
-					StringBuilder sb = new StringBuilder();
-					String aux = lerArq.readLine();
-
-					while(aux != null) {
-						aux = lerArq.readLine();
-						if(aux!= null) {
-							sb.append(aux);
-						}
-					}
-					linha = sb.toString();
-
-					c.setNomeArquivo(arquivo);
-					c.setXml(linha);
-					c.setDtImportacao(data);
-					Adicionar(c);
-
-					lerArq.close();
-				}
-			}
-		}catch(IOException e) {
-			throw new RuntimeException(e);
-		}
 	}
 }

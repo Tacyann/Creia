@@ -6,7 +6,6 @@ public class Arquivo {
 
 	private Integer Id;
 	private String NomeArquivo;
-	private String Xml;
 	private boolean Processado;
 	private Calendar DtImportacao;
 	
@@ -18,12 +17,6 @@ public class Arquivo {
 	}
 	public void setNomeArquivo(String nomeArquivo) {
 		NomeArquivo = nomeArquivo;
-	}
-	public String getXml() {
-		return Xml;
-	}
-	public void setXml(String xml) {
-		Xml = xml;
 	}
 	public boolean isProcessado() {
 		return Processado;
