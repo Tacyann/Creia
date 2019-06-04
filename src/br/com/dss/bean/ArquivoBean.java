@@ -25,9 +25,9 @@ public class ArquivoBean {
 	}
 
 	public String ExisteArquivo() {
-		ServiceArquivo s = new ServiceArquivo();
-		Service d = new Service();
-		var existe = d.Existe(s, filtro);
+		ServiceArquivo arquivo = new ServiceArquivo();
+		Service servico = new Service();
+		var existe = servico.Existe(arquivo, filtro);
 		var retorno = "Não existe";
 		if(existe) {
 			retorno = "Existe";

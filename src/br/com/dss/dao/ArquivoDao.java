@@ -22,6 +22,7 @@ import org.w3c.dom.NodeList;
 
 import br.com.dss.Conexao;
 import br.com.dss.modelo.Arquivo;
+import br.com.dss.modelo.Beneficiario;
 import br.com.dss.modelo.DetalheGuia;
 import br.com.dss.modelo.Guia;
 import br.com.dss.modelo.Lote;
@@ -107,11 +108,15 @@ public class ArquivoDao {
 		Double valorInformadoGuia = 0.0;
 		Double valorProcessadoGuia = 0.0;
 		Double valorLiberadoGuia = 0.0;
+		Double valorInformadoProtocolo = 0.0;
+		Double valorProcessadoProtocolo = 0.0;
+		Double valorLiberadoProtocolo = 0.0;
 		String item = null;
 		List<Lote> lotes = new ArrayList<Lote>();
 		List<Guia> guias = new ArrayList<Guia>();
 		DetalheGuia detalheGuia = new DetalheGuia();
 		Procedimento procedimento = new Procedimento();
+		Beneficiario beneficiario = new Beneficiario();
 
 		File f = new File("D:/ArquivoXml");
 		var auxDir = f.list();
@@ -124,7 +129,6 @@ public class ArquivoDao {
 			if(item == null) {
 				String file = f.getPath() + "\\" + arquivo;
 				Document doc = dBuilder.parse(file);
-
 
 				NodeList nListGuias = doc.getElementsByTagName("relacaoGuias");
 
@@ -160,8 +164,9 @@ public class ArquivoDao {
 					guia.setPrestador(numeroGuiaPrestador);
 					guia.setOperadora(numeroGuiaOperadora);
 					guia.setSenha(senha);
-					guia.setBeneficiario(nomeBeneficiario);
-					guia.setCarteira(numeroCarteira);
+					beneficiario.setNome(nomeBeneficiario);
+					beneficiario.setNumerocarteira(numeroCarteira);
+					guia.setBeneficiario(beneficiario);
 					guia.setDataIni(dataInicioFat);
 					guia.setSituacao(situacaoGuia);
 					detalheGuia.setDataRealizacao(dataRealizacao);
@@ -193,15 +198,22 @@ public class ArquivoDao {
 						numeroProtocolo = Integer.parseInt(eElement.getElementsByTagName("numeroProtocolo").item(0).getTextContent());
 						var dt = formato.parse(eElement.getElementsByTagName("dataProtocolo").item(0).getTextContent());
 						dataProtocolo.setTime(dt);
-						situacaoProtocolo = Integer.parseInt(eElement.getElementsByTagName("situacaoProtocolo").item(0).getTextContent());						
+						situacaoProtocolo = Integer.parseInt(eElement.getElementsByTagName("situacaoProtocolo").item(0).getTextContent());	
+						valorInformadoProtocolo = Double.parseDouble(eElement.getElementsByTagName("valorInformadoProtocolo").item(0).getTextContent());
+						valorProcessadoProtocolo = Double.parseDouble(eElement.getElementsByTagName("valorProcessadoProtocolo").item(0).getTextContent());
+						valorLiberadoProtocolo = Double.parseDouble(eElement.getElementsByTagName("valorLiberadoProtocolo").item(0).getTextContent());
 					}
 					
 					lote.setNumero(numeroLotePrestador);
 					lote.setProtocolo(numeroProtocolo);
 					lote.setData(dataProtocolo);
 					lote.setSituacao(situacaoProtocolo);
+					lote.setValorInformado(valorInformadoProtocolo);
+					lote.setValorProcessado(valorProcessadoProtocolo);
+					lote.setValorLiberado(valorLiberadoProtocolo);
 					lote.setGuia(guias);
 					lotes.add(lote);
+					
 				}
 			}
 			arq.setNomeArquivo(arquivo);

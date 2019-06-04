@@ -8,8 +8,7 @@ public class Guia extends Lote{
 	private int prestador;
 	private int operadora;
 	private int senha;
-	private String beneficiario;
-	private String carteira;
+	private Beneficiario beneficiario;
 	private Calendar dataIni;
 	private int situacao;
 	private double valorInformado;
@@ -41,17 +40,11 @@ public class Guia extends Lote{
 	public void setSenha(int senha) {
 		this.senha = senha;
 	}
-	public String getBeneficiario() {
+	public Beneficiario getBeneficiario() {
 		return beneficiario;
 	}
-	public void setBeneficiario(String beneficiario) {
+	public void setBeneficiario(Beneficiario beneficiario) {
 		this.beneficiario = beneficiario;
-	}
-	public String getCarteira() {
-		return carteira;
-	}
-	public void setCarteira(String carteira) {
-		this.carteira = carteira;
 	}
 	public Calendar getDataIni() {
 		return dataIni;

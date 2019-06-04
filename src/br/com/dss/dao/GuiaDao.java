@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import br.com.dss.Conexao;
+import br.com.dss.modelo.Beneficiario;
 import br.com.dss.modelo.Guia;
 
 public class GuiaDao {
@@ -31,8 +32,8 @@ public class GuiaDao {
 			stmt.setInt(2, guia.getPrestador());
 			stmt.setInt(3, guia.getOperadora());
 			stmt.setInt(4, guia.getSenha());
-			stmt.setString(5, guia.getBeneficiario());
-			stmt.setString(6, guia.getCarteira());
+			stmt.setString(5, guia.getBeneficiario().getNome());
+			stmt.setString(6, guia.getBeneficiario().getNumerocarteira());
 			stmt.setDate(7, new Date(guia.getDataIni().getTimeInMillis()));
 			stmt.setInt(8, guia.getSituacao());
 			stmt.setDouble(9, guia.getValorInformado());
@@ -66,8 +67,10 @@ public class GuiaDao {
 				guia.setPrestador(rs.getInt("numeroGuiaPrestador"));
 				guia.setOperadora(rs.getInt("numeroGuiaOperadora"));
 				guia.setSenha(rs.getInt("senha"));
-				guia.setBeneficiario(rs.getString("nomeBeneficiario"));
-				guia.setCarteira(rs.getString("numeroCarteira"));
+				var beneficiario = new Beneficiario();
+				beneficiario.setNome(rs.getString("nomeBeneficiario"));
+				beneficiario.setNumerocarteira(rs.getString("numeroCarteira"));
+				guia.setBeneficiario(beneficiario);
 				var calendario = Calendar.getInstance(); 
 				calendario.setTime(rs.getDate("dataInicioFat"));
 				guia.setDataIni(calendario);
@@ -104,8 +107,10 @@ public class GuiaDao {
 				guia.setPrestador(rs.getInt("numeroGuiaPrestador"));
 				guia.setOperadora(rs.getInt("numeroGuiaOperadora"));
 				guia.setSenha(rs.getInt("senha"));
-				guia.setBeneficiario(rs.getString("nomeBeneficiario"));
-				guia.setCarteira(rs.getString("numeroCarteira"));
+				var beneficiario = new Beneficiario();
+				beneficiario.setNome(rs.getString("nomeBeneficiario"));
+				beneficiario.setNumerocarteira(rs.getString("numeroCarteira"));
+				guia.setBeneficiario(beneficiario);
 				var calendario = Calendar.getInstance(); 
 				calendario.setTime(rs.getDate("dataInicioFat"));
 				guia.setDataIni(calendario);

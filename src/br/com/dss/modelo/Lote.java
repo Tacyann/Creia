@@ -21,24 +21,6 @@ public class Lote {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public double getValorInformado() {
-		return valorInformado;
-	}
-	public void setValorInformado(double valorInformado) {
-		this.valorInformado = valorInformado;
-	}
-	public double getValorProcessado() {
-		return valorProcessado;
-	}
-	public void setValorProcessado(double valorProcessado) {
-		this.valorProcessado = valorProcessado;
-	}
-	public double getValorLiberado() {
-		return valorLiberado;
-	}
-	public void setValorLiberado(double valorLiberado) {
-		this.valorLiberado = valorLiberado;
-	}
 	public int getNumero() {
 		return numero;
 	}
@@ -68,5 +50,23 @@ public class Lote {
 	}
 	public void setGuia(List<Guia> guia) {
 		this.guia = guia;
+	}
+	public double getValorInformado() {
+		return valorInformado;
+	}
+	public void setValorInformado(double valorInformado) {
+		this.valorInformado = valorInformado;
+	}
+	public double getValorProcessado() {
+		return valorProcessado;
+	}
+	public void setValorProcessado(double valorProcessado) {
+		this.valorProcessado = valorProcessado;
+	}
+	public double getValorLiberado() {
+		return valorLiberado;
+	}
+	public void setValorLiberado(double valorLiberado) {
+		this.valorLiberado = valorLiberado;
 	}
 }

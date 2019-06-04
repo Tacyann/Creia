@@ -2,7 +2,7 @@ package br.com.dss.servico;
 
 import br.com.dss.dao.UsuarioDao;
 
-public class ServiceUsuario implements IExisteDados {
+public class ServiceUsuario implements IDados {
 
 	@Override
 	public boolean isExist(String filtro) {
@@ -14,5 +14,10 @@ public class ServiceUsuario implements IExisteDados {
 		}
 		
 		return false;
+	}
+
+	public Object getEntidade(Object entidade) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

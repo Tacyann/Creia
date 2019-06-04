@@ -10,8 +10,8 @@ import br.com.dss.dao.UsuarioDao;
 public class UsuarioBean {
 
 	public String[] getUsuario(String id) {
-		UsuarioDao u = new UsuarioDao();
-		var usuario = u.Obter(id);
+		UsuarioDao conn = new UsuarioDao();
+		var usuario = conn.Obter(id);
 		return usuario;
 	}
 }
