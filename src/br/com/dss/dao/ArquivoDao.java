@@ -114,9 +114,6 @@ public class ArquivoDao {
 		String item = null;
 		List<Lote> lotes = new ArrayList<Lote>();
 		List<Guia> guias = new ArrayList<Guia>();
-		DetalheGuia detalheGuia = new DetalheGuia();
-		Procedimento procedimento = new Procedimento();
-		Beneficiario beneficiario = new Beneficiario();
 
 		File f = new File("D:/ArquivoXml");
 		var auxDir = f.list();
@@ -134,6 +131,9 @@ public class ArquivoDao {
 
 				for(int i = 0; i < nListGuias.getLength(); i++) {
 					Node nNode = nListGuias.item(i);
+					DetalheGuia detalheGuia = new DetalheGuia();
+					Procedimento procedimento = new Procedimento();
+					Beneficiario beneficiario = new Beneficiario();
 					Guia guia = new Guia();
 
 					if(nNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -215,12 +215,12 @@ public class ArquivoDao {
 					lotes.add(lote);
 					
 				}
+				arq.setNomeArquivo(arquivo);
+				arq.setDtImportacao(data);
+				Adicionar(arq);
 			}
-			arq.setNomeArquivo(arquivo);
-			arq.setDtImportacao(data);
-			Adicionar(arq);
 		}		
-
+		
 		return lotes;
 	}
 }

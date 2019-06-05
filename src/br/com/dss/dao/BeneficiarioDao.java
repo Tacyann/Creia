@@ -21,6 +21,7 @@ public class BeneficiarioDao {
 	public boolean Adicionar(Beneficiario beneficiario) {
 		boolean adicionou;
 		String sql = "insert into beneficiario(nome,numerocarteira) values(?,?)";
+		
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
 
@@ -40,9 +41,9 @@ public class BeneficiarioDao {
 		}
 	}
 
-	public Beneficiario Obter(String id) {
-		String sql = "select * from beneficiario where Id = '" + id + "'";		
-		Beneficiario beneficiario = new Beneficiario();
+	public Beneficiario Obter(Beneficiario beneficiario) {
+		String sql = "select * from beneficiario where nome = '" + beneficiario.getNome() + "' and numerocarteira = '" + beneficiario.getNumerocarteira() + "'";		
+		Beneficiario b = new Beneficiario();
 
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
@@ -50,15 +51,44 @@ public class BeneficiarioDao {
 			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()) {
-				beneficiario.setId(rs.getInt("Id"));
-				beneficiario.setNome(rs.getString("nome"));
-				beneficiario.setNumerocarteira(rs.getString("numerocarteira"));
+				b.setId(rs.getInt("Id"));
+				b.setNome(rs.getString("nome"));
+				b.setNumerocarteira(rs.getString("numerocarteira"));
 			}
 			
 			stmt.close();
 			rs.close();
 			
-			return beneficiario;
+			return b;
+		}catch(SQLException e) {
+			throw new RuntimeException(e);
+		}finally {
+			Conexao.FecharConexao();
+		}
+	}
+	
+	public boolean Existe(Beneficiario beneficiario) {
+		String sql = "select count(*) as QTD from beneficiario where nome = '" + beneficiario.getNome() + "' and numerocarteira = '" + beneficiario.getNumerocarteira() + "'";		
+		int qtd = 0;
+		boolean exist = false;
+		
+		try {
+			PreparedStatement stmt = connection.prepareStatement(sql);
+
+			ResultSet rs = stmt.executeQuery();
+
+			while(rs.next()) {
+				qtd =rs.getInt("QTD");
+			}
+			
+			stmt.close();
+			rs.close();
+			
+			if(qtd > 0) {
+				exist = true;
+			}
+			
+			return exist;
 		}catch(SQLException e) {
 			throw new RuntimeException(e);
 		}finally {

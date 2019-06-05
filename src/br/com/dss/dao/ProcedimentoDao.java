@@ -66,6 +66,34 @@ public class ProcedimentoDao {
 		}
 	}
 	
+	public boolean Existe(int codigoProcedimento) {
+		String sql = "select count(*) as QTD from procedimento where codigoProcedimento = '" + codigoProcedimento + "'";		
+		int qtd = 0;
+		boolean exist = false;
+		
+		try {
+			PreparedStatement stmt = connection.prepareStatement(sql);
+
+			ResultSet rs = stmt.executeQuery();
+
+			while(rs.next()) {
+				qtd = rs.getInt("QTD");
+			}
+			stmt.close();
+			rs.close();
+
+			if(qtd > 0) {
+				exist = true;
+			}
+			
+			return exist;
+		}catch(SQLException e) {
+			throw new RuntimeException(e);
+		}finally {
+			Conexao.FecharConexao();
+		}
+	}
+	
 	public List<Procedimento> Listar() {
 		String sql = "select * from procedimento";
 		List<Procedimento> procedimentos = new ArrayList<Procedimento>();

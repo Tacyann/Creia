@@ -21,21 +21,21 @@ public class DetalhesGuiaDao {
 		this.connection = Conexao.getConexao();
 	}
 
-	public boolean Adicionar(DetalheGuia detalheguia) {
+	public boolean Adicionar(DetalheGuia detalheguia, int prestador) {
 		boolean adicionou;
-		String sql = "insert into detalhesguia(relacaoGuiasID,dataRealizacao,procedimentoID,grauParticipacao,valorInformado,qtdExecutada,valorProcessado,valorLiberado) values(?,?,?,?,?,?,?,?)";
+		String sql = "insert into detalhesguia(numPrestador,dataRealizacao,procedimento,grauParticipacao,valorInformado,qtdExecutada,valorProcessado,valorLiberado) "+
+		"values(?,?,?,?,?,?,?,?)";
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
 
-			stmt.setInt(1, detalheguia.getId());
-			stmt.setDate(7, new Date(detalheguia.getDataRealizacao().getTimeInMillis()));
-			var procedimento = detalheguia.getProcedimento();
-			stmt.setInt(2, procedimento.getId());
-			stmt.setInt(3, detalheguia.getGrauParticipacao());
-			stmt.setDouble(4, detalheguia.getValorInformado());
-			stmt.setInt(5, detalheguia.getQtdExecutada());
-			stmt.setDouble(6, detalheguia.getValorProcessado());
-			stmt.setDouble(7, detalheguia.getValorLiberado());
+			stmt.setInt(1, prestador);
+			stmt.setDate(2, new Date(detalheguia.getDataRealizacao().getTimeInMillis()));
+			stmt.setInt(3, detalheguia.getProcedimento().getProcedimento());
+			stmt.setInt(4, detalheguia.getGrauParticipacao());
+			stmt.setDouble(5, detalheguia.getValorInformado());
+			stmt.setInt(6, detalheguia.getQtdExecutada());
+			stmt.setDouble(7, detalheguia.getValorProcessado());
+			stmt.setDouble(8, detalheguia.getValorLiberado());
 			
 			stmt.execute();
 			stmt.close();

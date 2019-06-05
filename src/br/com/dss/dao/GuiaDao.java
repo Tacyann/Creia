@@ -21,14 +21,14 @@ public class GuiaDao {
 		this.connection = Conexao.getConexao();
 	}
 
-	public boolean Adicionar(Guia guia) {
+	public boolean Adicionar(Guia guia, int numero) {
 		boolean adicionou;
 		String sql = "insert into guia(lote,numeroGuiaPrestador,numeroGuiaOperadora,senha,nomeBeneficiario,numeroCarteira,dataInicioFat,situacaoGuia,valorInformadoGuia,valorProcessadoGuia,valorLiberadoGuia)"+
-				"values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				"values(?,?,?,?,?,?,?,?,?,?,?)";
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
 
-			stmt.setInt(1, guia.getNumero());
+			stmt.setInt(1, numero);
 			stmt.setInt(2, guia.getPrestador());
 			stmt.setInt(3, guia.getOperadora());
 			stmt.setInt(4, guia.getSenha());
