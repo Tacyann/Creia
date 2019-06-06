@@ -15,9 +15,4 @@ public class ServiceUsuario implements IDados {
 		
 		return false;
 	}
-
-	public Object getEntidade(Object entidade) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

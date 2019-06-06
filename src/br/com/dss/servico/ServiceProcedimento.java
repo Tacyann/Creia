@@ -7,9 +7,4 @@ public class ServiceProcedimento implements IDados {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	public Object getEntidade(Object entidade) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

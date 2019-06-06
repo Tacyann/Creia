@@ -67,6 +67,32 @@ public class BeneficiarioDao {
 		}
 	}
 	
+	public Beneficiario Obter(String filtro) {
+		String sql = "select * from beneficiario where nome = '" + filtro + "'";		
+		Beneficiario b = new Beneficiario();
+
+		try {
+			PreparedStatement stmt = connection.prepareStatement(sql);
+
+			ResultSet rs = stmt.executeQuery();
+
+			while(rs.next()) {
+				b.setId(rs.getInt("Id"));
+				b.setNome(rs.getString("nome"));
+				b.setNumerocarteira(rs.getString("numerocarteira"));
+			}
+			
+			stmt.close();
+			rs.close();
+			
+			return b;
+		}catch(SQLException e) {
+			throw new RuntimeException(e);
+		}finally {
+			Conexao.FecharConexao();
+		}
+	}
+	
 	public boolean Existe(Beneficiario beneficiario) {
 		String sql = "select count(*) as QTD from beneficiario where nome = '" + beneficiario.getNome() + "' and numerocarteira = '" + beneficiario.getNumerocarteira() + "'";		
 		int qtd = 0;
@@ -98,7 +124,6 @@ public class BeneficiarioDao {
 	
 	public List<Beneficiario> Listar() {
 		String sql = "select * from beneficiario";
-		var beneficiario = new Beneficiario();
 		
 		List<Beneficiario> beneficiarios = new ArrayList<Beneficiario>();
 
@@ -108,9 +133,11 @@ public class BeneficiarioDao {
 			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()) {
+				var beneficiario = new Beneficiario();
 				beneficiario.setId(rs.getInt("Id"));
 				beneficiario.setNome(rs.getString("nome"));
 				beneficiario.setNumerocarteira(rs.getString("numerocarteira"));
+				beneficiarios.add(beneficiario);
 			}
 			stmt.close();
 			rs.close();
