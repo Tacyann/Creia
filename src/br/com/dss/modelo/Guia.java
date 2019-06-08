@@ -2,18 +2,19 @@ package br.com.dss.modelo;
 
 import java.util.Calendar;
 
-public class Guia extends Lote{
+public class Guia{
 
 	private int id;
+	private Lote lote;
 	private int prestador;
 	private int operadora;
 	private int senha;
 	private Beneficiario beneficiario;
 	private Calendar dataIni;
-	private int situacao;
-	private double valorInformado;
-	private double valorProcessado;
-	private double valorLiberado;
+	private int situacaoGuia;
+	private double valorInformadoGuia;
+	private double valorProcessadoGuia;
+	private double valorLiberadoGuia;
 	private DetalheGuia detalheGuia;
 	
 	public int getId() {
@@ -52,34 +53,40 @@ public class Guia extends Lote{
 	public void setDataIni(Calendar dataIni) {
 		this.dataIni = dataIni;
 	}
-	public int getSituacao() {
-		return situacao;
+	public int getSituacaoGuia() {
+		return situacaoGuia;
 	}
-	public void setSituacao(int situacao) {
-		this.situacao = situacao;
+	public void setSituacaoGuia(int situacaoGuia) {
+		this.situacaoGuia = situacaoGuia;
 	}
-	public double getValorInformado() {
-		return valorInformado;
+	public double getValorInformadoGuia() {
+		return valorInformadoGuia;
 	}
-	public void setValorInformado(double valorInformado) {
-		this.valorInformado = valorInformado;
+	public void setValorInformadoGuia(double valorInformadoGuia) {
+		this.valorInformadoGuia = valorInformadoGuia;
 	}
-	public double getValorProcessado() {
-		return valorProcessado;
+	public double getValorProcessadoGuia() {
+		return valorProcessadoGuia;
 	}
-	public void setValorProcessado(double valorProcessado) {
-		this.valorProcessado = valorProcessado;
+	public void setValorProcessadoGuia(double valorProcessadoGuia) {
+		this.valorProcessadoGuia = valorProcessadoGuia;
 	}
-	public double getValorLiberado() {
-		return valorLiberado;
+	public double getValorLiberadoGuia() {
+		return valorLiberadoGuia;
 	}
-	public void setValorLiberado(double valorLiberado) {
-		this.valorLiberado = valorLiberado;
+	public void setValorLiberadoGuia(double valorLiberadoGuia) {
+		this.valorLiberadoGuia = valorLiberadoGuia;
 	}
 	public DetalheGuia getDetalheGuia() {
 		return detalheGuia;
 	}
 	public void setDetalheGuia(DetalheGuia detalheGuia) {
 		this.detalheGuia = detalheGuia;
+	}
+	public Lote getLote() {
+		return lote;
+	}
+	public void setLote(Lote lote) {
+		this.lote = lote;
 	}
 }

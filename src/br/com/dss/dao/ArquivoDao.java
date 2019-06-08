@@ -117,6 +117,7 @@ public class ArquivoDao {
 
 		File f = new File("D:/ArquivoXml");
 		var auxDir = f.list();
+	
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		for(var arquivo : auxDir) {
@@ -168,21 +169,21 @@ public class ArquivoDao {
 					beneficiario.setNumerocarteira(numeroCarteira);
 					guia.setBeneficiario(beneficiario);
 					guia.setDataIni(dataInicioFat);
-					guia.setSituacao(situacaoGuia);
+					guia.setSituacaoGuia(situacaoGuia);
 					detalheGuia.setDataRealizacao(dataRealizacao);
 					procedimento.setTabela(codigoTabela);
 					procedimento.setProcedimento(codigoProcedimento);
 					procedimento.setDescricao(descricaoProcedimento);
 					detalheGuia.setProcedimento(procedimento);
 					detalheGuia.setGrauParticipacao(grauParticipacao);
-					detalheGuia.setValorInformado(valorInformado);
+					detalheGuia.setValorInformadoGuia(valorInformado);
 					detalheGuia.setQtdExecutada(qtdExecutada);
-					detalheGuia.setValorProcessado(valorProcessado);
-					detalheGuia.setValorLiberado(valorLiberado);
+					detalheGuia.setValorProcessadoGuia(valorProcessado);
+					detalheGuia.setValorLiberadoGuia(valorLiberado);
 					guia.setDetalheGuia(detalheGuia);
-					guia.setValorInformado(valorInformadoGuia);
-					guia.setValorProcessado(valorProcessadoGuia);
-					guia.setValorLiberado(valorLiberadoGuia);
+					guia.setValorInformadoGuia(valorInformadoGuia);
+					guia.setValorProcessadoGuia(valorProcessadoGuia);
+					guia.setValorLiberadoGuia(valorLiberadoGuia);
 					guias.add(guia);
 				}
 				
@@ -208,9 +209,9 @@ public class ArquivoDao {
 					lote.setProtocolo(numeroProtocolo);
 					lote.setData(dataProtocolo);
 					lote.setSituacao(situacaoProtocolo);
-					lote.setValorInformado(valorInformadoProtocolo);
-					lote.setValorProcessado(valorProcessadoProtocolo);
-					lote.setValorLiberado(valorLiberadoProtocolo);
+					lote.setValorInformadoProtocolo(valorInformadoProtocolo);
+					lote.setValorProcessadoProtocolo(valorProcessadoProtocolo);
+					lote.setValorLiberadoProtocolo(valorLiberadoProtocolo);
 					lote.setGuia(guias);
 					lotes.add(lote);
 					

@@ -11,9 +11,9 @@ public class Lote {
 	private Calendar data;
 	private int situacao;
 	private List<Guia> guia;
-	private double valorInformado;
-	private double valorProcessado;
-	private double valorLiberado;
+	private double valorInformadoProtocolo;
+	private double valorProcessadoProtocolo;
+	private double valorLiberadoProtocolo;
 
 	public int getId() {
 		return id;
@@ -51,22 +51,22 @@ public class Lote {
 	public void setGuia(List<Guia> guia) {
 		this.guia = guia;
 	}
-	public double getValorInformado() {
-		return valorInformado;
+	public double getValorInformadoProtocolo() {
+		return valorInformadoProtocolo;
 	}
-	public void setValorInformado(double valorInformado) {
-		this.valorInformado = valorInformado;
+	public void setValorInformadoProtocolo(double valorInformadoProtocolo) {
+		this.valorInformadoProtocolo = valorInformadoProtocolo;
 	}
-	public double getValorProcessado() {
-		return valorProcessado;
+	public double getValorProcessadoProtocolo() {
+		return valorProcessadoProtocolo;
 	}
-	public void setValorProcessado(double valorProcessado) {
-		this.valorProcessado = valorProcessado;
+	public void setValorProcessadoProtocolo(double valorProcessadoProtocolo) {
+		this.valorProcessadoProtocolo = valorProcessadoProtocolo;
 	}
-	public double getValorLiberado() {
-		return valorLiberado;
+	public double getValorLiberadoProtocolo() {
+		return valorLiberadoProtocolo;
 	}
-	public void setValorLiberado(double valorLiberado) {
-		this.valorLiberado = valorLiberado;
+	public void setValorLiberadoProtocolo(double valorLiberadoProtocolo) {
+		this.valorLiberadoProtocolo = valorLiberadoProtocolo;
 	}
 }

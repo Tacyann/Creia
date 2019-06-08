@@ -34,8 +34,8 @@ public class DetalhesGuiaDao {
 			stmt.setInt(4, detalheguia.getGrauParticipacao());
 			stmt.setDouble(5, detalheguia.getValorInformado());
 			stmt.setInt(6, detalheguia.getQtdExecutada());
-			stmt.setDouble(7, detalheguia.getValorProcessado());
-			stmt.setDouble(8, detalheguia.getValorLiberado());
+			stmt.setDouble(7, detalheguia.getValorProcessadoGuia());
+			stmt.setDouble(8, detalheguia.getValorLiberadoGuia());
 			
 			stmt.execute();
 			stmt.close();
@@ -49,8 +49,8 @@ public class DetalhesGuiaDao {
 		}
 	}
 
-	public DetalheGuia Obter(int relacaoGuiasID) {
-		String sql = "select * from detalheguia a join procedimento b on b.id = a.procedimentoid where relacaoGuiasID = '" + relacaoGuiasID + "'";		
+	public DetalheGuia Obter(int numPrestador) {
+		String sql = "select * from detalhesguia a join procedimento b on b.codigoProcedimento = a.procedimento where numPrestador = " + numPrestador;		
 		DetalheGuia detalheguia = new DetalheGuia();
 
 		try {
@@ -59,22 +59,22 @@ public class DetalhesGuiaDao {
 			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()) {
-				detalheguia.setId(rs.getInt("Id"));
+				detalheguia.setId(rs.getInt("a.Id"));
 				var calendario = Calendar.getInstance(); 
-				calendario.setTime(rs.getDate("dataRealizacao"));
+				calendario.setTime(rs.getDate("a.dataRealizacao"));
 				detalheguia.setDataRealizacao(calendario);
-				detalheguia.setId(rs.getInt("relacaoGuiasID"));
+				detalheguia.setId(rs.getInt("a.numPrestador"));
 				var procedimento = new Procedimento();
 				procedimento.setId(rs.getInt("b.id"));
 				procedimento.setTabela(rs.getInt("b.codigoTabela"));
 				procedimento.setProcedimento(rs.getInt("b.codigoProcedimento"));
 				procedimento.setDescricao(rs.getString("b.descricaoProcedimento"));
 				detalheguia.setProcedimento(procedimento);
-				detalheguia.setGrauParticipacao(rs.getInt("grauParticipacao"));
-				detalheguia.setValorInformado(rs.getDouble("valorInformado"));
-				detalheguia.setQtdExecutada(rs.getInt("qtdExecutada"));
-				detalheguia.setValorProcessado(rs.getDouble("valorProcessado"));
-				detalheguia.setValorLiberado(rs.getDouble("valorLiberado"));
+				detalheguia.setGrauParticipacao(rs.getInt("a.grauParticipacao"));
+				detalheguia.setValorInformadoGuia(rs.getDouble("a.valorInformado"));
+				detalheguia.setQtdExecutada(rs.getInt("a.qtdExecutada"));
+				detalheguia.setValorProcessadoGuia(rs.getDouble("a.valorProcessado"));
+				detalheguia.setValorLiberadoGuia(rs.getDouble("a.valorLiberado"));
 			}
 			stmt.close();
 			rs.close();
@@ -88,7 +88,7 @@ public class DetalhesGuiaDao {
 	}
 	
 	public List<DetalheGuia> Listar() {
-		String sql = "select * from procedimento";
+		String sql = "select * from detalhesguia";
 		List<DetalheGuia> detalheGuias = new ArrayList<DetalheGuia>();
 
 		try {
@@ -111,10 +111,10 @@ public class DetalhesGuiaDao {
 				procedimento.setDescricao(rs.getString("b.descricaoProcedimento"));
 				detalheguia.setProcedimento(procedimento);
 				detalheguia.setGrauParticipacao(rs.getInt("grauParticipacao"));
-				detalheguia.setValorInformado(rs.getDouble("valorInformado"));
+				detalheguia.setValorInformadoGuia(rs.getDouble("valorInformado"));
 				detalheguia.setQtdExecutada(rs.getInt("qtdExecutada"));
-				detalheguia.setValorProcessado(rs.getDouble("valorProcessado"));
-				detalheguia.setValorLiberado(rs.getDouble("valorLiberado"));
+				detalheguia.setValorProcessadoGuia(rs.getDouble("valorProcessado"));
+				detalheguia.setValorLiberadoGuia(rs.getDouble("valorLiberado"));
 								
 				detalheGuias.add(detalheguia);
 			}

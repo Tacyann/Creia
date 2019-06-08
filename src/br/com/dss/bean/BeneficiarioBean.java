@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
@@ -11,49 +12,39 @@ import br.com.dss.modelo.Beneficiario;
 import br.com.dss.servico.Service;
 import br.com.dss.servico.ServiceBeneficiario;
 
-@Named("beneficiario")
+@Named("cliente")
 @RequestScoped
 public class BeneficiarioBean implements Serializable{
 
-	private static final long serialVersionUID = 1L;
-	private String nomeBeneficiario;
-	private List<String> beneficiarios = new ArrayList<>();
+	private String[] nomeBeneficiario;
+	private List<String> nomes = new ArrayList<>();
+	private List<Beneficiario> beneficiarios = new ArrayList<>();
 	
-	public BeneficiarioBean() {
-		Listar();
-	}
-	
-	public String getNomeBeneficiario() {
-		return nomeBeneficiario;
-	}
-	public void setNomeBeneficiario(String nomeBeneficiario) {
-		this.nomeBeneficiario = nomeBeneficiario;
-	}
-	
-	public String Listar() {
+	@PostConstruct
+	public void inicializar() {
 		ServiceBeneficiario sb = new ServiceBeneficiario();
 		Service servico = new Service();
+
 		@SuppressWarnings("unchecked")
 		var listagem = (List<Beneficiario>) servico.Listar(sb);
 		
 		for(var item : listagem) {
-			beneficiarios.add(item.getNome());
+			beneficiarios.add(item);
+			nomes.add(item.getNome());
 		}
-		
-		return null;
 	}
 	
-	public String obter(String nome) {
-		
-		ServiceBeneficiario sb = new ServiceBeneficiario();
-		Service servico = new Service();
-		var ret = (Beneficiario) servico.Obter(sb, nome);
-		
-		setNomeBeneficiario(ret.getNome());
-		return null;
+	public String[] getNomeBeneficiario() {
+		return nomeBeneficiario;
 	}
-	
-	public List<String> getBeneficiarios() {
+
+	public void setNomeBeneficiario(String[] nomeBeneficiario) {
+		this.nomeBeneficiario = nomeBeneficiario;
+	}
+	public List<Beneficiario> getBeneficiarios() {
 		return beneficiarios;
+	}
+	public List<String> getNomes() {
+		return nomes;
 	}
 }

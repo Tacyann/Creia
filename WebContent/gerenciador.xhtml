@@ -9,13 +9,20 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 	<title>Gerenciador</title>
 </h:head>
-<body>
+<h:body>
+	<h2>Gerenciador</h2>
 	<h:form id="form">
-		<p:dataTable value="#{beneficiario.beneficiarios}" var="b">
-			<p:column headerText="Beneficiario">
-				<h:outputText value="#{b}" />
-			</p:column>
-		</p:dataTable>
+	<p:messages id="msg" globalOnly="true" showDetail="true" />
+		<h:panelGrid columns="2" cellpadding="5">
+			<p:selectCheckboxMenu id="cliente" value="#{gerenciador.clientes}" label="Clientes" filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
+				<f:selectItems value="#{cliente.nomes}" />
+			</p:selectCheckboxMenu>
+
+			<p:selectCheckboxMenu id="procedimento" value="#{procedimento.descricao}" label="Procedimentos" filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
+				<f:selectItems value="#{procedimento.nomes}" />
+			</p:selectCheckboxMenu>
+			<p:commandButton value="Consultar" action="gerenciador.processar" update="msg"/>
+		</h:panelGrid>		
 	</h:form>
-</body>
+</h:body>
 </html>

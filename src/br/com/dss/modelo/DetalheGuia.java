@@ -11,7 +11,6 @@ public class DetalheGuia extends Guia{
 	private int qtdExecutada;
 	private double valorProcessado;
 	private double valorLiberado;
-
 	public Calendar getDataRealizacao() {
 		return dataRealizacao;
 	}

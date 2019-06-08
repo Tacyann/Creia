@@ -12,6 +12,7 @@ import java.util.List;
 import br.com.dss.Conexao;
 import br.com.dss.modelo.Beneficiario;
 import br.com.dss.modelo.Guia;
+import br.com.dss.modelo.Lote;
 
 public class GuiaDao {
 	private Connection connection;
@@ -35,10 +36,10 @@ public class GuiaDao {
 			stmt.setString(5, guia.getBeneficiario().getNome());
 			stmt.setString(6, guia.getBeneficiario().getNumerocarteira());
 			stmt.setDate(7, new Date(guia.getDataIni().getTimeInMillis()));
-			stmt.setInt(8, guia.getSituacao());
-			stmt.setDouble(9, guia.getValorInformado());
-			stmt.setDouble(10, guia.getValorProcessado());
-			stmt.setDouble(11, guia.getValorLiberado());
+			stmt.setInt(8, guia.getSituacaoGuia());
+			stmt.setDouble(9, guia.getValorInformadoGuia());
+			stmt.setDouble(10, guia.getValorProcessadoGuia());
+			stmt.setDouble(11, guia.getValorLiberadoGuia());
 
 			stmt.execute();
 			stmt.close();
@@ -53,9 +54,10 @@ public class GuiaDao {
 	}
 
 	public Guia Obter(int lote) {
-		String sql = "select * from guia where lote = '" + lote + "'";		
+		String sql = "select * from guia where lote = " + lote + "";		
 		Guia guia = new Guia();
 
+		System.out.println("Estou no lote: " + lote);
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
 
@@ -63,7 +65,9 @@ public class GuiaDao {
 
 			while(rs.next()) {
 				guia.setId(rs.getInt("Id"));
-				guia.setNumero(rs.getInt("lote"));
+				var l =  new Lote();
+				l.setNumero(rs.getInt("lote"));
+				guia.setLote(l);
 				guia.setPrestador(rs.getInt("numeroGuiaPrestador"));
 				guia.setOperadora(rs.getInt("numeroGuiaOperadora"));
 				guia.setSenha(rs.getInt("senha"));
@@ -74,10 +78,10 @@ public class GuiaDao {
 				var calendario = Calendar.getInstance(); 
 				calendario.setTime(rs.getDate("dataInicioFat"));
 				guia.setDataIni(calendario);
-				guia.setSituacao(rs.getInt("situacaoGuia"));
-				guia.setValorInformado(rs.getDouble("valorInformadoGuia"));
-				guia.setValorProcessado(rs.getDouble("valorProcessadoGuia"));
-				guia.setValorLiberado(rs.getDouble("valorLiberadoGuia"));
+				guia.setSituacaoGuia(rs.getInt("situacaoGuia"));
+				guia.setValorInformadoGuia(rs.getDouble("valorInformadoGuia"));
+				guia.setValorProcessadoGuia(rs.getDouble("valorProcessadoGuia"));
+				guia.setValorLiberadoGuia(rs.getDouble("valorLiberadoGuia"));
 			}
 			
 			stmt.close();
@@ -114,10 +118,10 @@ public class GuiaDao {
 				var calendario = Calendar.getInstance(); 
 				calendario.setTime(rs.getDate("dataInicioFat"));
 				guia.setDataIni(calendario);
-				guia.setSituacao(rs.getInt("situacaoGuia"));
-				guia.setValorInformado(rs.getDouble("valorInformadoGuia"));
-				guia.setValorProcessado(rs.getDouble("valorProcessadoGuia"));
-				guia.setValorLiberado(rs.getDouble("valorLiberadoGuia"));
+				guia.setSituacaoGuia(rs.getInt("situacaoGuia"));
+				guia.setValorInformadoGuia(rs.getDouble("valorInformadoGuia"));
+				guia.setValorProcessadoGuia(rs.getDouble("valorProcessadoGuia"));
+				guia.setValorLiberadoGuia(rs.getDouble("valorLiberadoGuia"));
 				
 				guias.add(guia);
 			}

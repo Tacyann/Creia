@@ -10,7 +10,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import br.com.dss.Conexao;
-import br.com.dss.modelo.Guia;
 import br.com.dss.modelo.Lote;
 
 public class LoteDao {
@@ -32,9 +31,9 @@ public class LoteDao {
 			stmt.setInt(2, lote.getProtocolo());
 			stmt.setDate(3, new Date(lote.getData().getTimeInMillis()));
 			stmt.setInt(4, lote.getSituacao());
-			stmt.setDouble(5, lote.getValorInformado());
-			stmt.setDouble(6, lote.getValorProcessado());
-			stmt.setDouble(7, lote.getValorLiberado());
+			stmt.setDouble(5, lote.getValorInformadoProtocolo());
+			stmt.setDouble(6, lote.getValorProcessadoProtocolo());
+			stmt.setDouble(7, lote.getValorLiberadoProtocolo());
 			
 			stmt.execute();
 			stmt.close();
@@ -50,7 +49,7 @@ public class LoteDao {
 
 	public Lote Obter(int numeroLote) {
 		String sql = "select * from lote where numeroLotePrestador = '" + numeroLote + "'";		
-		Lote lote = new Guia();
+		Lote lote = new Lote();
 
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
@@ -59,15 +58,15 @@ public class LoteDao {
 
 			while(rs.next()) {
 				lote.setId(rs.getInt("Id"));
-				lote.setNumero(rs.getInt("lote"));
+				lote.setNumero(rs.getInt("numeroLotePrestador"));
 				lote.setProtocolo(rs.getInt("numeroProtocolo"));
 				var calendario = Calendar.getInstance(); 
 				calendario.setTime(rs.getDate("dataProtocolo"));
 				lote.setData(calendario);
-				lote.setSituacao(rs.getInt("situacaoGuia"));
-				lote.setValorInformado(rs.getDouble("valorInformadoGuia"));
-				lote.setValorProcessado(rs.getDouble("valorProcessadoGuia"));
-				lote.setValorLiberado(rs.getDouble("valorLiberadoGuia"));
+				lote.setSituacao(rs.getInt("situacaoProtocolo"));
+				lote.setValorInformadoProtocolo(rs.getDouble("valorInformadoProtocolo"));
+				lote.setValorProcessadoProtocolo(rs.getDouble("valorProcessadoProtocolo"));
+				lote.setValorLiberadoProtocolo(rs.getDouble("valorLiberadoProtocolo"));
 			}
 			
 			stmt.close();
@@ -94,15 +93,15 @@ public class LoteDao {
 				var lote = new Lote();
 
 				lote.setId(rs.getInt("Id"));
-				lote.setNumero(rs.getInt("lote"));
+				lote.setNumero(rs.getInt("numeroLotePrestador"));
 				lote.setProtocolo(rs.getInt("numeroProtocolo"));
 				var calendario = Calendar.getInstance(); 
 				calendario.setTime(rs.getDate("dataProtocolo"));
 				lote.setData(calendario);
-				lote.setSituacao(rs.getInt("situacaoGuia"));
-				lote.setValorInformado(rs.getDouble("valorInformadoGuia"));
-				lote.setValorProcessado(rs.getDouble("valorProcessadoGuia"));
-				lote.setValorLiberado(rs.getDouble("valorLiberadoGuia"));
+				lote.setSituacao(rs.getInt("situacaoProtocolo"));
+				lote.setValorInformadoProtocolo(rs.getDouble("valorInformadoProtocolo"));
+				lote.setValorProcessadoProtocolo(rs.getDouble("valorInformadoProtocolo"));
+				lote.setValorLiberadoProtocolo(rs.getDouble("valorLiberadoProtocolo"));
 				
 				lotes.add(lote);
 			}

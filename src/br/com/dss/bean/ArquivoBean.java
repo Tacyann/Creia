@@ -1,5 +1,7 @@
 package br.com.dss.bean;
 
+import java.io.Serializable;
+
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.Flash;
 import javax.inject.Inject;
@@ -10,7 +12,7 @@ import br.com.dss.servico.ServiceArquivo;
 
 @Named
 @RequestScoped
-public class ArquivoBean {
+public class ArquivoBean implements Serializable{
 	
 	private String filtro;
 	@Inject
