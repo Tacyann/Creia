@@ -22,10 +22,13 @@
 				<f:selectItems value="#{procedimento.procedimentos}" var="p" itemLabel="#{p.descricao}" itemValue="#{p.procedimento}"/>
 			</p:selectCheckboxMenu>
 
-		<p:commandButton value="Consultar" action="#{gerenciador.registros}" update="registrosGuias"/>
+		<p:commandButton value="Consultar" action="#{gerenciador.registros}" update="registrosGuias" />
 		</h:panelGrid>		
 		
-		<p:dataTable value="#{gerenciador.guias}" var="g" id="registrosGuias" resizableColumns="true" sortBy="#{g.beneficiario.nome}">
+		<p:dataTable value="#{gerenciador.guias}" var="g" id="registrosGuias" resizableColumns="true" sortBy="#{g.beneficiario.nome}"
+						paginator="true" 
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+						rowsPerPageTemplate="5,10,15">
 			<p:column headerText="Beneficiario" sortBy="#{g.beneficiario.nome}">
 				<h:outputText value="#{g.beneficiario.nome}" />
 			</p:column>
@@ -48,12 +51,12 @@
 					<f:convertNumber type="currency" lacale="pt_BR" />
 				</h:outputText>
 			</p:column>
-			<f:facet name="paginatorTopLeft">
-				<p:commandButton type="button" icon="pi pi-refresh" />
-			</f:facet>
-			<f:facet name="paginatorBottomRight">
-				<p:commandButton type="button" icon="pi pi-cloud-upload" />
-			</f:facet>
+<!-- 			<f:facet name="paginatorTopLeft"> -->
+<!-- 				<p:commandButton type="button" icon="pi-refresh" /> -->
+<!-- 			</f:facet> -->
+<!-- 			<f:facet name="paginatorBottomRight"> -->
+<!-- 				<p:commandButton type="button" icon="pi-cloud-upload" /> -->
+<!-- 			</f:facet> -->
 		</p:dataTable>
 	</h:form>
 </h:body>

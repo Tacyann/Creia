@@ -54,18 +54,25 @@ public class GuiaDao {
 
 	public List<Guia> Obter(String[] lista) {
 		
-		int count = 0;
-		StringBuilder sb = new StringBuilder();
-		for(var cliente : lista) {
-			sb.append("'").append(cliente).append("'");
-			count++;
-			if(lista.length > 1 && count !=lista.length) {
-				sb.append(",");
+		String sql;
+		
+		if(lista.length == 0) {
+			sql = "select * from guia";
+		}else {
+			int count = 0;
+			StringBuilder sb = new StringBuilder();
+			for(var cliente : lista) {
+				sb.append("'").append(cliente).append("'");
+				count++;
+				if(lista.length > 1 && count !=lista.length) {
+					sb.append(",");
+				}
 			}
+
+			var param = sb.toString();
+			sql = "select * from guia where nomeBeneficiario in (" + param + ")";			
 		}
 
-		var filtro = sb.toString();
-		String sql = "select * from guia where nomeBeneficiario in (" + filtro + ")";
 		System.out.println(sql);
 		List<Guia> guias = new ArrayList<>();
 		try {

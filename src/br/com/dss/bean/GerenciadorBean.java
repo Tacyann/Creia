@@ -27,54 +27,59 @@ public class GerenciadorBean implements Serializable {
 	private List<Guia> guias = new ArrayList<>();
 	private String[] clientes;
 	private String[] descricao;
-		
+
 	public void processar() {
 		StringBuilder sb = new StringBuilder("Clientes: ");
-		
+
 		for(var cliente : clientes) {
 			sb.append(cliente);
 		}
-		
+
 		FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, sb.toString());
 		facescontext.addMessage(null, msg);
 	}
-	
+
 	public void registros() {
-		
+
 		Service servico = new Service();
 		ServiceGuia sg = new ServiceGuia();
 		ServiceDetalheGuia sdg = new ServiceDetalheGuia();
-		
-		@SuppressWarnings("unchecked")
-		var listagemGuia = (List<Guia>) servico.Obter(sg, clientes);
-		
-		for(var item : listagemGuia) {
-			var guia = new Guia();
-			guia.setPrestador(item.getPrestador());
-			guia.setOperadora(item.getOperadora());
-			guia.setSenha(item.getSenha());
-			guia.setBeneficiario(item.getBeneficiario());
-			guia.setDataIni(item.getDataIni());
-			guia.setSituacaoGuia(item.getSituacaoGuia());
-			guia.setValorInformadoGuia(item.getValorInformadoGuia());
-			guia.setValorProcessadoGuia(item.getValorProcessadoGuia());
-			guia.setValorLiberadoGuia(item.getValorProcessadoGuia());
-			var detalheGuia = (DetalheGuia) servico.Obter(sdg, guia.getPrestador());			
-			guia.setDetalheGuia(detalheGuia);
-			
-			guias.add(guia);
+
+		if(clientes.length == 0) {
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum cliente foi selecionado para a consulta.");
+			facescontext.addMessage(null, msg);
+		}else {
+			@SuppressWarnings("unchecked")
+			var listagemGuia = (List<Guia>) servico.Obter(sg, clientes);
+
+			for(var item : listagemGuia) {
+				var guia = new Guia();
+				guia.setPrestador(item.getPrestador());
+				guia.setOperadora(item.getOperadora());
+				guia.setSenha(item.getSenha());
+				guia.setBeneficiario(item.getBeneficiario());
+				guia.setDataIni(item.getDataIni());
+				guia.setSituacaoGuia(item.getSituacaoGuia());
+				guia.setValorInformadoGuia(item.getValorInformadoGuia());
+				guia.setValorProcessadoGuia(item.getValorProcessadoGuia());
+				guia.setValorLiberadoGuia(item.getValorProcessadoGuia());
+				var detalheGuia = (DetalheGuia) servico.Obter(sdg, guia.getPrestador());			
+				guia.setDetalheGuia(detalheGuia);
+
+				guias.add(guia);
+			}
 		}
 	}
 
 	public List<String> nomeBeneficiario(){
-		
+
 		List<String> nomes = new ArrayList<>();
 		Service servico = new Service();
 		ServiceBeneficiario sb = new ServiceBeneficiario();
-		
+
 		@SuppressWarnings("unchecked")
 		var listagem = (List<Beneficiario>) servico.Listar(sb);
-		
+
 		for(var item : listagem) {
 			nomes.add(item.getNome());
 		}
