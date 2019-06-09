@@ -26,27 +26,27 @@ public class GerenciadorBean implements Serializable {
 	private FacesContext facescontext;
 	private List<Guia> guias = new ArrayList<>();
 	private String[] clientes;
-	
+	private String[] descricao;
+		
 	public void processar() {
 		StringBuilder sb = new StringBuilder("Clientes: ");
 		
 		for(var cliente : clientes) {
 			sb.append(cliente);
-			System.out.println(cliente);
 		}
 		
 		FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, sb.toString());
 		facescontext.addMessage(null, msg);
 	}
 	
-	public void inicializar() {
+	public void registros() {
 		
 		Service servico = new Service();
 		ServiceGuia sg = new ServiceGuia();
 		ServiceDetalheGuia sdg = new ServiceDetalheGuia();
 		
 		@SuppressWarnings("unchecked")
-		var listagemGuia = (List<Guia>) servico.Listar(sg);
+		var listagemGuia = (List<Guia>) servico.Obter(sg, clientes);
 		
 		for(var item : listagemGuia) {
 			var guia = new Guia();
@@ -66,11 +66,7 @@ public class GerenciadorBean implements Serializable {
 		}
 	}
 
-	public List<Guia> getGuias() {
-		return guias;
-	}
-	
-	public List<String> getNomeBeneficiario(){
+	public List<String> nomeBeneficiario(){
 		
 		List<String> nomes = new ArrayList<>();
 		Service servico = new Service();
@@ -85,11 +81,35 @@ public class GerenciadorBean implements Serializable {
 		return nomes;
 	}
 
+	public FacesContext getFacescontext() {
+		return facescontext;
+	}
+
+	public void setFacescontext(FacesContext facescontext) {
+		this.facescontext = facescontext;
+	}
+
+	public List<Guia> getGuias() {
+		return guias;
+	}
+
+	public void setGuias(List<Guia> guias) {
+		this.guias = guias;
+	}
+
 	public String[] getClientes() {
 		return clientes;
 	}
 
 	public void setClientes(String[] clientes) {
 		this.clientes = clientes;
+	}
+
+	public String[] getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String[] descricao) {
+		this.descricao = descricao;
 	}
 }

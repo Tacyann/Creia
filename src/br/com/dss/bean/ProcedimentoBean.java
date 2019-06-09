@@ -16,8 +16,7 @@ import br.com.dss.servico.ServiceProcedimento;
 @RequestScoped
 public class ProcedimentoBean implements Serializable{
 
-	private List<String> nomes = new ArrayList<>();
-	private List<Procedimento> lista = new ArrayList<>();
+	private List<Procedimento> procedimentos = new ArrayList<>();
 	private String[] descricao;
 	
 	@PostConstruct
@@ -29,16 +28,12 @@ public class ProcedimentoBean implements Serializable{
 		var listagem = (List<Procedimento>) servico.Listar(sp);
 		
 		for(var item : listagem) {
-			lista.add(item);
-			nomes.add(item.getDescricao());
+			procedimentos.add(item);
 		}
 	}
 	
-	public List<Procedimento> getLista() {
-		return lista;
-	}
-	public List<String> getNomes() {
-		return nomes;
+	public List<Procedimento> getProcedimentos() {
+		return procedimentos;
 	}
 	public String[] getDescricao() {
 		return descricao;

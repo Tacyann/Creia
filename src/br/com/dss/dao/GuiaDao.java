@@ -12,7 +12,6 @@ import java.util.List;
 import br.com.dss.Conexao;
 import br.com.dss.modelo.Beneficiario;
 import br.com.dss.modelo.Guia;
-import br.com.dss.modelo.Lote;
 
 public class GuiaDao {
 	private Connection connection;
@@ -53,21 +52,30 @@ public class GuiaDao {
 		}
 	}
 
-	public Guia Obter(int lote) {
-		String sql = "select * from guia where lote = " + lote + "";		
-		Guia guia = new Guia();
+	public List<Guia> Obter(String[] lista) {
+		
+		int count = 0;
+		StringBuilder sb = new StringBuilder();
+		for(var cliente : lista) {
+			sb.append("'").append(cliente).append("'");
+			count++;
+			if(lista.length > 1 && count !=lista.length) {
+				sb.append(",");
+			}
+		}
 
-		System.out.println("Estou no lote: " + lote);
+		var filtro = sb.toString();
+		String sql = "select * from guia where nomeBeneficiario in (" + filtro + ")";
+		System.out.println(sql);
+		List<Guia> guias = new ArrayList<>();
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
 
 			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()) {
+				var guia = new Guia();
 				guia.setId(rs.getInt("Id"));
-				var l =  new Lote();
-				l.setNumero(rs.getInt("lote"));
-				guia.setLote(l);
 				guia.setPrestador(rs.getInt("numeroGuiaPrestador"));
 				guia.setOperadora(rs.getInt("numeroGuiaOperadora"));
 				guia.setSenha(rs.getInt("senha"));
@@ -82,12 +90,14 @@ public class GuiaDao {
 				guia.setValorInformadoGuia(rs.getDouble("valorInformadoGuia"));
 				guia.setValorProcessadoGuia(rs.getDouble("valorProcessadoGuia"));
 				guia.setValorLiberadoGuia(rs.getDouble("valorLiberadoGuia"));
+				
+				guias.add(guia);
 			}
 			
 			stmt.close();
 			rs.close();
 
-			return guia;
+			return guias;
 		}catch(SQLException e) {
 			throw new RuntimeException(e);
 		}finally {

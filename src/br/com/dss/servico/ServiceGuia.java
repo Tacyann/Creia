@@ -18,7 +18,7 @@ public class ServiceGuia implements IListagem{
 		
 		GuiaDao arquivo = new GuiaDao();
 		
-		var guia = arquivo.Obter((int) objeto);
+		var guia = arquivo.Obter((String[]) objeto);
 		return guia;
 	}
 }

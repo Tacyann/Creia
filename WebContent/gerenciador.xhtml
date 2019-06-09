@@ -10,19 +10,51 @@
 	<title>Gerenciador</title>
 </h:head>
 <h:body>
-	<h2>Gerenciador</h2>
+	<h2>Gerenciador das guias de atendimento</h2>
 	<h:form id="form">
 	<p:messages id="msg" globalOnly="true" showDetail="true" />
 		<h:panelGrid columns="2" cellpadding="5">
 			<p:selectCheckboxMenu id="cliente" value="#{gerenciador.clientes}" label="Clientes" filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
-				<f:selectItems value="#{cliente.nomes}" />
+				<f:selectItems value="#{cliente.beneficiarios}" var="c" itemLabel="#{c.nome}" itemValue="#{c.nome}"/>
 			</p:selectCheckboxMenu>
 
-			<p:selectCheckboxMenu id="procedimento" value="#{procedimento.descricao}" label="Procedimentos" filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
-				<f:selectItems value="#{procedimento.nomes}" />
+			<p:selectCheckboxMenu id="procedimento" value="#{gerenciador.descricao}" label="Procedimentos" filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
+				<f:selectItems value="#{procedimento.procedimentos}" var="p" itemLabel="#{p.descricao}" itemValue="#{p.procedimento}"/>
 			</p:selectCheckboxMenu>
-			<p:commandButton value="Consultar" action="gerenciador.processar" update="msg"/>
+
+		<p:commandButton value="Consultar" action="#{gerenciador.registros}" update="registrosGuias"/>
 		</h:panelGrid>		
+		
+		<p:dataTable value="#{gerenciador.guias}" var="g" id="registrosGuias" resizableColumns="true" sortBy="#{g.beneficiario.nome}">
+			<p:column headerText="Beneficiario" sortBy="#{g.beneficiario.nome}">
+				<h:outputText value="#{g.beneficiario.nome}" />
+			</p:column>
+			<p:column headerText="Data" style="width:90px;">
+				<h:outputText value="#{g.detalheGuia.dataRealizacao.time}">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Operadora" style="width:90px;">
+				<h:outputText value="#{g.operadora}" />
+			</p:column>
+			<p:column headerText="Prestador" style="width:90px;">
+				<h:outputText value="#{g.prestador}" />
+			</p:column>
+			<p:column headerText="Procedimento">
+				<h:outputText value="#{g.detalheGuia.procedimento.descricao}" />
+			</p:column>
+			<p:column headerText="Vlr Informado" style="width:110px;">
+				<h:outputText value="#{g.valorInformadoGuia}" >
+					<f:convertNumber type="currency" lacale="pt_BR" />
+				</h:outputText>
+			</p:column>
+			<f:facet name="paginatorTopLeft">
+				<p:commandButton type="button" icon="pi pi-refresh" />
+			</f:facet>
+			<f:facet name="paginatorBottomRight">
+				<p:commandButton type="button" icon="pi pi-cloud-upload" />
+			</f:facet>
+		</p:dataTable>
 	</h:form>
 </h:body>
 </html>

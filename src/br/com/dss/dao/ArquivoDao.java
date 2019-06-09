@@ -129,7 +129,8 @@ public class ArquivoDao {
 				Document doc = dBuilder.parse(file);
 
 				NodeList nListGuias = doc.getElementsByTagName("relacaoGuias");
-
+				System.out.println(nListGuias.getLength());
+				
 				for(int i = 0; i < nListGuias.getLength(); i++) {
 					Node nNode = nListGuias.item(i);
 					DetalheGuia detalheGuia = new DetalheGuia();

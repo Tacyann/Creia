@@ -17,7 +17,6 @@ import br.com.dss.servico.ServiceBeneficiario;
 public class BeneficiarioBean implements Serializable{
 
 	private String[] nomeBeneficiario;
-	private List<String> nomes = new ArrayList<>();
 	private List<Beneficiario> beneficiarios = new ArrayList<>();
 	
 	@PostConstruct
@@ -30,7 +29,6 @@ public class BeneficiarioBean implements Serializable{
 		
 		for(var item : listagem) {
 			beneficiarios.add(item);
-			nomes.add(item.getNome());
 		}
 	}
 	
@@ -43,8 +41,5 @@ public class BeneficiarioBean implements Serializable{
 	}
 	public List<Beneficiario> getBeneficiarios() {
 		return beneficiarios;
-	}
-	public List<String> getNomes() {
-		return nomes;
 	}
 }
