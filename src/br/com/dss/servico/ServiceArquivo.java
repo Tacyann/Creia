@@ -32,32 +32,40 @@ public class ServiceArquivo implements IDados {
 		BeneficiarioDao beneficiario = new BeneficiarioDao();
 
 		try {
+			var countLote = 0;
+			var countGuia = 0;
 			var listaLote = arquivo.LerXmlGerarLotes();
 
 			if(listaLote != null) {
 
 				for(var itemLote : listaLote) {
-					lote.Adicionar(itemLote);
-					var num = itemLote.getNumero();
-
-					for(var itemGuia : itemLote.getGuia()) {
-						guia.Adicionar(itemGuia, num);
+					var isLote = lote.Existe(itemLote.getNumero());
+					countLote++;
+					if(!isLote) {
+						lote.Adicionar(itemLote);
 						
-						var isBeneficiario = beneficiario.Existe(itemGuia.getBeneficiario());
-						
-						if(!isBeneficiario) {
-							beneficiario.Adicionar(itemGuia.getBeneficiario());
-						}
-						
-						detalhe.Adicionar(itemGuia.getDetalheGuia(), itemGuia.getPrestador());
-
-						var isProcedimento = procedimento.Existe(itemGuia.getDetalheGuia().getProcedimento().getProcedimento());
-
-						if(!isProcedimento) {
-							procedimento.Adicionar(itemGuia.getDetalheGuia().getProcedimento());
+						for(var itemGuia : itemLote.getGuia()) {
+							guia.Adicionar(itemGuia,itemLote.getNumero());
+							countGuia++;
+							
+							var isBeneficiario = beneficiario.Existe(itemGuia.getBeneficiario());
+							
+							if(!isBeneficiario) {
+								beneficiario.Adicionar(itemGuia.getBeneficiario());
+							}
+							
+							detalhe.Adicionar(itemGuia.getDetalheGuia(), itemGuia.getPrestador());
+							
+							var isProcedimento = procedimento.Existe(itemGuia.getDetalheGuia().getProcedimento().getProcedimento());
+							
+							if(!isProcedimento) {
+								procedimento.Adicionar(itemGuia.getDetalheGuia().getProcedimento());
+							}
 						}
 					}
-				}				
+				}	
+
+				System.out.println("No ServiceArquivo Qtd de lotes: " + countLote + " Qtd de guias: " + countGuia);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

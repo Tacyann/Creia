@@ -116,6 +116,34 @@ public class LoteDao {
 		}
 	}
 	
+	public boolean Existe(int numeroLote) {
+		String sql = "select count(*) QTD from lote where numeroLotePrestador = '" + numeroLote + "'";		
+		var qtd = 0;
+		var existe = false;
+		try {
+			PreparedStatement stmt = connection.prepareStatement(sql);
+
+			ResultSet rs = stmt.executeQuery();
+
+			while(rs.next()) {
+				qtd = rs.getInt("QTD");
+				}
+			
+			stmt.close();
+			rs.close();
+			
+			if(qtd > 0) {
+				existe = true;
+			}
+
+			return existe;
+		}catch(SQLException e) {
+			throw new RuntimeException(e);
+		}finally {
+			Conexao.FecharConexao();
+		}
+	}
+	
 	public boolean Excluir(int numeroLote) {
 		String sql = "delete from lote where ID = '" + numeroLote + "'";		
 		

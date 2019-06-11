@@ -72,7 +72,6 @@ public class GuiaDao {
 			var param = sb.toString();
 			sql = "select * from guia where nomeBeneficiario in (" + param + ")";			
 		}
-
 		System.out.println(sql);
 		List<Guia> guias = new ArrayList<>();
 		try {

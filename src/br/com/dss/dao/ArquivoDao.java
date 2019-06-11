@@ -113,11 +113,10 @@ public class ArquivoDao {
 		Double valorLiberadoProtocolo = 0.0;
 		String item = null;
 		List<Lote> lotes = new ArrayList<Lote>();
-		List<Guia> guias = new ArrayList<Guia>();
 
 		File f = new File("D:/ArquivoXml");
 		var auxDir = f.list();
-	
+
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		for(var arquivo : auxDir) {
@@ -128,71 +127,12 @@ public class ArquivoDao {
 				String file = f.getPath() + "\\" + arquivo;
 				Document doc = dBuilder.parse(file);
 
-				NodeList nListGuias = doc.getElementsByTagName("relacaoGuias");
-				System.out.println(nListGuias.getLength());
-				
-				for(int i = 0; i < nListGuias.getLength(); i++) {
-					Node nNode = nListGuias.item(i);
-					DetalheGuia detalheGuia = new DetalheGuia();
-					Procedimento procedimento = new Procedimento();
-					Beneficiario beneficiario = new Beneficiario();
-					Guia guia = new Guia();
-
-					if(nNode.getNodeType() == Node.ELEMENT_NODE) {
-						Element eElement = (Element) nNode;
-
-						numeroGuiaPrestador = Integer.parseInt(eElement.getElementsByTagName("numeroGuiaPrestador").item(0).getTextContent());
-						numeroGuiaOperadora = Integer.parseInt(eElement.getElementsByTagName("numeroGuiaOperadora").item(0).getTextContent());
-						senha = Integer.parseInt(eElement.getElementsByTagName("senha").item(0).getTextContent());
-						nomeBeneficiario = eElement.getElementsByTagName("nomeBeneficiario").item(0).getTextContent();
-						numeroCarteira = eElement.getElementsByTagName("numeroCarteira").item(0).getTextContent();
-						var dt = formato.parse(eElement.getElementsByTagName("dataInicioFat").item(0).getTextContent());
-						dataInicioFat.setTime(dt);
-						situacaoGuia = Integer.parseInt(eElement.getElementsByTagName("situacaoGuia").item(0).getTextContent());
-						dt = formato.parse(eElement.getElementsByTagName("dataRealizacao").item(0).getTextContent());
-						dataRealizacao.setTime(dt);
-						codigoTabela = Integer.parseInt(eElement.getElementsByTagName("codigoTabela").item(0).getTextContent());
-						codigoProcedimento = Integer.parseInt(eElement.getElementsByTagName("codigoProcedimento").item(0).getTextContent());
-						descricaoProcedimento = eElement.getElementsByTagName("descricaoProcedimento").item(0).getTextContent();
-						grauParticipacao = Integer.parseInt(eElement.getElementsByTagName("grauParticipacao").item(0).getTextContent());
-						valorInformado = Double.parseDouble(eElement.getElementsByTagName("valorInformado").item(0).getTextContent());
-						qtdExecutada = Integer.parseInt(eElement.getElementsByTagName("qtdExecutada").item(0).getTextContent());
-						valorProcessado = Double.parseDouble(eElement.getElementsByTagName("valorProcessado").item(0).getTextContent());
-						valorLiberado = Double.parseDouble(eElement.getElementsByTagName("valorProcessado").item(0).getTextContent());
-						valorInformadoGuia = Double.parseDouble(eElement.getElementsByTagName("valorInformadoGuia").item(0).getTextContent());
-						valorProcessadoGuia = Double.parseDouble(eElement.getElementsByTagName("valorProcessadoGuia").item(0).getTextContent());
-						valorLiberadoGuia = Double.parseDouble(eElement.getElementsByTagName("valorLiberadoGuia").item(0).getTextContent());
-					}
-					guia.setPrestador(numeroGuiaPrestador);
-					guia.setOperadora(numeroGuiaOperadora);
-					guia.setSenha(senha);
-					beneficiario.setNome(nomeBeneficiario);
-					beneficiario.setNumerocarteira(numeroCarteira);
-					guia.setBeneficiario(beneficiario);
-					guia.setDataIni(dataInicioFat);
-					guia.setSituacaoGuia(situacaoGuia);
-					detalheGuia.setDataRealizacao(dataRealizacao);
-					procedimento.setTabela(codigoTabela);
-					procedimento.setProcedimento(codigoProcedimento);
-					procedimento.setDescricao(descricaoProcedimento);
-					detalheGuia.setProcedimento(procedimento);
-					detalheGuia.setGrauParticipacao(grauParticipacao);
-					detalheGuia.setValorInformadoGuia(valorInformado);
-					detalheGuia.setQtdExecutada(qtdExecutada);
-					detalheGuia.setValorProcessadoGuia(valorProcessado);
-					detalheGuia.setValorLiberadoGuia(valorLiberado);
-					guia.setDetalheGuia(detalheGuia);
-					guia.setValorInformadoGuia(valorInformadoGuia);
-					guia.setValorProcessadoGuia(valorProcessadoGuia);
-					guia.setValorLiberadoGuia(valorLiberadoGuia);
-					guias.add(guia);
-				}
-				
 				NodeList nListLote = doc.getElementsByTagName("dadosProtocolo");
 				
 				for(int i = 0; i < nListLote.getLength(); i++) {
 					Lote lote = new Lote();
 					Node nNode = nListLote.item(i);
+					List<Guia> guias = new ArrayList<Guia>();
 					
 					if(nNode.getNodeType() == Node.ELEMENT_NODE) {
 						Element eElement = (Element) nNode;
@@ -206,6 +146,66 @@ public class ArquivoDao {
 						valorLiberadoProtocolo = Double.parseDouble(eElement.getElementsByTagName("valorLiberadoProtocolo").item(0).getTextContent());
 					}
 					
+					NodeList nListGuias = doc.getElementsByTagName("relacaoGuias");
+					
+					for(int j = 0; j < nListGuias.getLength(); j++) {
+						Node nNodeG = nListGuias.item(j);
+						DetalheGuia detalheGuia = new DetalheGuia();
+						Procedimento procedimento = new Procedimento();
+						Beneficiario beneficiario = new Beneficiario();
+						Guia guia = new Guia();
+						
+						if(nNodeG.getNodeType() == Node.ELEMENT_NODE) {
+							Element eElement = (Element) nNodeG;
+
+							numeroGuiaPrestador = Integer.parseInt(eElement.getElementsByTagName("numeroGuiaPrestador").item(0).getTextContent());
+							numeroGuiaOperadora = Integer.parseInt(eElement.getElementsByTagName("numeroGuiaOperadora").item(0).getTextContent());
+							senha = Integer.parseInt(eElement.getElementsByTagName("senha").item(0).getTextContent());
+							nomeBeneficiario = eElement.getElementsByTagName("nomeBeneficiario").item(0).getTextContent();
+							numeroCarteira = eElement.getElementsByTagName("numeroCarteira").item(0).getTextContent();
+							var dt = formato.parse(eElement.getElementsByTagName("dataInicioFat").item(0).getTextContent());
+							dataInicioFat.setTime(dt);
+							situacaoGuia = Integer.parseInt(eElement.getElementsByTagName("situacaoGuia").item(0).getTextContent());
+							dt = formato.parse(eElement.getElementsByTagName("dataRealizacao").item(0).getTextContent());
+							dataRealizacao.setTime(dt);
+							codigoTabela = Integer.parseInt(eElement.getElementsByTagName("codigoTabela").item(0).getTextContent());
+							codigoProcedimento = Integer.parseInt(eElement.getElementsByTagName("codigoProcedimento").item(0).getTextContent());
+							descricaoProcedimento = eElement.getElementsByTagName("descricaoProcedimento").item(0).getTextContent();
+							grauParticipacao = Integer.parseInt(eElement.getElementsByTagName("grauParticipacao").item(0).getTextContent());
+							valorInformado = Double.parseDouble(eElement.getElementsByTagName("valorInformado").item(0).getTextContent());
+							qtdExecutada = Integer.parseInt(eElement.getElementsByTagName("qtdExecutada").item(0).getTextContent());
+							valorProcessado = Double.parseDouble(eElement.getElementsByTagName("valorProcessado").item(0).getTextContent());
+							valorLiberado = Double.parseDouble(eElement.getElementsByTagName("valorProcessado").item(0).getTextContent());
+							valorInformadoGuia = Double.parseDouble(eElement.getElementsByTagName("valorInformadoGuia").item(0).getTextContent());
+							valorProcessadoGuia = Double.parseDouble(eElement.getElementsByTagName("valorProcessadoGuia").item(0).getTextContent());
+							valorLiberadoGuia = Double.parseDouble(eElement.getElementsByTagName("valorLiberadoGuia").item(0).getTextContent());
+						}
+						guia.setPrestador(numeroGuiaPrestador);
+						guia.setOperadora(numeroGuiaOperadora);
+						guia.setSenha(senha);
+						beneficiario.setNome(nomeBeneficiario);
+						beneficiario.setNumerocarteira(numeroCarteira);
+						guia.setBeneficiario(beneficiario);
+						guia.setDataIni(dataInicioFat);
+						guia.setSituacaoGuia(situacaoGuia);
+						detalheGuia.setDataRealizacao(dataRealizacao);
+						procedimento.setTabela(codigoTabela);
+						procedimento.setProcedimento(codigoProcedimento);
+						procedimento.setDescricao(descricaoProcedimento);
+						detalheGuia.setProcedimento(procedimento);
+						detalheGuia.setGrauParticipacao(grauParticipacao);
+						detalheGuia.setValorInformadoGuia(valorInformado);
+						detalheGuia.setQtdExecutada(qtdExecutada);
+						detalheGuia.setValorProcessadoGuia(valorProcessado);
+						detalheGuia.setValorLiberadoGuia(valorLiberado);
+						guia.setDetalheGuia(detalheGuia);
+						guia.setValorInformadoGuia(valorInformadoGuia);
+						guia.setValorProcessadoGuia(valorProcessadoGuia);
+						guia.setValorLiberadoGuia(valorLiberadoGuia);
+						guias.add(guia);
+					}
+					
+					lote.setGuia(guias);
 					lote.setNumero(numeroLotePrestador);
 					lote.setProtocolo(numeroProtocolo);
 					lote.setData(dataProtocolo);
@@ -213,16 +213,15 @@ public class ArquivoDao {
 					lote.setValorInformadoProtocolo(valorInformadoProtocolo);
 					lote.setValorProcessadoProtocolo(valorProcessadoProtocolo);
 					lote.setValorLiberadoProtocolo(valorLiberadoProtocolo);
-					lote.setGuia(guias);
-					lotes.add(lote);
-					
-				}
+					lotes.add(lote);	
+				}			
+				
 				arq.setNomeArquivo(arquivo);
 				arq.setDtImportacao(data);
 				Adicionar(arq);
 			}
 		}		
-		
+
 		return lotes;
 	}
 }

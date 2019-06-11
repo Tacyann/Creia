@@ -9,11 +9,11 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 	<title>Gerenciador</title>
 </h:head>
-<h:body>
-	<h2>Gerenciador das guias de atendimento</h2>
+<h:body style="background-color:#796">
+	<h1 style="text-align:center; color:black; text-shadow: 5px 3px 5px #050;">Gerenciador das guias de atendimento</h1>
 	<h:form id="form">
 	<p:messages id="msg" globalOnly="true" showDetail="true" />
-		<h:panelGrid columns="2" cellpadding="5">
+		<h:panelGrid columns="4" cellpadding="5">
 			<p:selectCheckboxMenu id="cliente" value="#{gerenciador.clientes}" label="Clientes" filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
 				<f:selectItems value="#{cliente.beneficiarios}" var="c" itemLabel="#{c.nome}" itemValue="#{c.nome}"/>
 			</p:selectCheckboxMenu>
@@ -22,32 +22,38 @@
 				<f:selectItems value="#{procedimento.procedimentos}" var="p" itemLabel="#{p.descricao}" itemValue="#{p.procedimento}"/>
 			</p:selectCheckboxMenu>
 
-		<p:commandButton value="Consultar" action="#{gerenciador.registros}" update="registrosGuias" />
+		<p:commandButton value="Consultar" action="#{gerenciador.registros}" update="registrosGuias,valor,msg" />
+		<p:commandButton value="Limpar" action="#{gerenciador.limpar}" update="registrosGuias,valor,msg" />
 		</h:panelGrid>		
 		
-		<p:dataTable value="#{gerenciador.guias}" var="g" id="registrosGuias" resizableColumns="true" sortBy="#{g.beneficiario.nome}"
-						paginator="true" 
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-						rowsPerPageTemplate="5,10,15">
-			<p:column headerText="Beneficiario" sortBy="#{g.beneficiario.nome}">
+		<p:dataTable value="#{gerenciador.guias}" var="g" id="registrosGuias" resizableColumns="true" rows="10" 
+						paginator="true"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15" >
+			<p:column headerText="Beneficiario" sortBy="#{g.beneficiario.nome}" style="width:290px; font-size:15px;">
 				<h:outputText value="#{g.beneficiario.nome}" />
 			</p:column>
-			<p:column headerText="Data" style="width:90px;">
+			<p:column headerText="Data" style="width:70px; font-size:15px;">
 				<h:outputText value="#{g.detalheGuia.dataRealizacao.time}">
 					<f:convertDateTime pattern="dd/MM/yyyy" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Operadora" style="width:90px;">
+			<p:column headerText="Operadora" style="width:70px; font-size:15px;">
 				<h:outputText value="#{g.operadora}" />
 			</p:column>
-			<p:column headerText="Prestador" style="width:90px;">
+			<p:column headerText="Prestador" style="width:70px; font-size:15px;">
 				<h:outputText value="#{g.prestador}" />
 			</p:column>
-			<p:column headerText="Procedimento">
+			<p:column headerText="Procedimento" style="font-size:15px;">
 				<h:outputText value="#{g.detalheGuia.procedimento.descricao}" />
 			</p:column>
-			<p:column headerText="Vlr Informado" style="width:110px;">
-				<h:outputText value="#{g.valorInformadoGuia}" >
+			<p:column headerText="Vlr Liberado" style="width:80px; font-size:15px;">
+				<h:outputText value="#{g.valorLiberadoGuia}" >
+					<f:convertNumber type="currency" lacale="pt_BR" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Vlr Processado" style="width:100px; font-size:15px;">
+				<h:outputText value="#{g.detalheGuia.valorProcessado}" >
 					<f:convertNumber type="currency" lacale="pt_BR" />
 				</h:outputText>
 			</p:column>
@@ -58,6 +64,13 @@
 <!-- 				<p:commandButton type="button" icon="pi-cloud-upload" /> -->
 <!-- 			</f:facet> -->
 		</p:dataTable>
+
+		<p:panel>
+			<h:outputText value="Total geral: " />
+			<h:outputText value="#{gerenciador.valorTotal}" id="valor">
+				<f:convertNumber type="currency" lacale="pt_BR" />
+			</h:outputText>
+		</p:panel>
 	</h:form>
 </h:body>
 </html>

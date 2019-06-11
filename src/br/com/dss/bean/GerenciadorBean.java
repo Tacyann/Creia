@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -19,33 +19,29 @@ import br.com.dss.servico.ServiceDetalheGuia;
 import br.com.dss.servico.ServiceGuia;
 
 @Named("gerenciador")
-@RequestScoped
+@SessionScoped
 public class GerenciadorBean implements Serializable {
 
 	@Inject
 	private FacesContext facescontext;
-	private List<Guia> guias = new ArrayList<>();
+
+	private List<Guia> guias;
+	private List<Double> valoresLiberados;
 	private String[] clientes;
 	private String[] descricao;
-
-	public void processar() {
-		StringBuilder sb = new StringBuilder("Clientes: ");
-
-		for(var cliente : clientes) {
-			sb.append(cliente);
-		}
-
-		FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, sb.toString());
-		facescontext.addMessage(null, msg);
-	}
+	private Double valorTotal;
 
 	public void registros() {
+
+		guias = new ArrayList<>();
+		valoresLiberados = new ArrayList<>();
 
 		Service servico = new Service();
 		ServiceGuia sg = new ServiceGuia();
 		ServiceDetalheGuia sdg = new ServiceDetalheGuia();
 
 		if(clientes.length == 0) {
+			valorTotal = 0.0;
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum cliente foi selecionado para a consulta.");
 			facescontext.addMessage(null, msg);
 		}else {
@@ -66,8 +62,53 @@ public class GerenciadorBean implements Serializable {
 				var detalheGuia = (DetalheGuia) servico.Obter(sdg, guia.getPrestador());			
 				guia.setDetalheGuia(detalheGuia);
 
+				//valoresLiberados.add(detalheGuia.getValorLiberado());
 				guias.add(guia);
 			}
+
+			valorTotal = 0.0;
+			for(var valor : guias) {
+				valorTotal = valorTotal + valor.getValorLiberadoGuia();
+			}
+		}
+	}
+
+	public void limpar() {
+		if(guias.size()>0) {
+			guias.clear();
+			valorTotal = 0.0;
+		}
+	}
+
+	public void listar() {
+
+		Service servico = new Service();
+		ServiceGuia sg = new ServiceGuia();
+		ServiceDetalheGuia sdg = new ServiceDetalheGuia();
+		@SuppressWarnings("unchecked")
+		var listagemGuia = (List<Guia>) servico.Listar(sg);
+
+		for(var item : listagemGuia) {
+			var guia = new Guia();
+			guia.setPrestador(item.getPrestador());
+			guia.setOperadora(item.getOperadora());
+			guia.setSenha(item.getSenha());
+			guia.setBeneficiario(item.getBeneficiario());
+			guia.setDataIni(item.getDataIni());
+			guia.setSituacaoGuia(item.getSituacaoGuia());
+			guia.setValorInformadoGuia(item.getValorInformadoGuia());
+			guia.setValorProcessadoGuia(item.getValorProcessadoGuia());
+			guia.setValorLiberadoGuia(item.getValorProcessadoGuia());
+			var detalheGuia = (DetalheGuia) servico.Obter(sdg, guia.getPrestador());			
+			guia.setDetalheGuia(detalheGuia);
+
+			//valoresLiberados.add(detalheGuia.getValorLiberado());
+			guias.add(guia);
+		}
+
+		valorTotal = 0.0;
+		for(var valor : guias) {
+			valorTotal = valorTotal + valor.getValorLiberadoGuia();
 		}
 	}
 
@@ -116,5 +157,21 @@ public class GerenciadorBean implements Serializable {
 
 	public void setDescricao(String[] descricao) {
 		this.descricao = descricao;
+	}
+
+	public Double getValorTotal() {
+		return valorTotal;
+	}
+
+	public void setValorTotal(Double valorTotal) {
+		this.valorTotal = valorTotal;
+	}
+
+	public List<Double> getValoresLiberados() {
+		return valoresLiberados;
+	}
+
+	public void setValoresLiberados(List<Double> valoresLiberados) {
+		this.valoresLiberados = valoresLiberados;
 	}
 }
