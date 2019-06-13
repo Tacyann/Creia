@@ -26,17 +26,5 @@
 		</p:menuitem>
 	</p:tabMenu>
 	<h:outputStylesheet library="css" name="estilo.css" />
-	<div id="menuprincipal">
-		<p>Sistema que efetua leitura de arquivos em formato XML e insere
-			os dados.</p>
-		<p>A CREIA deseja facilitar a leitura dos lotes disponibilizados
-			pela CASSI para analisar as fichas de atendimento e gerenciar os
-			pagamentos, que na atualidade &eacute; efetuado por m&eacute;dia, sem
-			par&acirc;metros concretos.</p>
-	</div>
-	<h:form>
-		Filtro: <p:inputText value="#{arquivoBean.filtro}" />
-		<p:commandButton value="Processar" action="#{arquivoBean.ExisteArquivo}" />
-	</h:form>
 </body>
 </html>

@@ -2,6 +2,7 @@ package br.com.dss.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
@@ -30,6 +31,10 @@ public class GerenciadorBean implements Serializable {
 	private String[] clientes;
 	private String[] descricao;
 	private Double valorTotal;
+	private Double valorCreia;
+	private Double valorEspecialista;
+	private Date dtInicial;
+	private Date dtFinal;
 
 	public void registros() {
 
@@ -45,8 +50,12 @@ public class GerenciadorBean implements Serializable {
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum cliente foi selecionado para a consulta.");
 			facescontext.addMessage(null, msg);
 		}else {
+
+			java.sql.Date dt1 = new java.sql.Date(getDtInicial().getTime());
+			java.sql.Date dt2 = new java.sql.Date(getDtFinal().getTime());
+
 			@SuppressWarnings("unchecked")
-			var listagemGuia = (List<Guia>) servico.Obter(sg, clientes);
+			var listagemGuia = (List<Guia>) servico.Obter(sg, clientes, dt1, dt2);
 
 			for(var item : listagemGuia) {
 				var guia = new Guia();
@@ -67,9 +76,13 @@ public class GerenciadorBean implements Serializable {
 			}
 
 			valorTotal = 0.0;
+			valorCreia = 0.0;
+			valorEspecialista = 0.0;
 			for(var valor : guias) {
 				valorTotal = valorTotal + valor.getValorLiberadoGuia();
 			}
+			valorCreia = valorTotal * 45.5 / 100;
+			valorEspecialista = valorTotal * 54.5 / 100;
 		}
 	}
 
@@ -77,9 +90,16 @@ public class GerenciadorBean implements Serializable {
 		if(guias.size()>0) {
 			guias.clear();
 			valorTotal = 0.0;
+			valorCreia = 0.0;
+			valorEspecialista = 0.0;
 		}
 	}
 
+	public String sair() {
+		limpar();
+		return "home?faces-redirect=true";
+	}
+	
 	public void listar() {
 
 		Service servico = new Service();
@@ -173,5 +193,29 @@ public class GerenciadorBean implements Serializable {
 
 	public void setValoresLiberados(List<Double> valoresLiberados) {
 		this.valoresLiberados = valoresLiberados;
+	}
+
+	public Date getDtInicial() {
+		return dtInicial;
+	}
+
+	public void setDtInicial(Date dtInicial) {
+		this.dtInicial = dtInicial;
+	}
+
+	public Date getDtFinal() {
+		return dtFinal;
+	}
+
+	public void setDtFinal(Date dtFinal) {
+		this.dtFinal = dtFinal;
+	}
+
+	public Double getValorCreia() {
+		return valorCreia;
+	}
+
+	public Double getValorEspecialista() {
+		return valorEspecialista;
 	}
 }

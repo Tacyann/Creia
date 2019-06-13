@@ -52,7 +52,7 @@ public class GuiaDao {
 		}
 	}
 
-	public List<Guia> Obter(String[] lista) {
+	public List<Guia> Obter(String[] lista, Date dtIni, Date dtFim) {
 		
 		String sql;
 		
@@ -70,7 +70,10 @@ public class GuiaDao {
 			}
 
 			var param = sb.toString();
-			sql = "select * from guia where nomeBeneficiario in (" + param + ")";			
+			sql = "SELECT DISTINCT a.* FROM guia a "
+					+"JOIN detalhesguia b ON a.numeroGuiaPrestador = b.numPrestador "
+					+"WHERE a.nomeBeneficiario IN (" + param + ") "
+					+"AND b.dataRealizacao >= '" + dtIni + "' AND b.dataRealizacao <= '" + dtFim + "'";			
 		}
 		System.out.println(sql);
 		List<Guia> guias = new ArrayList<>();

@@ -1,8 +1,10 @@
 package br.com.dss.servico;
 
+import java.sql.Date;
+
 import br.com.dss.dao.GuiaDao;
 
-public class ServiceGuia implements IListagem{
+public class ServiceGuia implements IListagem, IListagemPorData{
 
 	@Override
 	public Object Lista() {
@@ -15,10 +17,16 @@ public class ServiceGuia implements IListagem{
 
 	@Override
 	public Object obter(Object objeto) {
+		// TODO Auto-generated method stub
+		return null;		
+	}
+
+	@Override
+	public Object obter(Object objeto, Date dtIni, Date dtFim) {
 		
 		GuiaDao arquivo = new GuiaDao();
 		
-		var guia = arquivo.Obter((String[]) objeto);
+		var guia = arquivo.Obter((String[]) objeto, dtIni, dtFim);
 		return guia;
 	}
 }

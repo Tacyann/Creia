@@ -10,22 +10,46 @@
 	<title>Gerenciador</title>
 </h:head>
 <h:body style="background-color:#796">
+<h:outputStylesheet library="css" name="estilo.css" />
+	<p:tabMenu activeIndex="#{param.i}">
+		<p:menuitem value="Iniciar" outcome="home" icon="pi pi-star">
+			<f:param name="i" value="0" />
+		</p:menuitem>
+		<p:menuitem value="Gerenciador" outcome="gerenciador"
+			icon="pi pi-search">
+			<f:param name="i" value="1" />
+		</p:menuitem>
+		<p:menuitem value="Sobre" outcome="sobre" icon="pi pi-file">
+			<f:param name="i" value="2" />
+		</p:menuitem>
+		<p:menuitem value="Support" outcome="suporte" icon="pi pi-briefcase">
+			<f:param name="i" value="3" />
+		</p:menuitem>
+	</p:tabMenu>
 	<h1 style="text-align:center; color:black; text-shadow: 5px 3px 5px #050;">Gerenciador das guias de atendimento</h1>
 	<h:form id="form">
 	<p:messages id="msg" globalOnly="true" showDetail="true" />
-		<h:panelGrid columns="4" cellpadding="5">
+		<p:panel>
 			<p:selectCheckboxMenu id="cliente" value="#{gerenciador.clientes}" label="Clientes" filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
 				<f:selectItems value="#{cliente.beneficiarios}" var="c" itemLabel="#{c.nome}" itemValue="#{c.nome}"/>
 			</p:selectCheckboxMenu>
-
+			&nbsp;
 			<p:selectCheckboxMenu id="procedimento" value="#{gerenciador.descricao}" label="Procedimentos" filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
 				<f:selectItems value="#{procedimento.procedimentos}" var="p" itemLabel="#{p.descricao}" itemValue="#{p.procedimento}"/>
 			</p:selectCheckboxMenu>
-
-		<p:commandButton value="Consultar" action="#{gerenciador.registros}" update="registrosGuias,valor,msg" />
-		<p:commandButton value="Limpar" action="#{gerenciador.limpar}" update="registrosGuias,valor,msg" />
-		</h:panelGrid>		
+			&nbsp;
+			<p:outputLabel for="dtInicial" value="Data Inicial:" /> &nbsp;
+			<p:datePicker id="dtInicial" value="#{gerenciador.dtInicial}" showButtonBar="true" pattern="dd/MM/yyyy"/>
+			<p:outputLabel for="dtFinal" value="Data Final:" /> &nbsp;
+			<p:datePicker id="dtFinal" value="#{gerenciador.dtFinal}" showButtonBar="true" pattern="dd/MM/yyyy"/>
+		</p:panel>		
 		
+		<br/>
+		&nbsp;<p:commandButton value="Consultar" action="#{gerenciador.registros}" update="registrosGuias,valorTotal,valorCreia,valorEspecialista,msg" />
+		&nbsp;
+		<p:commandButton value="Limpar" action="#{gerenciador.limpar}" update="registrosGuias,valorTotal,valorCreia,valorEspecialista,msg" />
+		<br/>
+		<br/>
 		<p:dataTable value="#{gerenciador.guias}" var="g" id="registrosGuias" resizableColumns="true" rows="10" 
 						paginator="true"
 						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -64,13 +88,22 @@
 <!-- 				<p:commandButton type="button" icon="pi-cloud-upload" /> -->
 <!-- 			</f:facet> -->
 		</p:dataTable>
-
-		<p:panel>
+		<p:panelGrid columns="2">
 			<h:outputText value="Total geral: " />
-			<h:outputText value="#{gerenciador.valorTotal}" id="valor">
+			<h:outputText value="#{gerenciador.valorTotal}" id="valorTotal">
 				<f:convertNumber type="currency" lacale="pt_BR" />
 			</h:outputText>
-		</p:panel>
+			<h:outputText value="Total Creia: " />
+			<h:outputText value="#{gerenciador.valorCreia}" id="valorCreia">
+				<f:convertNumber type="currency" lacale="pt_BR" />
+			</h:outputText>
+			<h:outputText value="Total Especialista: " />
+			<h:outputText value="#{gerenciador.valorEspecialista}" id="valorEspecialista">
+				<f:convertNumber type="currency" lacale="pt_BR" />
+			</h:outputText>
+		</p:panelGrid>
+		<p:commandButton value="Sair" action="#{gerenciador.sair}"/>
 	</h:form>
+
 </h:body>
 </html>
