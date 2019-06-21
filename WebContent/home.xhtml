@@ -9,22 +9,13 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 	<title>Home</title>
 </h:head>
-<h:body>
-	<p:tabMenu activeIndex="#{param.i}">
-		<p:menuitem value="Iniciar" outcome="home" icon="pi pi-star">
-			<f:param name="i" value="0" />
-		</p:menuitem>
-		<p:menuitem value="Gerenciador" outcome="gerenciador"
-			icon="pi pi-search">
-			<f:param name="i" value="1" />
-		</p:menuitem>
-		<p:menuitem value="Sobre" outcome="sobre" icon="pi pi-file">
-			<f:param name="i" value="2" />
-		</p:menuitem>
-		<p:menuitem value="Support" outcome="suporte" icon="pi pi-briefcase">
-			<f:param name="i" value="3" />
-		</p:menuitem>
-	</p:tabMenu>
-	<h:outputStylesheet library="css" name="estilo.css" />
+<h:body style="background-color:#796">
+	<p:breadCrumb>
+	    <p:menuitem value="Home" url="home.faces" />
+	    <p:menuitem value="Gerenciador" url="gerenciador.faces" />
+	    <p:menuitem value="Suporte" url="suporte.faces" />
+	    <p:menuitem value="Sobre" url="sobre.faces" />
+	</p:breadCrumb>
+
 </h:body>
 </html>

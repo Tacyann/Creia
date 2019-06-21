@@ -9,23 +9,15 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 	<title>Gerenciador</title>
 </h:head>
-<h:body style="background-color:#796">
-<h:outputStylesheet library="css" name="estilo.css" />
-	<p:tabMenu activeIndex="#{param.i}">
-		<p:menuitem value="Iniciar" outcome="home" icon="pi pi-star">
-			<f:param name="i" value="0" />
-		</p:menuitem>
-		<p:menuitem value="Gerenciador" outcome="gerenciador"
-			icon="pi pi-search">
-			<f:param name="i" value="1" />
-		</p:menuitem>
-		<p:menuitem value="Sobre" outcome="sobre" icon="pi pi-file">
-			<f:param name="i" value="2" />
-		</p:menuitem>
-		<p:menuitem value="Support" outcome="suporte" icon="pi pi-briefcase">
-			<f:param name="i" value="3" />
-		</p:menuitem>
-	</p:tabMenu>
+<h:body >
+
+	<p:breadCrumb>
+	    <p:menuitem value="Home" url="home.faces" />
+	    <p:menuitem value="Gerenciador" url="gerenciador.faces" />
+	    <p:menuitem value="Suporte" url="suporte.faces" />
+	    <p:menuitem value="Sobre" url="sobre.faces" />
+	</p:breadCrumb>
+	
 	<h1 style="text-align:center; color:black; text-shadow: 5px 3px 5px #050;">Gerenciador das guias de atendimento</h1>
 	<h:form id="form">
 	<p:messages id="msg" globalOnly="true" showDetail="true" />
@@ -45,6 +37,7 @@
 		</p:panel>		
 		
 		<br/>
+		
 		&nbsp;<p:commandButton value="Consultar" action="#{gerenciador.registros}" update="registrosGuias,valorTotal,valorCreia,valorEspecialista,msg" />
 		&nbsp;
 		<p:commandButton value="Limpar" action="#{gerenciador.limpar}" update="registrosGuias,valorTotal,valorCreia,valorEspecialista,msg" />
@@ -58,7 +51,7 @@
 				<h:outputText value="#{g.beneficiario.nome}" />
 			</p:column>
 			<p:column headerText="Data" style="width:70px; font-size:15px;">
-				<h:outputText value="#{g.detalheGuia.dataRealizacao.time}">
+				<h:outputText value="#{g.detalheGuia.dataRealizacao.time}" >
 					<f:convertDateTime pattern="dd/MM/yyyy" />
 				</h:outputText>
 			</p:column>
@@ -77,7 +70,7 @@
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Vlr Processado" style="width:100px; font-size:15px;">
-				<h:outputText value="#{g.detalheGuia.valorProcessado}" >
+				<h:outputText value="#{g.valorLiberadoGuia}" >
 					<f:convertNumber type="currency" lacale="pt_BR" />
 				</h:outputText>
 			</p:column>
@@ -88,6 +81,7 @@
 <!-- 				<p:commandButton type="button" icon="pi-cloud-upload" /> -->
 <!-- 			</f:facet> -->
 		</p:dataTable>
+		<p:separator/>
 		<p:panelGrid columns="2">
 			<h:outputText value="Total geral: " />
 			<h:outputText value="#{gerenciador.valorTotal}" id="valorTotal">
@@ -102,7 +96,8 @@
 				<f:convertNumber type="currency" lacale="pt_BR" />
 			</h:outputText>
 		</p:panelGrid>
-		<p:commandButton value="Sair" action="#{gerenciador.sair}"/>
+		<p:separator/>
+		<p:commandButton value="Sair" action="#{gerenciador.sair}" />
 	</h:form>
 
 </h:body>
