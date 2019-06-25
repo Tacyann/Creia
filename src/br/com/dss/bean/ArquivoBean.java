@@ -18,6 +18,16 @@ public class ArquivoBean implements Serializable{
 	@Inject
 	private Flash flash;
 	
+	private String existe;
+	
+	public String getExiste() {
+		return existe;
+	}
+
+	public void setExiste(String existe) {
+		this.existe = existe;
+	}
+
 	public String getFiltro() {
 		return filtro;
 	}
@@ -38,6 +48,20 @@ public class ArquivoBean implements Serializable{
 		flash.put("nomeDoArquivo","O Arquivo " + filtro);
 		flash.put("existe", retorno);
 		
+		return "result?faces-redirect=true";
+	}
+	
+	public String Processar() {
+		ServiceArquivo arquivo = new ServiceArquivo();
+		Service servico = new Service();
+		var existe = servico.Existe(arquivo, "");
+		var retorno = "Não existe";
+		if(existe) {
+			retorno = "Existe";
+		}
+		setExiste(retorno);
+		
+		flash.put("nomeDoArquivo", "Finalizou com sucesso");
 		return "result?faces-redirect=true";
 	}
 }

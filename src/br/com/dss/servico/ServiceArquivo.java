@@ -43,23 +43,28 @@ public class ServiceArquivo implements IDados {
 					countLote++;
 					if(!isLote) {
 						lote.Adicionar(itemLote);
-						
+
 						for(var itemGuia : itemLote.getGuia()) {
 							guia.Adicionar(itemGuia,itemLote.getNumero());
 							countGuia++;
-							
+
 							var isBeneficiario = beneficiario.Existe(itemGuia.getBeneficiario());
-							
+
 							if(!isBeneficiario) {
 								beneficiario.Adicionar(itemGuia.getBeneficiario());
 							}
-							
-							detalhe.Adicionar(itemGuia.getDetalheGuia(), itemGuia.getPrestador());
-							
-							var isProcedimento = procedimento.Existe(itemGuia.getDetalheGuia().getProcedimento().getProcedimento());
-							
-							if(!isProcedimento) {
-								procedimento.Adicionar(itemGuia.getDetalheGuia().getProcedimento());
+
+							for(var itemDetalhes : itemGuia.getDetalheGuia()) {
+
+								detalhe.Adicionar(itemDetalhes, itemGuia.getPrestador());
+
+								if(itemDetalhes.getProcedimento().getProcedimento() != 0) {
+									var isProcedimento = procedimento.Existe(itemDetalhes.getProcedimento().getProcedimento());
+
+									if(!isProcedimento) {
+										procedimento.Adicionar(itemDetalhes.getProcedimento());
+									}
+								}
 							}
 						}
 					}

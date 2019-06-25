@@ -1,6 +1,7 @@
 package br.com.dss.modelo;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class Guia{
 
@@ -15,7 +16,8 @@ public class Guia{
 	private double valorInformadoGuia;
 	private double valorProcessadoGuia;
 	private double valorLiberadoGuia;
-	private DetalheGuia detalheGuia;
+	private double valorGlosa;
+	private List<DetalheGuia> detalheGuia;
 	
 	public int getId() {
 		return id;
@@ -77,16 +79,22 @@ public class Guia{
 	public void setValorLiberadoGuia(double valorLiberadoGuia) {
 		this.valorLiberadoGuia = valorLiberadoGuia;
 	}
-	public DetalheGuia getDetalheGuia() {
-		return detalheGuia;
-	}
-	public void setDetalheGuia(DetalheGuia detalheGuia) {
-		this.detalheGuia = detalheGuia;
-	}
 	public Lote getLote() {
 		return lote;
 	}
 	public void setLote(Lote lote) {
 		this.lote = lote;
+	}
+	public double getValorGlosa() {
+		return valorGlosa;
+	}
+	public void setValorGlosa(double valorGlosa) {
+		this.valorGlosa = valorGlosa;
+	}
+	public List<DetalheGuia> getDetalheGuia() {
+		return detalheGuia;
+	}
+	public void setDetalheGuia(List<DetalheGuia> detalheGuia) {
+		this.detalheGuia = detalheGuia;
 	}
 }

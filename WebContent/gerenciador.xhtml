@@ -64,8 +64,13 @@
 			<p:column headerText="Procedimento" style="font-size:15px;">
 				<h:outputText value="#{g.detalheGuia.procedimento.descricao}" />
 			</p:column>
-			<p:column headerText="Vlr Liberado" style="width:80px; font-size:15px;">
-				<h:outputText value="#{g.valorLiberadoGuia}" >
+			<p:column headerText="Vlr Informado" style="width:80px; font-size:15px;">
+				<h:outputText value="#{g.valorInformadoGuia}" >
+					<f:convertNumber type="currency" lacale="pt_BR" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Vlr Glosa" style="width:80px; font-size:15px;">
+				<h:outputText value="#{g.valorGlosa}" >
 					<f:convertNumber type="currency" lacale="pt_BR" />
 				</h:outputText>
 			</p:column>

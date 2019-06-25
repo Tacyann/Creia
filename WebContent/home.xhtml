@@ -16,6 +16,9 @@
 	    <p:menuitem value="Suporte" url="suporte.faces" />
 	    <p:menuitem value="Sobre" url="sobre.faces" />
 	</p:breadCrumb>
-
+	
+	<h:form>
+		<p:commandButton value="Processar" action="#{arquivoBean.ExisteArquivo}" />
+	</h:form>
 </h:body>
 </html>
