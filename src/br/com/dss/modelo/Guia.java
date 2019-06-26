@@ -3,20 +3,46 @@ package br.com.dss.modelo;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import br.com.dss.controle.DateAdapter;
+
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Guia{
 
 	private int id;
 	private Lote lote;
+	@XmlElement(name="numeroGuiaPrestador")
 	private int prestador;
+	
+	@XmlElement(name="numeroGuiaOperadora")
 	private int operadora;
+	
+	@XmlElement
 	private int senha;
+	
 	private Beneficiario beneficiario;
+	
+	@XmlElement(name="dataInicioFat")
+	@XmlJavaTypeAdapter(DateAdapter.class)
 	private Calendar dataIni;
+	
+	@XmlElement
 	private int situacaoGuia;
+	
+	@XmlElement
 	private double valorInformadoGuia;
+	
+	@XmlElement
 	private double valorProcessadoGuia;
+	
+	@XmlElement
 	private double valorLiberadoGuia;
-	private double valorGlosa;
+	
+	@XmlElement(name="detalhesGuia")
 	private List<DetalheGuia> detalheGuia;
 	
 	public int getId() {
@@ -84,12 +110,6 @@ public class Guia{
 	}
 	public void setLote(Lote lote) {
 		this.lote = lote;
-	}
-	public double getValorGlosa() {
-		return valorGlosa;
-	}
-	public void setValorGlosa(double valorGlosa) {
-		this.valorGlosa = valorGlosa;
 	}
 	public List<DetalheGuia> getDetalheGuia() {
 		return detalheGuia;

@@ -1,5 +1,12 @@
 package br.com.dss.dao;
 
+import java.io.IOException;
+
+import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+
 public class TesteArquivoDAO {
 
 	public static void main(String[] args) {
@@ -26,13 +33,29 @@ public class TesteArquivoDAO {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-		//Processar();
-		Testar();
+		Processar();
+		//Testar();
 	}
 	
 	public static void Testar() {
 		ArquivoDao arquivo = new ArquivoDao();
-		arquivo.Teste();
+		//arquivo.TesteStream();
+		//arquivo.Teste();
+		try {
+			arquivo.TesteNodo();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static void Processar() {

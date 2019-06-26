@@ -1,10 +1,16 @@
 package br.com.dss.modelo;
 
+import javax.xml.bind.annotation.XmlElement;
+
 public class Beneficiario {
 
 	private int Id;
+	
+	@XmlElement(name="nomeBeneficiario")
 	private String nome;
-	private String numerocarteira;
+	
+	@XmlElement
+	private String numeroCarteira;
 	
 	public String getNome() {
 		return nome;
@@ -12,11 +18,11 @@ public class Beneficiario {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public String getNumerocarteira() {
-		return numerocarteira;
+	public String getNumeroCarteira() {
+		return numeroCarteira;
 	}
-	public void setNumerocarteira(String numerocarteira) {
-		this.numerocarteira = numerocarteira;
+	public void setNumeroCarteira(String numeroCarteira) {
+		this.numeroCarteira = numeroCarteira;
 	}
 	public int getId() {
 		return Id;

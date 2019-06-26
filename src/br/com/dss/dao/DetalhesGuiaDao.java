@@ -34,8 +34,8 @@ public class DetalhesGuiaDao {
 			stmt.setInt(4, detalheguia.getGrauParticipacao());
 			stmt.setDouble(5, detalheguia.getValorInformado());
 			stmt.setInt(6, detalheguia.getQtdExecutada());
-			stmt.setDouble(7, detalheguia.getValorProcessadoGuia());
-			stmt.setDouble(8, detalheguia.getValorLiberadoGuia());
+			stmt.setDouble(7, detalheguia.getValorProcessado());
+			stmt.setDouble(8, detalheguia.getValorLiberado());
 			
 			stmt.execute();
 			stmt.close();
@@ -59,11 +59,9 @@ public class DetalhesGuiaDao {
 			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()) {
-				detalheguia.setId(rs.getInt("a.Id"));
 				var calendario = Calendar.getInstance(); 
 				calendario.setTime(rs.getDate("a.dataRealizacao"));
 				detalheguia.setDataRealizacao(calendario);
-				detalheguia.setId(rs.getInt("a.numPrestador"));
 				var procedimento = new Procedimento();
 				procedimento.setId(rs.getInt("b.id"));
 				procedimento.setTabela(rs.getInt("b.codigoTabela"));
@@ -71,10 +69,10 @@ public class DetalhesGuiaDao {
 				procedimento.setDescricao(rs.getString("b.descricaoProcedimento"));
 				detalheguia.setProcedimento(procedimento);
 				detalheguia.setGrauParticipacao(rs.getInt("a.grauParticipacao"));
-				detalheguia.setValorInformadoGuia(rs.getDouble("a.valorInformado"));
+				detalheguia.setValorInformado(rs.getDouble("a.valorInformado"));
 				detalheguia.setQtdExecutada(rs.getInt("a.qtdExecutada"));
-				detalheguia.setValorProcessadoGuia(rs.getDouble("a.valorProcessado"));
-				detalheguia.setValorLiberadoGuia(rs.getDouble("a.valorLiberado"));
+				detalheguia.setValorProcessado(rs.getDouble("a.valorProcessado"));
+				detalheguia.setValorLiberado(rs.getDouble("a.valorLiberado"));
 			}
 			stmt.close();
 			rs.close();
@@ -99,11 +97,9 @@ public class DetalhesGuiaDao {
 			while(rs.next()) {
 				var detalheguia = new DetalheGuia();
 
-				detalheguia.setId(rs.getInt("Id"));
 				var calendario = Calendar.getInstance(); 
 				calendario.setTime(rs.getDate("dataRealizacao"));
 				detalheguia.setDataRealizacao(calendario);
-				detalheguia.setId(rs.getInt("relacaoGuiasID"));
 				var procedimento = new Procedimento();
 				procedimento.setId(rs.getInt("b.id"));
 				procedimento.setTabela(rs.getInt("b.codigoTabela"));
@@ -111,10 +107,10 @@ public class DetalhesGuiaDao {
 				procedimento.setDescricao(rs.getString("b.descricaoProcedimento"));
 				detalheguia.setProcedimento(procedimento);
 				detalheguia.setGrauParticipacao(rs.getInt("grauParticipacao"));
-				detalheguia.setValorInformadoGuia(rs.getDouble("valorInformado"));
+				detalheguia.setValorInformado(rs.getDouble("valorInformado"));
 				detalheguia.setQtdExecutada(rs.getInt("qtdExecutada"));
-				detalheguia.setValorProcessadoGuia(rs.getDouble("valorProcessado"));
-				detalheguia.setValorLiberadoGuia(rs.getDouble("valorLiberado"));
+				detalheguia.setValorProcessado(rs.getDouble("valorProcessado"));
+				detalheguia.setValorLiberado(rs.getDouble("valorLiberado"));
 								
 				detalheGuias.add(detalheguia);
 			}

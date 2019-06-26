@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.Date;
@@ -18,6 +19,9 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -28,6 +32,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import com.thoughtworks.xstream.XStream;
 
 import br.com.dss.Conexao;
 import br.com.dss.modelo.Arquivo;
@@ -89,31 +95,98 @@ public class ArquivoDao {
 		}
 	}
 	
+	public void TesteNodo() throws ParserConfigurationException, SAXException, IOException, JAXBException {
+		File f = new File("D:/ArquivoXml"); 
+		var auxDir = f.list();
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		
+		for(var arquivo : auxDir) {
+			var extencaoArquivo = arquivo.substring(arquivo.indexOf('.')+1);
+
+			if(extencaoArquivo.equals("xml")) {	
+				String file = f.getPath() + "\\" + arquivo;
+				Document doc = dBuilder.parse(file);
+
+				NodeList nListLote = doc.getElementsByTagName("dadosProtocolo");
+
+				for(int i = 0; i < nListLote.getLength(); i++) {
+					Node nNode = nListLote.item(i);
+					JAXBContext context = JAXBContext.newInstance(Lote.class);
+					var lote = (Lote) context.createUnmarshaller().unmarshal(nNode);
+					
+					System.out.println(lote.getNumero());
+				}
+			}
+		}
+	}
+	
+	public void TesteStream() {
+		File f = new File("D:/ArquivoXml"); 
+		var auxDir = f.list();
+		
+		for(var arquivo : auxDir) {
+			var extencaoArquivo = arquivo.substring(arquivo.indexOf('.')+1);
+
+			if(extencaoArquivo.equals("xml")) {	
+				
+				try {
+					XStream xstream = new XStream();
+					var arq = new FileReader(f.getPath() + "\\" + arquivo);
+
+					BufferedReader br = new BufferedReader(arq);
+					StringBuilder sb = new StringBuilder();
+					
+					while(br.readLine() != null) {
+						sb.append(br.readLine());
+					}
+					String linha = sb.toString();
+					
+					System.out.println(linha);
+					Lote lote = (Lote) xstream.fromXML(linha);
+					System.out.println(lote.getNumero());
+					arq.close();
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
 	public List<Lote> Teste(){
 		File f = new File("D:/ArquivoXml"); 
 		var auxDir = f.list();
 		
 		for(var arquivo : auxDir) {
-			FileReader arq;
+//			FileReader arq;
 			try {
 				var extencaoArquivo = arquivo.substring(arquivo.indexOf('.')+1);
 
 				if(extencaoArquivo.equals("xml")) {	
-					arq = new FileReader(f.getPath() + "\\" + arquivo);
-					BufferedReader br = new BufferedReader(arq);
-					String linha = br.readLine();
 					
-					while(linha != null) {
-						System.out.println(linha);
-						linha = br.readLine();
+//					Reader arq = new FileReader(f.getPath() + "\\" + arquivo);
+					JAXBContext context = JAXBContext.newInstance(Lote.class);
+//					Unmarshaller unmarshaller = context.createUnmarshaller();
+//					var lote = (Lote) unmarshaller.unmarshal(arq);
+//					var lote = (Lote) unmarshaller.unmarshal(new FileReader(f.getPath() + "\\" + arquivo));
+					var lote = (Lote) context.createUnmarshaller().unmarshal(new FileReader(f.getPath() + "\\" + arquivo));
+					
+					for(var item : lote.getGuia()) {
+						System.out.println(item.getLote().getNumero());
 					}
-					
-					arq.close();					
+//					arq.close();					
 				}
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JAXBException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}			
@@ -211,25 +284,19 @@ public class ArquivoDao {
 								dataInicioFat.setTime(dt);
 								situacaoGuia = Integer.parseInt(eGuia.getElementsByTagName("situacaoGuia").item(0).getTextContent());
 
-								NodeList listaFilhosGuia = eGuia.getChildNodes();
-								
-								/*
-								 * Teste
-								 * */
-								System.out.println(listaFilhosGuia.getLength());
-								
-								for(int k = 0; k < listaFilhosGuia.getLength(); k++) {
-									Node nodeFilhosGuia = listaFilhosGuia.item(k);
+								NodeList nListDetalhes = nodeGuia.getChildNodes();
+								System.out.println("-----------------");
+								System.out.println(nomeBeneficiario);
+								for(int k = 0; k < nListDetalhes.getLength(); k++) {
+									Node nodeDetalhesGuia = nListDetalhes.item(k);
 									DetalheGuia detalheGuia = new DetalheGuia();
 									Procedimento procedimento = new Procedimento();
 
-									if(nodeFilhosGuia.getNodeType() == Node.ELEMENT_NODE) {
-										Element eDetalhes = (Element) nodeFilhosGuia;
+									if(nodeDetalhesGuia.getNodeType() == Node.ELEMENT_NODE) {
+										Element eDetalhes = (Element) nodeDetalhesGuia;
 
 										switch(eDetalhes.getTagName()) {
 										case "detalhesGuia":
-											//NodeList nodeDetalhes = eFilhosGuia.getElementsByTagName("detalhesGuia").item(k);
-											System.out.println();
 											
 											dt = formato.parse(eDetalhes.getElementsByTagName("dataRealizacao").item(0).getTextContent());
 											dataRealizacao.setTime(dt);
@@ -241,6 +308,10 @@ public class ArquivoDao {
 											qtdExecutada = Integer.parseInt(eDetalhes.getElementsByTagName("qtdExecutada").item(0).getTextContent());
 											valorProcessado = Double.parseDouble(eDetalhes.getElementsByTagName("valorProcessado").item(0).getTextContent());
 											valorLiberado = Double.parseDouble(eDetalhes.getElementsByTagName("valorLiberado").item(0).getTextContent());
+											/*
+											 * Testado até este ponto
+											 * */
+											System.out.println("Cod: " + codigoTabela + ", Vlr Informado: " + valorInformado + ", Qtd Exec: " + qtdExecutada + ", Vlr Processado: " + valorProcessado);
 											break;
 										}
 									}
@@ -250,10 +321,10 @@ public class ArquivoDao {
 									procedimento.setDescricao(descricaoProcedimento);
 									detalheGuia.setProcedimento(procedimento);
 									detalheGuia.setGrauParticipacao(grauParticipacao);
-									detalheGuia.setValorInformadoGuia(valorInformado);
+									detalheGuia.setValorInformado(valorInformado);
 									detalheGuia.setQtdExecutada(qtdExecutada);
-									detalheGuia.setValorProcessadoGuia(valorProcessado);
-									detalheGuia.setValorLiberadoGuia(valorLiberado);
+									detalheGuia.setValorProcessado(valorProcessado);
+									detalheGuia.setValorLiberado(valorLiberado);
 
 									detalhes.add(detalheGuia);
 								}
@@ -266,7 +337,7 @@ public class ArquivoDao {
 							guia.setOperadora(numeroGuiaOperadora);
 							guia.setSenha(senha);
 							beneficiario.setNome(nomeBeneficiario);
-							beneficiario.setNumerocarteira(numeroCarteira);
+							beneficiario.setNumeroCarteira(numeroCarteira);
 							guia.setBeneficiario(beneficiario);
 							guia.setDataIni(dataInicioFat);
 							guia.setSituacaoGuia(situacaoGuia);

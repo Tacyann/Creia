@@ -59,7 +59,6 @@ public class GerenciadorBean implements Serializable {
 
 			for(var item : listagemGuia) {
 				var guia = new Guia();
-				var valorGlosa = 0.0;
 				guia.setPrestador(item.getPrestador());
 				guia.setOperadora(item.getOperadora());
 				guia.setSenha(item.getSenha());
@@ -71,11 +70,6 @@ public class GerenciadorBean implements Serializable {
 				guia.setValorLiberadoGuia(item.getValorProcessadoGuia());
 				var detalheGuia = (List<DetalheGuia>) servico.Obter(sdg, guia.getPrestador());			
 				guia.setDetalheGuia(detalheGuia);
-				
-				if(item.getValorLiberadoGuia() == 0) {
-					valorGlosa = item.getValorInformadoGuia();
-				}
-				guia.setValorGlosa(valorGlosa);
 
 				//valoresLiberados.add(detalheGuia.getValorLiberado());
 				guias.add(guia);

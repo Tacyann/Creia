@@ -26,7 +26,7 @@ public class BeneficiarioDao {
 			PreparedStatement stmt = connection.prepareStatement(sql);
 
 			stmt.setString(1, beneficiario.getNome());
-			stmt.setString(2, beneficiario.getNumerocarteira());
+			stmt.setString(2, beneficiario.getNumeroCarteira());
 
 			stmt.execute();
 			stmt.close();
@@ -42,7 +42,7 @@ public class BeneficiarioDao {
 	}
 
 	public Beneficiario Obter(Beneficiario beneficiario) {
-		String sql = "select * from beneficiario where nome = '" + beneficiario.getNome() + "' and numerocarteira = '" + beneficiario.getNumerocarteira() + "'";		
+		String sql = "select * from beneficiario where nome = '" + beneficiario.getNome() + "' and numerocarteira = '" + beneficiario.getNumeroCarteira() + "'";		
 		Beneficiario b = new Beneficiario();
 
 		try {
@@ -53,7 +53,7 @@ public class BeneficiarioDao {
 			while(rs.next()) {
 				b.setId(rs.getInt("Id"));
 				b.setNome(rs.getString("nome"));
-				b.setNumerocarteira(rs.getString("numerocarteira"));
+				b.setNumeroCarteira(rs.getString("numerocarteira"));
 			}
 			
 			stmt.close();
@@ -79,7 +79,7 @@ public class BeneficiarioDao {
 			while(rs.next()) {
 				b.setId(rs.getInt("Id"));
 				b.setNome(rs.getString("nome"));
-				b.setNumerocarteira(rs.getString("numerocarteira"));
+				b.setNumeroCarteira(rs.getString("numerocarteira"));
 			}
 			
 			stmt.close();
@@ -94,7 +94,7 @@ public class BeneficiarioDao {
 	}
 	
 	public boolean Existe(Beneficiario beneficiario) {
-		String sql = "select count(*) as QTD from beneficiario where nome = '" + beneficiario.getNome() + "' and numerocarteira = '" + beneficiario.getNumerocarteira() + "'";		
+		String sql = "select count(*) as QTD from beneficiario where nome = '" + beneficiario.getNome() + "' and numerocarteira = '" + beneficiario.getNumeroCarteira() + "'";		
 		int qtd = 0;
 		boolean exist = false;
 		
@@ -136,7 +136,7 @@ public class BeneficiarioDao {
 				var beneficiario = new Beneficiario();
 				beneficiario.setId(rs.getInt("Id"));
 				beneficiario.setNome(rs.getString("nome"));
-				beneficiario.setNumerocarteira(rs.getString("numerocarteira"));
+				beneficiario.setNumeroCarteira(rs.getString("numerocarteira"));
 				beneficiarios.add(beneficiario);
 			}
 			stmt.close();

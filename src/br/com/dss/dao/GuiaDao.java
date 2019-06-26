@@ -33,7 +33,7 @@ public class GuiaDao {
 			stmt.setInt(3, guia.getOperadora());
 			stmt.setInt(4, guia.getSenha());
 			stmt.setString(5, guia.getBeneficiario().getNome());
-			stmt.setString(6, guia.getBeneficiario().getNumerocarteira());
+			stmt.setString(6, guia.getBeneficiario().getNumeroCarteira());
 			stmt.setDate(7, new Date(guia.getDataIni().getTimeInMillis()));
 			stmt.setInt(8, guia.getSituacaoGuia());
 			stmt.setDouble(9, guia.getValorInformadoGuia());
@@ -90,7 +90,7 @@ public class GuiaDao {
 				guia.setSenha(rs.getInt("senha"));
 				var beneficiario = new Beneficiario();
 				beneficiario.setNome(rs.getString("nomeBeneficiario"));
-				beneficiario.setNumerocarteira(rs.getString("numeroCarteira"));
+				beneficiario.setNumeroCarteira(rs.getString("numeroCarteira"));
 				guia.setBeneficiario(beneficiario);
 				var calendario = Calendar.getInstance(); 
 				calendario.setTime(rs.getDate("dataInicioFat"));
@@ -132,7 +132,7 @@ public class GuiaDao {
 				guia.setSenha(rs.getInt("senha"));
 				var beneficiario = new Beneficiario();
 				beneficiario.setNome(rs.getString("nomeBeneficiario"));
-				beneficiario.setNumerocarteira(rs.getString("numeroCarteira"));
+				beneficiario.setNumeroCarteira(rs.getString("numeroCarteira"));
 				guia.setBeneficiario(beneficiario);
 				var calendario = Calendar.getInstance(); 
 				calendario.setTime(rs.getDate("dataInicioFat"));

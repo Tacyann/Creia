@@ -2,15 +2,41 @@ package br.com.dss.modelo;
 
 import java.util.Calendar;
 
-public class DetalheGuia extends Guia{
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import br.com.dss.controle.DateAdapter;
+
+@XmlAccessorType(XmlAccessType.FIELD)
+public class DetalheGuia {
+
+	@XmlElement
+	@XmlJavaTypeAdapter(DateAdapter.class)
 	private Calendar dataRealizacao;
+	
+	@XmlElement
 	private Procedimento procedimento;
+	
+	@XmlElement
 	private int grauParticipacao;
+	
+	@XmlElement
 	private double valorInformado;
+	
+	@XmlElement
 	private int qtdExecutada;
+	
+	@XmlElement
 	private double valorProcessado;
+	
+	@XmlElement
 	private double valorLiberado;
+	
+	@XmlElement(name="relacaoGlosa")
+	private Glosa glosa;
+	
 	public Calendar getDataRealizacao() {
 		return dataRealizacao;
 	}
