@@ -7,12 +7,23 @@ import javax.xml.bind.annotation.XmlElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Glosa {
 
-	@XmlElement(name="valorGlosa")
+	private int codigo;
+	private String descricao;
 	private Double valor;
-	
-	@XmlElement(name="tipoGlosa")
 	private int tipo;
 	
+	public int getCodigo() {
+		return codigo;
+	}
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
+	}
+	public String getDescricao() {
+		return descricao;
+	}
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
 	public Double getValor() {
 		return valor;
 	}

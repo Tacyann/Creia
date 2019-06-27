@@ -9,32 +9,15 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import br.com.dss.controle.DateAdapter;
 
-@XmlAccessorType(XmlAccessType.FIELD)
 public class DetalheGuia {
 
-	@XmlElement
-	@XmlJavaTypeAdapter(DateAdapter.class)
 	private Calendar dataRealizacao;
-	
-	@XmlElement
 	private Procedimento procedimento;
-	
-	@XmlElement
 	private int grauParticipacao;
-	
-	@XmlElement
 	private double valorInformado;
-	
-	@XmlElement
 	private int qtdExecutada;
-	
-	@XmlElement
 	private double valorProcessado;
-	
-	@XmlElement
 	private double valorLiberado;
-	
-	@XmlElement(name="relacaoGlosa")
 	private Glosa glosa;
 	
 	public Calendar getDataRealizacao() {
@@ -78,5 +61,11 @@ public class DetalheGuia {
 	}
 	public void setValorLiberado(double valorLiberado) {
 		this.valorLiberado = valorLiberado;
+	}
+	public Glosa getGlosa() {
+		return glosa;
+	}
+	public void setGlosa(Glosa glosa) {
+		this.glosa = glosa;
 	}
 }
