@@ -17,6 +17,7 @@ import br.com.dss.modelo.Guia;
 import br.com.dss.servico.Service;
 import br.com.dss.servico.ServiceBeneficiario;
 import br.com.dss.servico.ServiceDetalheGuia;
+import br.com.dss.servico.ServiceGlosa;
 import br.com.dss.servico.ServiceGuia;
 
 @Named("gerenciador")
@@ -27,12 +28,14 @@ public class GerenciadorBean implements Serializable {
 	private FacesContext facescontext;
 
 	private List<Guia> guias;
+	private List<DetalheGuia> detalhes;
 	private List<Double> valoresLiberados;
 	private String[] clientes;
 	private String[] descricao;
 	private Double valorTotal;
+	private Double valorGlosa;
 	private Double valorCreia;
-	private Double valorEspecialista;
+	private Double valorProfissional;
 	private Date dtInicial;
 	private Date dtFinal;
 
@@ -46,7 +49,7 @@ public class GerenciadorBean implements Serializable {
 		ServiceDetalheGuia sdg = new ServiceDetalheGuia();
 
 		if(clientes.length == 0) {
-			valorTotal = 0.0;
+			limpar();
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum cliente foi selecionado para a consulta.");
 			facescontext.addMessage(null, msg);
 		}else {
@@ -65,24 +68,37 @@ public class GerenciadorBean implements Serializable {
 				guia.setBeneficiario(item.getBeneficiario());
 				guia.setDataIni(item.getDataIni());
 				guia.setSituacaoGuia(item.getSituacaoGuia());
+
+//				var glosa = item.getGlosa();
+//				
+//				if(glosa != null) {
+//					guia.setGlosa(glosa);	
+//					for(var g : glosa) {
+//						System.out.println(g.getDescricao());
+//					}
+//				}
+				
 				guia.setValorInformadoGuia(item.getValorInformadoGuia());
 				guia.setValorProcessadoGuia(item.getValorProcessadoGuia());
 				guia.setValorLiberadoGuia(item.getValorProcessadoGuia());
-				var detalheGuia = (List<DetalheGuia>) servico.Obter(sdg, guia.getPrestador());			
-				guia.setDetalheGuia(detalheGuia);
+				var detalheGuia = (DetalheGuia) servico.Obter(sdg, guia.getPrestador());			
+				detalhes.add(detalheGuia);
 
 				//valoresLiberados.add(detalheGuia.getValorLiberado());
 				guias.add(guia);
 			}
 
-			valorTotal = 0.0;
-			valorCreia = 0.0;
-			valorEspecialista = 0.0;
+			limpar();
 			for(var valor : guias) {
-				valorTotal = valorTotal + valor.getValorLiberadoGuia();
+				var liberado = valor.getValorLiberadoGuia();
+				valorTotal = valorTotal + liberado;
+
+				if(liberado == 0) {
+					valorGlosa = valorGlosa + valor.getValorInformadoGuia();
+				}
 			}
 			valorCreia = valorTotal * 45.5 / 100;
-			valorEspecialista = valorTotal * 54.5 / 100;
+			valorProfissional = valorTotal * 54.5 / 100;
 		}
 	}
 
@@ -90,8 +106,9 @@ public class GerenciadorBean implements Serializable {
 		if(guias.size()>0) {
 			guias.clear();
 			valorTotal = 0.0;
+			valorGlosa = 0.0;
 			valorCreia = 0.0;
-			valorEspecialista = 0.0;
+			valorProfissional = 0.0;
 		}
 	}
 
@@ -116,9 +133,20 @@ public class GerenciadorBean implements Serializable {
 			guia.setBeneficiario(item.getBeneficiario());
 			guia.setDataIni(item.getDataIni());
 			guia.setSituacaoGuia(item.getSituacaoGuia());
+			
+//			var glosa = item.getGlosa();
+//			
+//			if(glosa != null) {
+//				guia.setGlosa(glosa);	
+//				for(var g : glosa) {
+//					System.out.println(g.getDescricao());
+//				}
+//			}
+			
 			guia.setValorInformadoGuia(item.getValorInformadoGuia());
 			guia.setValorProcessadoGuia(item.getValorProcessadoGuia());
 			guia.setValorLiberadoGuia(item.getValorProcessadoGuia());
+			@SuppressWarnings("unchecked")
 			var detalheGuia = (List<DetalheGuia>) servico.Obter(sdg, guia.getPrestador());			
 			guia.setDetalheGuia(detalheGuia);
 
@@ -126,9 +154,14 @@ public class GerenciadorBean implements Serializable {
 			guias.add(guia);
 		}
 
-		valorTotal = 0.0;
+		limpar();
 		for(var valor : guias) {
-			valorTotal = valorTotal + valor.getValorLiberadoGuia();
+			var liberado = valor.getValorLiberadoGuia();
+			valorTotal = valorTotal + liberado;
+			
+			if(liberado == 0) {
+				valorGlosa = valorGlosa + valor.getValorInformadoGuia();
+			}
 		}
 	}
 
@@ -214,8 +247,12 @@ public class GerenciadorBean implements Serializable {
 	public Double getValorCreia() {
 		return valorCreia;
 	}
+	
+	public Double getValorProfissional() {
+		return valorProfissional;
+	}
 
-	public Double getValorEspecialista() {
-		return valorEspecialista;
+	public Double getValorGlosa() {
+		return valorGlosa;
 	}
 }

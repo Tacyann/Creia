@@ -3,37 +3,16 @@ package br.com.dss.modelo;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement(name="dadosProtocolo")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class Lote {
 
 	private int id;
-	
-	@XmlElement(name="numeroLotePrestador")
 	private int numero;
-	
-	@XmlElement(name="numeroProtocolo")
 	private int protocolo;
-	
-	@XmlElement(name="dataProtocolo")
 	private Calendar data;
-	
-	@XmlElement(name="situacaoProtocolo")
 	private int situacao;
-	
-	@XmlElement(name="relacaoGuias")
 	private List<Guia> guia;
-	
-	@XmlElement
 	private double valorInformadoProtocolo;
-	@XmlElement
 	private double valorProcessadoProtocolo;
-	@XmlElement
 	private double valorLiberadoProtocolo;
 
 	public int getId() {

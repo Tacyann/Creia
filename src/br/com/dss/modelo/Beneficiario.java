@@ -1,15 +1,9 @@
 package br.com.dss.modelo;
 
-import javax.xml.bind.annotation.XmlElement;
-
 public class Beneficiario {
 
 	private int Id;
-	
-	@XmlElement(name="nomeBeneficiario")
 	private String nome;
-	
-	@XmlElement
 	private String numeroCarteira;
 	
 	public String getNome() {

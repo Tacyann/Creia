@@ -21,12 +21,10 @@ import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.jboss.as.controller.client.impl.InputStreamEntry.FileStreamEntry;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -121,80 +119,6 @@ public class ArquivoDao {
 			}
 		}
 	}
-	
-	public void TesteStream() {
-		File f = new File("D:/ArquivoXml"); 
-		var auxDir = f.list();
-		
-		for(var arquivo : auxDir) {
-			var extencaoArquivo = arquivo.substring(arquivo.indexOf('.')+1);
-
-			if(extencaoArquivo.equals("xml")) {	
-				
-				try {
-					XStream xstream = new XStream();
-					var arq = new FileReader(f.getPath() + "\\" + arquivo);
-
-					BufferedReader br = new BufferedReader(arq);
-					StringBuilder sb = new StringBuilder();
-					
-					while(br.readLine() != null) {
-						sb.append(br.readLine());
-					}
-					String linha = sb.toString();
-					
-					System.out.println(linha);
-					Lote lote = (Lote) xstream.fromXML(linha);
-					System.out.println(lote.getNumero());
-					arq.close();
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-	
-	public List<Lote> Teste(){
-		File f = new File("D:/ArquivoXml"); 
-		var auxDir = f.list();
-		
-		for(var arquivo : auxDir) {
-//			FileReader arq;
-			try {
-				var extencaoArquivo = arquivo.substring(arquivo.indexOf('.')+1);
-
-				if(extencaoArquivo.equals("xml")) {	
-					
-//					Reader arq = new FileReader(f.getPath() + "\\" + arquivo);
-					JAXBContext context = JAXBContext.newInstance(Lote.class);
-//					Unmarshaller unmarshaller = context.createUnmarshaller();
-//					var lote = (Lote) unmarshaller.unmarshal(arq);
-//					var lote = (Lote) unmarshaller.unmarshal(new FileReader(f.getPath() + "\\" + arquivo));
-					var lote = (Lote) context.createUnmarshaller().unmarshal(new FileReader(f.getPath() + "\\" + arquivo));
-					
-					for(var item : lote.getGuia()) {
-						System.out.println(item.getLote().getNumero());
-					}
-//					arq.close();					
-				}
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (JAXBException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}			
-		}
-		
-		return null;
-	}
 
 	public List<Lote> LerXmlGerarLotes() throws Exception {	
 		Calendar data = new GregorianCalendar();
@@ -230,10 +154,9 @@ public class ArquivoDao {
 		String item = null;
 		Integer codigoGlosa = 0;
 		String descricaoGlosa = "";
-		Double valorGlosa = 0.0;
-		Integer tipoGlosa = 0;
+//		Double valorGlosa = 0.0;
+//		Integer tipoGlosa = 0;
 		List<Lote> lotes = new ArrayList<Lote>();
-		List<DetalheGuia> detalhes = new ArrayList<DetalheGuia>();
 
 		File f = new File("D:/ArquivoXml"); 
 		var auxDir = f.list();
@@ -276,6 +199,7 @@ public class ArquivoDao {
 							Node nodeGuia = nListGuias.item(j);
 							Beneficiario beneficiario = new Beneficiario();
 							Guia guia = new Guia();
+							List<Glosa> glosas = new ArrayList<>();
 
 							if(nodeGuia.getNodeType() == Node.ELEMENT_NODE) {
 								Element eGuia = (Element) nodeGuia;
@@ -290,33 +214,36 @@ public class ArquivoDao {
 								situacaoGuia = Integer.parseInt(eGuia.getElementsByTagName("situacaoGuia").item(0).getTextContent());
 								
 								NodeList nListDetalhes = nodeGuia.getChildNodes();
-								Glosa glosa = new Glosa();
 								
 								for(int g = 0; g < nListDetalhes.getLength(); g++) {
 									Node nodeMotivoGlosa = nListDetalhes.item(g);
-									
 									if(nodeMotivoGlosa.getNodeType() == Node.ELEMENT_NODE) {
 										Element eMotivoGlosa = (Element) nodeMotivoGlosa;
 										
 										switch (eMotivoGlosa.getTagName()) {
 										case "motivoGlosaGuia":
-											codigoGlosa = Integer.parseInt(eGuia.getElementsByTagName("codigoGlosa").item(0).getTextContent());
-											descricaoGlosa = eGuia.getElementsByTagName("descricaoGlosa").item(0).getTextContent();
+											Glosa glosa = new Glosa();
+											codigoGlosa = Integer.parseInt(eMotivoGlosa.getElementsByTagName("codigoGlosa").item(0).getTextContent());
+											descricaoGlosa = eMotivoGlosa.getElementsByTagName("descricaoGlosa").item(0).getTextContent();
 											
 											glosa.setCodigo(codigoGlosa);
 											glosa.setDescricao(descricaoGlosa);
+											glosas.add(glosa);
 											break;
 										}
 									}
 								}
-								StringBuilder separador = new StringBuilder();
-								for(int s = 0; s < 100; s++) {
-									separador.append("-");
-								}
-								System.out.println(separador.toString());
-								System.out.println("Cod Glosa: " + codigoGlosa + ", Descrição: " + descricaoGlosa);
-								System.out.println("Nº prestador: " + numeroGuiaPrestador + ", Nº operadora: " + numeroGuiaOperadora);
-								System.out.println(nomeBeneficiario);
+								
+//								StringBuilder separador = new StringBuilder();
+//								for(int s = 0; s < 100; s++) {
+//									separador.append("-");
+//								}
+//								System.out.println(separador.toString());
+//								System.out.println("Cod Glosa: " + codigoGlosa + ", Descrição: " + descricaoGlosa);
+//								System.out.println("Nº prestador: " + numeroGuiaPrestador + ", Nº operadora: " + numeroGuiaOperadora);
+//								System.out.println(nomeBeneficiario);
+
+								List<DetalheGuia> detalhes = new ArrayList<DetalheGuia>();
 								
 								for(int k = 0; k < nListDetalhes.getLength(); k++) {
 									Node nodeDetalhesGuia = nListDetalhes.item(k);
@@ -351,35 +278,37 @@ public class ArquivoDao {
 											detalheGuia.setValorProcessado(valorProcessado);
 											detalheGuia.setValorLiberado(valorLiberado);
 											
-											System.out.println("Procedimento: " + descricaoProcedimento);
-											System.out.println("Vlr Informado: " + valorInformado + ", Qtd Exec: " + qtdExecutada + ", Vlr Liberado: " + valorLiberado + ", Vlr Processado: " + valorProcessado);
+//											System.out.println("Procedimento: " + descricaoProcedimento);
+//											System.out.println("Vlr Informado: " + valorInformado + ", Qtd Exec: " + qtdExecutada + ", Vlr Liberado: " + valorLiberado + ", Vlr Processado: " + valorProcessado);
 											
-											NodeList nListDetalhesFliho = eDetalhes.getChildNodes();
-											for(int r = 0; r < nListDetalhesFliho.getLength(); r++) {
-												Node nodeRelacaoGlosa = nListDetalhesFliho.item(r);
-												
-												if(nodeRelacaoGlosa.getNodeType() == Node.ELEMENT_NODE) {
-													Element eRelacao = (Element) nodeRelacaoGlosa;
-													
-													switch (eRelacao.getTagName()) {
-													case "relacaoGlosa":
-														valorGlosa = Double.parseDouble(eRelacao.getElementsByTagName("valorGlosa").item(0).getTextContent());
-														tipoGlosa = Integer.parseInt(eRelacao.getElementsByTagName("tipoGlosa").item(0).getTextContent());
-														
-														glosa.setTipo(tipoGlosa);
-														glosa.setValor(valorGlosa);
-														
-														detalheGuia.setGlosa(glosa);
-														System.out.println("Vlr Glosa: " + valorGlosa + ", Tipo Glosa: " + tipoGlosa);
-														break;
-													}
-												}
-											}
+											/**
+											 * Trecho que atende o valor da Glosa, comentado aguardando o retorno do Sergio.
+											 * */
+//											NodeList nListDetalhesFliho = eDetalhes.getChildNodes();
+//											for(int r = 0; r < nListDetalhesFliho.getLength(); r++) {
+//												Node nodeRelacaoGlosa = nListDetalhesFliho.item(r);
+//												
+//												if(nodeRelacaoGlosa.getNodeType() == Node.ELEMENT_NODE) {
+//													Element eRelacao = (Element) nodeRelacaoGlosa;
+//													
+//													switch (eRelacao.getTagName()) {
+//													case "relacaoGlosa":
+//														valorGlosa = Double.parseDouble(eRelacao.getElementsByTagName("valorGlosa").item(0).getTextContent());
+//														tipoGlosa = Integer.parseInt(eRelacao.getElementsByTagName("tipoGlosa").item(0).getTextContent());
+//														
+//														glosa.setTipo(tipoGlosa);
+//														glosa.setValor(valorGlosa);
+//														
+//														detalheGuia.setGlosa(glosa);
+////														System.out.println("Vlr Glosa: " + valorGlosa + ", Tipo Glosa: " + tipoGlosa);
+//														break;
+//													}
+//												}
+//											}
+											detalhes.add(detalheGuia);
+											guia.setDetalheGuia(detalhes);
 											break;
-										
-										}
-										
-										detalhes.add(detalheGuia);
+										}								
 									}
 								}
 
@@ -394,16 +323,16 @@ public class ArquivoDao {
 							beneficiario.setNumeroCarteira(numeroCarteira);
 							guia.setBeneficiario(beneficiario);
 							guia.setDataIni(dataInicioFat);
+							guia.setGlosa(glosas);
 							guia.setSituacaoGuia(situacaoGuia);
-							guia.setDetalheGuia(detalhes);
 							guia.setValorInformadoGuia(valorInformadoGuia);
 							guia.setValorProcessadoGuia(valorProcessadoGuia);
 							guia.setValorLiberadoGuia(valorLiberadoGuia);
 							guias.add(guia);
 
-							System.out.println("--------------");
-							System.out.println("Totais da Guia");
-							System.out.println("Vlr Inf Guia: " + valorInformadoGuia + ", Vlr Process Guia: " + valorProcessadoGuia + ", Vlr Lib Guia: " + valorLiberadoGuia);
+//							System.out.println("--------------");
+//							System.out.println("Totais da Guia");
+//							System.out.println("Vlr Inf Guia: " + valorInformadoGuia + ", Vlr Process Guia: " + valorProcessadoGuia + ", Vlr Lib Guia: " + valorLiberadoGuia);
 						}
 
 						lote.setGuia(guias);
@@ -419,7 +348,7 @@ public class ArquivoDao {
 
 					arq.setNomeArquivo(arquivo);
 					arq.setDtImportacao(data);
-					//Adicionar(arq);
+					Adicionar(arq);
 				}
 			}
 		}		

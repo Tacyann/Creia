@@ -2,13 +2,6 @@ package br.com.dss.modelo;
 
 import java.util.Calendar;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import br.com.dss.controle.DateAdapter;
-
 public class DetalheGuia {
 
 	private Calendar dataRealizacao;
@@ -18,7 +11,6 @@ public class DetalheGuia {
 	private int qtdExecutada;
 	private double valorProcessado;
 	private double valorLiberado;
-	private Glosa glosa;
 	
 	public Calendar getDataRealizacao() {
 		return dataRealizacao;
@@ -61,11 +53,5 @@ public class DetalheGuia {
 	}
 	public void setValorLiberado(double valorLiberado) {
 		this.valorLiberado = valorLiberado;
-	}
-	public Glosa getGlosa() {
-		return glosa;
-	}
-	public void setGlosa(Glosa glosa) {
-		this.glosa = glosa;
 	}
 }

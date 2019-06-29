@@ -38,9 +38,9 @@
 		
 		<br/>
 		
-		&nbsp;<p:commandButton value="Consultar" action="#{gerenciador.registros}" update="registrosGuias,valorTotal,valorCreia,valorEspecialista,msg" />
+		&nbsp;<p:commandButton value="Consultar" action="#{gerenciador.registros}" update="registrosGuias,valorTotal,valorCreia,valorProfissional,msg" />
 		&nbsp;
-		<p:commandButton value="Limpar" action="#{gerenciador.limpar}" update="registrosGuias,valorTotal,valorCreia,valorEspecialista,msg" />
+		<p:commandButton value="Limpar" action="#{gerenciador.limpar}" update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg" />
 		<br/>
 		<br/>
 		<p:dataTable value="#{gerenciador.guias}" var="g" id="registrosGuias" resizableColumns="true" rows="10" 
@@ -51,7 +51,7 @@
 				<h:outputText value="#{g.beneficiario.nome}" />
 			</p:column>
 			<p:column headerText="Data" style="width:70px; font-size:15px;">
-				<h:outputText value="#{g.detalheGuia.dataRealizacao.time}" >
+				<h:outputText value="#{g.detalhes.dataRealizacao.time}" >
 					<f:convertDateTime pattern="dd/MM/yyyy" />
 				</h:outputText>
 			</p:column>
@@ -62,20 +62,20 @@
 				<h:outputText value="#{g.prestador}" />
 			</p:column>
 			<p:column headerText="Procedimento" style="font-size:15px;">
-				<h:outputText value="#{g.detalheGuia.procedimento.descricao}" />
+				<h:outputText value="#{g.detalhes.procedimento.descricao}" />
 			</p:column>
 			<p:column headerText="Vlr Informado" style="width:80px; font-size:15px;">
-				<h:outputText value="#{g.valorInformadoGuia}" >
+				<h:outputText value="#{g.detalhes.valorInformado}" >
 					<f:convertNumber type="currency" lacale="pt_BR" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Vlr Glosa" style="width:80px; font-size:15px;">
-				<h:outputText value="#{g.valorGlosa}" >
+				<h:outputText value="#{g.detalhes.valorLiberado}" >
 					<f:convertNumber type="currency" lacale="pt_BR" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Vlr Processado" style="width:100px; font-size:15px;">
-				<h:outputText value="#{g.valorLiberadoGuia}" >
+			<p:column headerText="Vlr Liberado" style="width:100px; font-size:15px;">
+				<h:outputText value="#{g.detalhes.valorLiberado}" >
 					<f:convertNumber type="currency" lacale="pt_BR" />
 				</h:outputText>
 			</p:column>
@@ -96,8 +96,12 @@
 			<h:outputText value="#{gerenciador.valorCreia}" id="valorCreia">
 				<f:convertNumber type="currency" lacale="pt_BR" />
 			</h:outputText>
-			<h:outputText value="Total Especialista: " />
-			<h:outputText value="#{gerenciador.valorEspecialista}" id="valorEspecialista">
+			<h:outputText value="Total Glosa: " />
+			<h:outputText value="#{gerenciador.valorGlosa}" id="valorGlosa">
+				<f:convertNumber type="currency" lacale="pt_BR" />
+			</h:outputText>
+			<h:outputText value="Total Profissional: " />
+			<h:outputText value="#{gerenciador.valorProfissional}" id="valorProfissional">
 				<f:convertNumber type="currency" lacale="pt_BR" />
 			</h:outputText>
 		</p:panelGrid>
