@@ -71,8 +71,14 @@ public class DetalhesGuiaDao {
 				detalheguia.setGrauParticipacao(rs.getInt("a.grauParticipacao"));
 				detalheguia.setValorInformado(rs.getDouble("a.valorInformado"));
 				detalheguia.setQtdExecutada(rs.getInt("a.qtdExecutada"));
+				var vlrLiberado = rs.getDouble("a.valorLiberado");
+				var vlrGlosa = 0.0;
+				if(vlrLiberado == 0.0) {
+					vlrGlosa = detalheguia.getValorInformado();
+				}
+				detalheguia.setValorGlosa(vlrGlosa);
 				detalheguia.setValorProcessado(rs.getDouble("a.valorProcessado"));
-				detalheguia.setValorLiberado(rs.getDouble("a.valorLiberado"));
+				detalheguia.setValorLiberado(vlrLiberado);
 			}
 			stmt.close();
 			rs.close();

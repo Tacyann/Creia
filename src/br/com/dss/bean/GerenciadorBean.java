@@ -11,13 +11,13 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import br.com.dss.argument.GuiaArgument;
 import br.com.dss.modelo.Beneficiario;
 import br.com.dss.modelo.DetalheGuia;
 import br.com.dss.modelo.Guia;
 import br.com.dss.servico.Service;
 import br.com.dss.servico.ServiceBeneficiario;
 import br.com.dss.servico.ServiceDetalheGuia;
-import br.com.dss.servico.ServiceGlosa;
 import br.com.dss.servico.ServiceGuia;
 
 @Named("gerenciador")
@@ -27,15 +27,15 @@ public class GerenciadorBean implements Serializable {
 	@Inject
 	private FacesContext facescontext;
 
-	private List<Guia> guias;
-	private List<DetalheGuia> detalhes;
+	private List<GuiaArgument> guias;
 	private List<Double> valoresLiberados;
+	private List<Double> valoresGlosa;
 	private String[] clientes;
 	private String[] descricao;
-	private Double valorTotal;
-	private Double valorGlosa;
-	private Double valorCreia;
-	private Double valorProfissional;
+	private Double valorTotal = 0.0;
+	private Double valorGlosa = 0.0;
+	private Double valorCreia = 0.0;
+	private Double valorProfissional = 0.0;
 	private Date dtInicial;
 	private Date dtFinal;
 
@@ -43,6 +43,7 @@ public class GerenciadorBean implements Serializable {
 
 		guias = new ArrayList<>();
 		valoresLiberados = new ArrayList<>();
+		valoresGlosa = new ArrayList<>();
 
 		Service servico = new Service();
 		ServiceGuia sg = new ServiceGuia();
@@ -61,13 +62,14 @@ public class GerenciadorBean implements Serializable {
 			var listagemGuia = (List<Guia>) servico.Obter(sg, clientes, dt1, dt2);
 
 			for(var item : listagemGuia) {
-				var guia = new Guia();
+				var guia = new GuiaArgument();
 				guia.setPrestador(item.getPrestador());
 				guia.setOperadora(item.getOperadora());
-				guia.setSenha(item.getSenha());
-				guia.setBeneficiario(item.getBeneficiario());
+				var cliente = item.getBeneficiario();
+				if(cliente != null) {
+					guia.setBeneficiario(item.getBeneficiario());					
+				}
 				guia.setDataIni(item.getDataIni());
-				guia.setSituacaoGuia(item.getSituacaoGuia());
 
 //				var glosa = item.getGlosa();
 //				
@@ -78,26 +80,29 @@ public class GerenciadorBean implements Serializable {
 //					}
 //				}
 				
-				guia.setValorInformadoGuia(item.getValorInformadoGuia());
-				guia.setValorProcessadoGuia(item.getValorProcessadoGuia());
-				guia.setValorLiberadoGuia(item.getValorProcessadoGuia());
-				var detalheGuia = (DetalheGuia) servico.Obter(sdg, guia.getPrestador());			
-				detalhes.add(detalheGuia);
-
-				//valoresLiberados.add(detalheGuia.getValorLiberado());
+				var detalheGuia = (DetalheGuia) servico.Obter(sdg, guia.getPrestador());
+				
+				guia.setDetalheGuia(detalheGuia);
+				valoresLiberados.add(detalheGuia.getValorLiberado());
+				valoresGlosa.add(detalheGuia.getValorGlosa());
 				guias.add(guia);
 			}
 
-			limpar();
-			for(var valor : guias) {
-				var liberado = valor.getValorLiberadoGuia();
-				valorTotal = valorTotal + liberado;
-
-				if(liberado == 0) {
-					valorGlosa = valorGlosa + valor.getValorInformadoGuia();
-				}
+			valorTotal = 0.0;
+			valorGlosa = 0.0;
+			valorCreia = 0.0;
+			valorProfissional = 0.0;
+			
+			for(var total : valoresLiberados) {
+				valorTotal =+ valorTotal + total;
 			}
+			
 			valorCreia = valorTotal * 45.5 / 100;
+			
+			for(var glosa : valoresGlosa) {
+				valorGlosa =+ valorGlosa + glosa;				
+			}
+
 			valorProfissional = valorTotal * 54.5 / 100;
 		}
 	}
@@ -126,13 +131,11 @@ public class GerenciadorBean implements Serializable {
 		var listagemGuia = (List<Guia>) servico.Listar(sg);
 
 		for(var item : listagemGuia) {
-			var guia = new Guia();
+			var guia = new GuiaArgument();
 			guia.setPrestador(item.getPrestador());
 			guia.setOperadora(item.getOperadora());
-			guia.setSenha(item.getSenha());
 			guia.setBeneficiario(item.getBeneficiario());
 			guia.setDataIni(item.getDataIni());
-			guia.setSituacaoGuia(item.getSituacaoGuia());
 			
 //			var glosa = item.getGlosa();
 //			
@@ -143,26 +146,13 @@ public class GerenciadorBean implements Serializable {
 //				}
 //			}
 			
-			guia.setValorInformadoGuia(item.getValorInformadoGuia());
-			guia.setValorProcessadoGuia(item.getValorProcessadoGuia());
-			guia.setValorLiberadoGuia(item.getValorProcessadoGuia());
-			@SuppressWarnings("unchecked")
-			var detalheGuia = (List<DetalheGuia>) servico.Obter(sdg, guia.getPrestador());			
+			var detalheGuia = (DetalheGuia) servico.Obter(sdg, guia.getPrestador());			
 			guia.setDetalheGuia(detalheGuia);
 
-			//valoresLiberados.add(detalheGuia.getValorLiberado());
 			guias.add(guia);
 		}
 
 		limpar();
-		for(var valor : guias) {
-			var liberado = valor.getValorLiberadoGuia();
-			valorTotal = valorTotal + liberado;
-			
-			if(liberado == 0) {
-				valorGlosa = valorGlosa + valor.getValorInformadoGuia();
-			}
-		}
 	}
 
 	public List<String> nomeBeneficiario(){
@@ -188,11 +178,11 @@ public class GerenciadorBean implements Serializable {
 		this.facescontext = facescontext;
 	}
 
-	public List<Guia> getGuias() {
+	public List<GuiaArgument> getGuias() {
 		return guias;
 	}
 
-	public void setGuias(List<Guia> guias) {
+	public void setGuias(List<GuiaArgument> guias) {
 		this.guias = guias;
 	}
 
@@ -254,5 +244,13 @@ public class GerenciadorBean implements Serializable {
 
 	public Double getValorGlosa() {
 		return valorGlosa;
+	}
+
+	public List<Double> getValoresGlosa() {
+		return valoresGlosa;
+	}
+
+	public void setValoresGlosa(List<Double> valoresGlosa) {
+		this.valoresGlosa = valoresGlosa;
 	}
 }

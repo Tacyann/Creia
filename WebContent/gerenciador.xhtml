@@ -11,13 +11,6 @@
 </h:head>
 <h:body >
 
-	<p:breadCrumb>
-	    <p:menuitem value="Home" url="home.faces" />
-	    <p:menuitem value="Gerenciador" url="gerenciador.faces" />
-	    <p:menuitem value="Suporte" url="suporte.faces" />
-	    <p:menuitem value="Sobre" url="sobre.faces" />
-	</p:breadCrumb>
-	
 	<h1 style="text-align:center; color:black; text-shadow: 5px 3px 5px #050;">Gerenciador das guias de atendimento</h1>
 	<h:form id="form">
 	<p:messages id="msg" globalOnly="true" showDetail="true" />
@@ -37,12 +30,15 @@
 		</p:panel>		
 		
 		<br/>
-		
-		&nbsp;<p:commandButton value="Consultar" action="#{gerenciador.registros}" update="registrosGuias,valorTotal,valorCreia,valorProfissional,msg" />
-		&nbsp;
-		<p:commandButton value="Limpar" action="#{gerenciador.limpar}" update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg" />
-		<br/>
-		<br/>
+		<div style="text-align: right;">
+			&nbsp;
+			<p:commandButton value="Consultar" action="#{gerenciador.registros}"
+				update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg" />
+			&nbsp;
+			<p:commandButton value="Limpar" action="#{gerenciador.limpar}"
+				update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg" />
+			<br /> <br />
+		</div>
 		<p:dataTable value="#{gerenciador.guias}" var="g" id="registrosGuias" resizableColumns="true" rows="10" 
 						paginator="true"
 						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -51,7 +47,7 @@
 				<h:outputText value="#{g.beneficiario.nome}" />
 			</p:column>
 			<p:column headerText="Data" style="width:70px; font-size:15px;">
-				<h:outputText value="#{g.detalhes.dataRealizacao.time}" >
+				<h:outputText value="#{g.detalheGuia.dataRealizacao.time}" >
 					<f:convertDateTime pattern="dd/MM/yyyy" />
 				</h:outputText>
 			</p:column>
@@ -62,20 +58,20 @@
 				<h:outputText value="#{g.prestador}" />
 			</p:column>
 			<p:column headerText="Procedimento" style="font-size:15px;">
-				<h:outputText value="#{g.detalhes.procedimento.descricao}" />
+				<h:outputText value="#{g.detalheGuia.procedimento.descricao}" />
 			</p:column>
 			<p:column headerText="Vlr Informado" style="width:80px; font-size:15px;">
-				<h:outputText value="#{g.detalhes.valorInformado}" >
+				<h:outputText value="#{g.detalheGuia.valorInformado}" >
 					<f:convertNumber type="currency" lacale="pt_BR" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Vlr Glosa" style="width:80px; font-size:15px;">
-				<h:outputText value="#{g.detalhes.valorLiberado}" >
+				<h:outputText value="#{g.detalheGuia.valorGlosa}" >
 					<f:convertNumber type="currency" lacale="pt_BR" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Vlr Liberado" style="width:100px; font-size:15px;">
-				<h:outputText value="#{g.detalhes.valorLiberado}" >
+				<h:outputText value="#{g.detalheGuia.valorLiberado}" >
 					<f:convertNumber type="currency" lacale="pt_BR" />
 				</h:outputText>
 			</p:column>
@@ -88,19 +84,19 @@
 		</p:dataTable>
 		<p:separator/>
 		<p:panelGrid columns="2">
-			<h:outputText value="Total geral: " />
+			<h:outputText value="Total Geral: " />
 			<h:outputText value="#{gerenciador.valorTotal}" id="valorTotal">
 				<f:convertNumber type="currency" lacale="pt_BR" />
 			</h:outputText>
-			<h:outputText value="Total Creia: " />
+			<h:outputText value="Total da Creia: " />
 			<h:outputText value="#{gerenciador.valorCreia}" id="valorCreia">
 				<f:convertNumber type="currency" lacale="pt_BR" />
 			</h:outputText>
-			<h:outputText value="Total Glosa: " />
+			<h:outputText value="Total de Glosa: " />
 			<h:outputText value="#{gerenciador.valorGlosa}" id="valorGlosa">
 				<f:convertNumber type="currency" lacale="pt_BR" />
 			</h:outputText>
-			<h:outputText value="Total Profissional: " />
+			<h:outputText value="Total do Profissional: " />
 			<h:outputText value="#{gerenciador.valorProfissional}" id="valorProfissional">
 				<f:convertNumber type="currency" lacale="pt_BR" />
 			</h:outputText>

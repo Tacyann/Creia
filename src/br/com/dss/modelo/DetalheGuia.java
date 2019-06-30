@@ -9,6 +9,7 @@ public class DetalheGuia {
 	private int grauParticipacao;
 	private double valorInformado;
 	private int qtdExecutada;
+	private double valorGlosa;
 	private double valorProcessado;
 	private double valorLiberado;
 	
@@ -53,5 +54,11 @@ public class DetalheGuia {
 	}
 	public void setValorLiberado(double valorLiberado) {
 		this.valorLiberado = valorLiberado;
+	}
+	public double getValorGlosa() {
+		return valorGlosa;
+	}
+	public void setValorGlosa(double valorGlosa) {
+		this.valorGlosa = valorGlosa;
 	}
 }
