@@ -106,20 +106,36 @@ public class GerenciadorBean implements Serializable {
 			valorProfissional = valorTotal * 54.5 / 100;
 		}
 	}
+	
+	public void filtroProcedimento() {
+		if(guias.size() > 0) {
+			for(var guia : guias) {
+				for(int i = 0; i < descricao.length; i++) {
+					if(Integer.parseInt(descricao[i]) != guia.getDetalheGuia().getProcedimento().getProcedimento()) {
+						guias.remove(guia);
+					}
+				}
+			}
+		}
+	}
 
 	public void limpar() {
 		if(guias.size()>0) {
 			guias.clear();
-			valorTotal = 0.0;
-			valorGlosa = 0.0;
-			valorCreia = 0.0;
-			valorProfissional = 0.0;
+//			valorTotal = 0.0;
+//			valorGlosa = 0.0;
+//			valorCreia = 0.0;
+//			valorProfissional = 0.0;
 		}
 	}
 
 	public String sair() {
-		limpar();
+		//limpar();
 		return "home?faces-redirect=true";
+	}
+	
+	public String gerarImpressao() {
+		return "relatorio?faces-redirect=true";
 	}
 	
 	public void listar() {
