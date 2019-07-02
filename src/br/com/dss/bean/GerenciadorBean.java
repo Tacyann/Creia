@@ -8,6 +8,7 @@ import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -26,12 +27,16 @@ public class GerenciadorBean implements Serializable {
 
 	@Inject
 	private FacesContext facescontext;
+	
+	@Inject
+	private Flash flash;
 
 	private List<GuiaArgument> guias;
 	private List<Double> valoresLiberados;
 	private List<Double> valoresGlosa;
 	private String[] clientes;
 	private String[] descricao;
+	private String[] profissionais;
 	private Double valorTotal = 0.0;
 	private Double valorGlosa = 0.0;
 	private Double valorCreia = 0.0;
@@ -54,12 +59,23 @@ public class GerenciadorBean implements Serializable {
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum cliente foi selecionado para a consulta.");
 			facescontext.addMessage(null, msg);
 		}else {
+			if(descricao.length > 0) {
+				var tam = descricao.length;
+				String texto = "";
+				if(tam == 1) {
+					texto = " procedimento está selecionado.";
+				}else {
+					texto = " procedimentos estão selecionados.";
+				}
+				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, descricao.length + texto);
+				facescontext.addMessage(null, msg);
+			}
 
 			java.sql.Date dt1 = new java.sql.Date(getDtInicial().getTime());
 			java.sql.Date dt2 = new java.sql.Date(getDtFinal().getTime());
 
 			@SuppressWarnings("unchecked")
-			var listagemGuia = (List<Guia>) servico.Obter(sg, clientes, dt1, dt2);
+			var listagemGuia = (List<Guia>) servico.Obter(sg, clientes, descricao, dt1, dt2);
 
 			for(var item : listagemGuia) {
 				var guia = new GuiaArgument();
@@ -71,17 +87,17 @@ public class GerenciadorBean implements Serializable {
 				}
 				guia.setDataIni(item.getDataIni());
 
-//				var glosa = item.getGlosa();
-//				
-//				if(glosa != null) {
-//					guia.setGlosa(glosa);	
-//					for(var g : glosa) {
-//						System.out.println(g.getDescricao());
-//					}
-//				}
-				
+				//				var glosa = item.getGlosa();
+				//				
+				//				if(glosa != null) {
+				//					guia.setGlosa(glosa);	
+				//					for(var g : glosa) {
+				//						System.out.println(g.getDescricao());
+				//					}
+				//				}
+
 				var detalheGuia = (DetalheGuia) servico.Obter(sdg, guia.getPrestador());
-				
+
 				guia.setDetalheGuia(detalheGuia);
 				valoresLiberados.add(detalheGuia.getValorLiberado());
 				valoresGlosa.add(detalheGuia.getValorGlosa());
@@ -92,13 +108,13 @@ public class GerenciadorBean implements Serializable {
 			valorGlosa = 0.0;
 			valorCreia = 0.0;
 			valorProfissional = 0.0;
-			
+
 			for(var total : valoresLiberados) {
 				valorTotal =+ valorTotal + total;
 			}
-			
+
 			valorCreia = valorTotal * 45.5 / 100;
-			
+
 			for(var glosa : valoresGlosa) {
 				valorGlosa =+ valorGlosa + glosa;				
 			}
@@ -106,38 +122,107 @@ public class GerenciadorBean implements Serializable {
 			valorProfissional = valorTotal * 54.5 / 100;
 		}
 	}
-	
+
 	public void filtroProcedimento() {
-		if(guias.size() > 0) {
-			for(var guia : guias) {
-				for(int i = 0; i < descricao.length; i++) {
-					if(Integer.parseInt(descricao[i]) != guia.getDetalheGuia().getProcedimento().getProcedimento()) {
-						guias.remove(guia);
+
+		if(guias != null && guias.size()>0) {
+			guias.clear();
+			valoresLiberados.clear();
+			valoresGlosa.clear();
+
+			Service servico = new Service();
+			ServiceGuia sg = new ServiceGuia();
+			ServiceDetalheGuia sdg = new ServiceDetalheGuia();
+
+			if(clientes.length == 0) {
+				limpar();
+				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum cliente foi selecionado para a consulta.");
+				facescontext.addMessage(null, msg);
+			}else if(descricao.length == 0) {
+				limpar();
+				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum Procedimento foi selecionado para a consulta.");
+				facescontext.addMessage(null, msg);
+			}else if(clientes.length == 0 && descricao.length == 0) {
+				limpar();
+				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum Procedimento foi selecionado para a consulta.");
+				facescontext.addMessage(null, msg);
+			}else {
+				java.sql.Date dt1 = new java.sql.Date(getDtInicial().getTime());
+				java.sql.Date dt2 = new java.sql.Date(getDtFinal().getTime());
+
+				@SuppressWarnings("unchecked")
+				var listagemGuia = (List<Guia>) servico.Obter(sg, clientes, descricao, dt1, dt2);
+
+				for(var item : listagemGuia) {
+					var guia = new GuiaArgument();
+					guia.setPrestador(item.getPrestador());
+					guia.setOperadora(item.getOperadora());
+					var cliente = item.getBeneficiario();
+					if(cliente != null) {
+						guia.setBeneficiario(item.getBeneficiario());					
 					}
+					guia.setDataIni(item.getDataIni());
+
+					var detalheGuia = (DetalheGuia) servico.Obter(sdg, guia.getPrestador());
+
+					guia.setDetalheGuia(detalheGuia);
+					valoresLiberados.add(detalheGuia.getValorLiberado());
+					valoresGlosa.add(detalheGuia.getValorGlosa());
+					guias.add(guia);
 				}
+
+				valorTotal = 0.0;
+				valorGlosa = 0.0;
+				valorCreia = 0.0;
+				valorProfissional = 0.0;
+
+				for(var total : valoresLiberados) {
+					valorTotal =+ valorTotal + total;
+				}
+
+				valorCreia = valorTotal * 45.5 / 100;
+
+				for(var glosa : valoresGlosa) {
+					valorGlosa =+ valorGlosa + glosa;				
+				}
+
+				valorProfissional = valorTotal * 54.5 / 100;
 			}
+		}else {
+			limpar();
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum cliente foi selecionado para a consulta.");
+			facescontext.addMessage(null, msg);
 		}
 	}
 
 	public void limpar() {
-		if(guias.size()>0) {
+		if(guias != null && guias.size()>0) {
 			guias.clear();
-//			valorTotal = 0.0;
-//			valorGlosa = 0.0;
-//			valorCreia = 0.0;
-//			valorProfissional = 0.0;
+			valorTotal = 0.0;
+			valorGlosa = 0.0;
+			valorCreia = 0.0;
+			valorProfissional = 0.0;
 		}
 	}
 
 	public String sair() {
-		//limpar();
+		limpar();
 		return "home?faces-redirect=true";
 	}
-	
+
 	public String gerarImpressao() {
+
+		flash.put( "clientes", clientes);
+		flash.put( "descricao", descricao);
+		flash.put( "profissionais", profissionais);
+		flash.put( "valorTotal", valorTotal);
+		flash.put( "valorGlosa", valorGlosa);
+		flash.put( "valorCreia", valorCreia);
+		flash.put( "valorProfissional", valorProfissional);
+		flash.put("guias", guias);
 		return "relatorio?faces-redirect=true";
 	}
-	
+
 	public void listar() {
 
 		Service servico = new Service();
@@ -152,16 +237,16 @@ public class GerenciadorBean implements Serializable {
 			guia.setOperadora(item.getOperadora());
 			guia.setBeneficiario(item.getBeneficiario());
 			guia.setDataIni(item.getDataIni());
-			
-//			var glosa = item.getGlosa();
-//			
-//			if(glosa != null) {
-//				guia.setGlosa(glosa);	
-//				for(var g : glosa) {
-//					System.out.println(g.getDescricao());
-//				}
-//			}
-			
+
+			//			var glosa = item.getGlosa();
+			//			
+			//			if(glosa != null) {
+			//				guia.setGlosa(glosa);	
+			//				for(var g : glosa) {
+			//					System.out.println(g.getDescricao());
+			//				}
+			//			}
+
 			var detalheGuia = (DetalheGuia) servico.Obter(sdg, guia.getPrestador());			
 			guia.setDetalheGuia(detalheGuia);
 
@@ -218,6 +303,14 @@ public class GerenciadorBean implements Serializable {
 		this.descricao = descricao;
 	}
 
+	public String[] getProfissionais() {
+		return profissionais;
+	}
+
+	public void setPrifissionais(String[] profissionais) {
+		this.profissionais = profissionais;
+	}
+
 	public Double getValorTotal() {
 		return valorTotal;
 	}
@@ -253,7 +346,7 @@ public class GerenciadorBean implements Serializable {
 	public Double getValorCreia() {
 		return valorCreia;
 	}
-	
+
 	public Double getValorProfissional() {
 		return valorProfissional;
 	}

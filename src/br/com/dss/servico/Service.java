@@ -14,8 +14,8 @@ public class Service {
 		return ret;
 	}
 	
-	public Object Obter(IListagemPorData listagem, Object objeto, Date dtIni, Date dtFim) {
-		var ret = listagem.obter(objeto, dtIni, dtFim);
+	public Object Obter(IListagemPorData listagem, Object objeto1, Object objeto2, Date dtIni, Date dtFim) {
+		var ret = listagem.obter(objeto1, objeto2, dtIni, dtFim);
 		return ret;
 	}
 	

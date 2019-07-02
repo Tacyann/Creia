@@ -22,11 +22,11 @@ public class ServiceGuia implements IListagem, IListagemPorData{
 	}
 
 	@Override
-	public Object obter(Object objeto, Date dtIni, Date dtFim) {
+	public Object obter(Object objeto1, Object objeto2, Date dtIni, Date dtFim) {
 		
 		GuiaDao arquivo = new GuiaDao();
 		
-		var guia = arquivo.Obter((String[]) objeto, dtIni, dtFim);
+		var guia = arquivo.Obter((String[]) objeto1, (String[]) objeto2, dtIni, dtFim);
 		return guia;
 	}
 }

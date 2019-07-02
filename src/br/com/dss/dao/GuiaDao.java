@@ -52,29 +52,48 @@ public class GuiaDao {
 		}
 	}
 
-	public List<Guia> Obter(String[] lista, Date dtIni, Date dtFim) {
-		
+	public List<Guia> Obter(String[] listaCliente, String[] listaProcedimento, Date dtIni, Date dtFim) {
 		String sql;
 		
-		if(lista.length == 0) {
+		if(listaCliente.length == 0) {
 			sql = "select * from guia";
 		}else {
 			int count = 0;
-			StringBuilder sb = new StringBuilder();
-			for(var cliente : lista) {
-				sb.append("'").append(cliente).append("'");
+			StringBuilder sbCliente = new StringBuilder();
+			for(var cliente : listaCliente) {
+				sbCliente.append("'").append(cliente).append("'");
 				count++;
-				if(lista.length > 1 && count !=lista.length) {
-					sb.append(",");
+				if(listaCliente.length > 1 && count !=listaCliente.length) {
+					sbCliente.append(",");
 				}
 			}
 
-			var param = sb.toString();
-			sql = "SELECT DISTINCT a.* FROM guia a "
-					+"JOIN detalhesguia b ON a.numeroGuiaPrestador = b.numPrestador "
-					+"WHERE a.nomeBeneficiario IN (" + param + ") "
-					+"AND b.dataRealizacao >= '" + dtIni + "' AND b.dataRealizacao <= '" + dtFim + "'";			
+			var paramCliente = sbCliente.toString();
+			if(listaProcedimento.length == 0) {
+				sql = "SELECT DISTINCT a.* FROM guia a "
+						+"JOIN detalhesguia b ON a.numeroGuiaPrestador = b.numPrestador "
+						+"WHERE a.nomeBeneficiario IN (" + paramCliente + ") "
+						+"AND b.dataRealizacao >= '" + dtIni + "' AND b.dataRealizacao <= '" + dtFim + "'";							
+			}else {
+				int countP = 0;
+				StringBuilder sbProcedimento = new StringBuilder();
+				for(var procedimento : listaProcedimento) {
+					sbProcedimento.append(procedimento);
+					countP++;
+					if(listaProcedimento.length > 1 && countP !=listaProcedimento.length) {
+						sbProcedimento.append(",");
+					}
+				}
+				
+				var paramProcedimento = sbProcedimento.toString();
+				sql = "SELECT DISTINCT a.* FROM guia a "
+						+"JOIN detalhesguia b ON a.numeroGuiaPrestador = b.numPrestador "
+						+"WHERE a.nomeBeneficiario IN (" + paramCliente + ") "
+						+"AND b.dataRealizacao >= '" + dtIni + "' AND b.dataRealizacao <= '" + dtFim + "'"
+						+"AND b.procedimento IN (" + paramProcedimento + ")";	
+			}
 		}
+		
 		System.out.println(sql);
 		List<Guia> guias = new ArrayList<>();
 		try {
