@@ -8,6 +8,48 @@
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 	<title>Gerenciador</title>
+	<script type="text/javascript">
+	PrimeFaces.locales ['pt_BR'] = {
+		    closeText: 'Fechar',
+		    prevText: 'Anterior',
+		    nextText: 'Próximo',
+		    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+		    monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun', 'Jul','Ago','Set','Out','Nov','Dez'],
+		    dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+		    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'],
+		    dayNamesMin: ['D','S','T','Q','Q','S','S'],
+		    weekHeader: 'Semana',
+		    weekNumberTitle: 'Sm',
+		    firstDay: 0,
+		    isRTL: false,
+		    showMonthAfterYear: false,
+		    yearSuffix:'',
+		    timeOnlyTitle: 'Só Horas',
+		    timeText: 'Tempo',
+		    hourText: 'Hora',
+		    minuteText: 'Minuto',
+		    secondText: 'Segundo',
+		    currentText: 'Começo',
+		    ampm: false,
+		    month: 'Mês',
+		    week: 'Semana',
+		    day: 'Dia',
+		    allDayText: 'Todo o Dia'
+		};
+	</script>
+	<script type="text/javascript">
+    //<![CDATA[
+    function dateTemplateFunc(date) {
+        return '<span style="background-color:' + ((date.day < 21 && date.day > 10) ? '#81C784' : 'inherit') + ';border-radius:50%;padding: .25em;width: 1.75em; height:1.75em; display:block;">' + date.day + '</span>';
+    }
+    //]]>
+	</script>
+ 
+	<style type="text/css">
+	    .value {
+	        font-weight: bold;
+	    }
+	</style>
 </h:head>
 <h:body >
 
@@ -16,13 +58,13 @@
 	<p:messages id="msg" globalOnly="true" showDetail="true" />
 		<p:panel>
 			<p:selectCheckboxMenu id="cliente" value="#{gerenciador.clientes}" label="Clientes" filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
-				<f:selectItems value="#{cliente.beneficiarios}" var="c" itemLabel="#{c.nome}" itemValue="#{c.nome}"/>
+				<f:selectItems value="#{cliente.beneficiarios}" var="c" itemLabel="#{c.nome}" itemValue="#{c.nome}" />
 			</p:selectCheckboxMenu>
 			&nbsp;
 			<p:outputLabel for="dtInicial" value="Data Inicial:" /> &nbsp;
-			<p:datePicker id="dtInicial" value="#{gerenciador.dtInicial}" showButtonBar="true" pattern="dd/MM/yyyy"/>
+			<p:datePicker id="dtInicial" value="#{gerenciador.dtInicial}" locale="pt_BR" monthNavigator="true" showButtonBar="false" showIcon="true" pattern="dd/MM/yyyy"/>
 			<p:outputLabel for="dtFinal" value="Data Final:" /> &nbsp;
-			<p:datePicker id="dtFinal" value="#{gerenciador.dtFinal}" showButtonBar="true" pattern="dd/MM/yyyy"/>
+			<p:datePicker id="dtFinal" value="#{gerenciador.dtFinal}" locale="pt_BR" monthNavigator="true"  showButtonBar="false" showIcon="true" pattern="dd/MM/yyyy"/>
 		</p:panel>		
 		
 		<br/>

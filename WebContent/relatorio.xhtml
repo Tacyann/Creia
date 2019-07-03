@@ -12,12 +12,36 @@
 <h:body>
 	<p:commandButton value="Imprimir" type="button" icon="print"
 			style="display:block;margin-bottom: 20px">
-			<p:printer />
+			<p:printer target="form" />
 		</p:commandButton>
 		<br/>
-	<f:metadata name="guias" values="#{relatorio.guias}" />
+ 	
+	<h:form id="form">
+		<p:panel>
+		<p:repeat var="g" value="#{gerenciador.clienteArgs}">
+			<p:outputLabel value="#{g.beneficiario.nome}" />
+			<p:separator />
+			<p:outputLabel value="#{g.procedimento.descricao}" />
+			<br/>
+			<p:outputLabel value="#{g.valorInformado}">
+				<f:convertNumber type="currency" lacale="pt_BR" />
+			</p:outputLabel>
+			&nbsp;
+			<p:outputLabel value="#{g.valorLiberado}">
+				<f:convertNumber type="currency" lacale="pt_BR" />
+			</p:outputLabel>
+			&nbsp;
+			<p:outputLabel value="#{g.valorProcessado}">
+				<f:convertNumber type="currency" lacale="pt_BR" />
+			</p:outputLabel>&nbsp;
+			<p:outputLabel value="#{g.valorGlosa}">
+				<f:convertNumber type="currency" lacale="pt_BR" />
+			</p:outputLabel>
+		</p:repeat>
+		</p:panel>
+	</h:form>
 	<h:form>
-		<p:commandButton value="Sair" action="home.faces" />
+		<p:commandButton value="Sair" action="gerenciador.sair" />
 	</h:form>
 	
 </h:body>

@@ -1,13 +1,6 @@
 package br.com.dss.dao;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -19,19 +12,13 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import com.thoughtworks.xstream.XStream;
 
 import br.com.dss.Conexao;
 import br.com.dss.modelo.Arquivo;
@@ -93,33 +80,12 @@ public class ArquivoDao {
 			Conexao.FecharConexao();
 		}
 	}
-	
-	public void TesteNodo() throws ParserConfigurationException, SAXException, IOException, JAXBException {
-		File f = new File("D:/ArquivoXml"); 
-		var auxDir = f.list();
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-		
-		for(var arquivo : auxDir) {
-			var extencaoArquivo = arquivo.substring(arquivo.indexOf('.')+1);
 
-			if(extencaoArquivo.equals("xml")) {	
-				String file = f.getPath() + "\\" + arquivo;
-				Document doc = dBuilder.parse(file);
-
-				NodeList nListLote = doc.getElementsByTagName("dadosProtocolo");
-
-				for(int i = 0; i < nListLote.getLength(); i++) {
-					Node nNode = nListLote.item(i);
-					JAXBContext context = JAXBContext.newInstance(Lote.class);
-					var lote = (Lote) context.createUnmarshaller().unmarshal(nNode);
-					
-					System.out.println(lote.getNumero());
-				}
-			}
-		}
-	}
-
+	/**
+	 * Método de leitura de arquivo XML
+	 * @return Retorna uma lista dos lotes
+	 * @throws Exception
+	 */
 	public List<Lote> LerXmlGerarLotes() throws Exception {	
 		Calendar data = new GregorianCalendar();
 		Date d = new Date(System.currentTimeMillis());

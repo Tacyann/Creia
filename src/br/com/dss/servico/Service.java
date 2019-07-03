@@ -4,6 +4,11 @@ import java.sql.Date;
 
 public class Service {
 	
+	public boolean Adicionar(IAdiciona add, Object objeto) {
+		var ret = add.adicionar(objeto);
+		return ret;
+	}
+	
 	public boolean Existe(IDados dados, String filtro) {
 		var ret = dados.isExist(filtro);
 		return ret;

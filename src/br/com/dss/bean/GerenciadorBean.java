@@ -12,6 +12,7 @@ import javax.faces.context.Flash;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import br.com.dss.argument.ClienteArgument;
 import br.com.dss.argument.GuiaArgument;
 import br.com.dss.modelo.Beneficiario;
 import br.com.dss.modelo.DetalheGuia;
@@ -31,9 +32,12 @@ public class GerenciadorBean implements Serializable {
 	@Inject
 	private Flash flash;
 
+	private List<ClienteArgument> listaCliente; 
 	private List<GuiaArgument> guias;
 	private List<Double> valoresLiberados;
 	private List<Double> valoresGlosa;
+	private List<ClienteArgument> clienteArgs;
+	private ClienteArgument clienteArg;
 	private String[] clientes;
 	private String[] descricao;
 	private String[] profissionais;
@@ -211,16 +215,29 @@ public class GerenciadorBean implements Serializable {
 	}
 
 	public String gerarImpressao() {
-
-		flash.put( "clientes", clientes);
-		flash.put( "descricao", descricao);
-		flash.put( "profissionais", profissionais);
-		flash.put( "valorTotal", valorTotal);
-		flash.put( "valorGlosa", valorGlosa);
-		flash.put( "valorCreia", valorCreia);
-		flash.put( "valorProfissional", valorProfissional);
-		flash.put("guias", guias);
-		return "relatorio?faces-redirect=true";
+		
+		if(guias == null && guias.size()==0) {
+			limpar();
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum cliente foi selecionado para a consulta.");
+			facescontext.addMessage(null, msg);
+		}
+		
+		clienteArgs = new ArrayList<ClienteArgument>();
+		
+		for(var guia :  guias) {
+			ClienteArgument clienteArg = new ClienteArgument();
+			
+			clienteArg.setBeneficiario(guia.getBeneficiario());
+			clienteArg.setProcedimento(guia.getDetalheGuia().getProcedimento());
+			clienteArg.setValorInformado(guia.getDetalheGuia().getValorInformado());
+			clienteArg.setValorGlosa(guia.getDetalheGuia().getValorGlosa());
+			clienteArg.setValorProcessado(guia.getDetalheGuia().getValorProcessado());
+			clienteArg.setValorLiberado(guia.getDetalheGuia().getValorLiberado());
+			
+			clienteArgs.add(clienteArg);
+		}
+		
+		return "relatorio";
 	}
 
 	public void listar() {
@@ -361,5 +378,25 @@ public class GerenciadorBean implements Serializable {
 
 	public void setValoresGlosa(List<Double> valoresGlosa) {
 		this.valoresGlosa = valoresGlosa;
+	}
+	public ClienteArgument getClienteArg() {
+		return clienteArg;
+	}
+	public void setClienteArg(ClienteArgument clienteArg) {
+		this.clienteArg = clienteArg;
+	}
+	public List<ClienteArgument> getClienteArgs() {
+		return clienteArgs;
+	}
+	public void setClienteArgs(List<ClienteArgument> clienteArgs) {
+		this.clienteArgs = clienteArgs;
+	}
+
+	public List<ClienteArgument> getListaCliente() {
+		return listaCliente;
+	}
+
+	public void setListaCliente(List<ClienteArgument> listaCliente) {
+		this.listaCliente = listaCliente;
 	}
 }

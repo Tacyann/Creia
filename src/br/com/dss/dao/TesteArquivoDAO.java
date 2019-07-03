@@ -1,11 +1,5 @@
 package br.com.dss.dao;
 
-import java.io.IOException;
-
-import javax.xml.bind.JAXBException;
-
-import org.xml.sax.SAXException;
-
 public class TesteArquivoDAO {
 
 	public static void main(String[] args) {
@@ -29,7 +23,7 @@ public class TesteArquivoDAO {
 //					}
 //				}
 //		} catch (Exception e) {
-//			// TODO Auto-generated catch block
+//			
 //			e.printStackTrace();
 //		}
 		Processar();
@@ -38,9 +32,6 @@ public class TesteArquivoDAO {
 	
 	public static void Testar() {
 		ArquivoDao arquivo = new ArquivoDao();
-		//arquivo.TesteStream();
-		//arquivo.Teste();
-		
 	}
 	
 	public static void Processar() {
