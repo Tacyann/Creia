@@ -79,7 +79,7 @@
 		</div>
 		<p:separator/>
 		<div style="text-align: right;">
-			<p:selectCheckboxMenu id="profissional" value="#{gerenciador.profissionais}" label="Profissionais" filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
+			<p:selectCheckboxMenu id="profissional" value="#{gerenciador.profissionais}" label="Profissionais" filter="true" filterMatchMode="startsWith" panelStyle="width:250px" rendered="#{profissional.profissionais.size() > 0}">
 				<f:selectItems value="#{profissional.profissionais}" var="p" itemLabel="#{p.nome}" itemValue="#{p.nome}" />
 			</p:selectCheckboxMenu>
 			&nbsp;

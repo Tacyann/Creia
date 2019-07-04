@@ -10,15 +10,32 @@
 	<title>Home</title>
 </h:head>
 <h:body>
-	<p:breadCrumb>
-	    <p:menuitem value="Home" url="home.faces" />
-	    <p:menuitem value="Gerenciador" url="gerenciador.faces" />
-	    <p:menuitem value="Suporte" url="suporte.faces" />
-	    <p:menuitem value="Sobre" url="sobre.faces" />
-	</p:breadCrumb>
-	<p:separator/>
+<!-- 	<p:breadCrumb> -->
+<!-- 		<p:menuitem value="Home" url="home.faces" /> -->
+<!-- 		<p:menuitem value="Gerenciador" url="gerenciador.faces" /> -->
+<!-- 		<p:menuitem value="Suporte" url="suporte.faces" /> -->
+<!-- 		<p:menuitem value="Sobre" url="sobre.faces" /> -->
+<!-- 	</p:breadCrumb> -->
+
 	<h:form>
-		<p:commandButton value="Processar" action="#{arquivoBean.ExisteArquivo}" />
+		<p:growl id="messages" showSummary="false" showDetail="true"/>
+
+		<p:menubar>
+			<p:submenu label="Cadastro">
+				<p:submenu label="Novo">
+					<p:menuitem value="Profissionais" action="#{home.cadastrar}" />
+					<p:menuitem value="Importar" action="#{arquivoBean.adicionar}"  update="messages" />
+					<p:menuitem value="Usuários" url="#" />
+				</p:submenu>
+				<p:menuitem value="Abrir" url="gerenciador.faces" />
+				<p:separator />
+				<p:menuitem value="Sair" url="home.faces" />
+			</p:submenu>
+			<p:submenu label="Ajuda">
+				<p:menuitem value="Sobre o Sistema" action="#{home.sobre}"/>
+			</p:submenu>
+		</p:menubar>
 	</h:form>
+
 </h:body>
 </html>

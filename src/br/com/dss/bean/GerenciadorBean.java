@@ -8,7 +8,6 @@ import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.context.Flash;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -28,9 +27,6 @@ public class GerenciadorBean implements Serializable {
 
 	@Inject
 	private FacesContext facescontext;
-	
-	@Inject
-	private Flash flash;
 
 	private List<ClienteArgument> listaCliente; 
 	private List<GuiaArgument> guias;

@@ -7,7 +7,7 @@ import br.com.dss.dao.GuiaDao;
 import br.com.dss.dao.LoteDao;
 import br.com.dss.dao.ProcedimentoDao;
 
-public class ServiceArquivo implements IDados {
+public class ServiceArquivo implements IDados, IAdiciona {
 
 	@Override
 	public boolean isExist(String filtro) {
@@ -23,8 +23,9 @@ public class ServiceArquivo implements IDados {
 		return false;
 	}
 
-	private void Processar(ArquivoDao arquivo) {
+	private boolean Processar(ArquivoDao arquivo) {
 
+		boolean importar = false;
 		LoteDao lote = new LoteDao();
 		GuiaDao guia = new GuiaDao();
 		DetalhesGuiaDao detalhe = new DetalhesGuiaDao();
@@ -71,9 +72,25 @@ public class ServiceArquivo implements IDados {
 				}	
 
 				System.out.println("No ServiceArquivo Qtd de lotes: " + countLote + " Qtd de guias: " + countGuia);
+				if(countLote > 0) {
+					importar = true;
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return importar;
+	}
+
+	@Override
+	public boolean adicionar(Object objeto) {
+		ArquivoDao arquivo = new ArquivoDao();
+		var add = Processar(arquivo);
+
+		if(add) {
+			return true;
+		}
+
+		return false;
 	}
 }

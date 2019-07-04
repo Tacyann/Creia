@@ -6,6 +6,7 @@ public class Profissional {
 	private String nome;
 	private String especializacao;
 	private int numeroconselho;
+	private boolean cadastrar;
 	
 	public int getId() {
 		return id;
@@ -30,5 +31,11 @@ public class Profissional {
 	}
 	public void setNumeroconselho(int numeroconselho) {
 		this.numeroconselho = numeroconselho;
+	}
+	public boolean isCadastrar() {
+		return cadastrar;
+	}
+	public void setCadastrar(boolean cadastrar) {
+		this.cadastrar = cadastrar;
 	}
 }

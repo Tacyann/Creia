@@ -17,7 +17,9 @@ import br.com.dss.servico.ServiceProfissional;
 public class ProfissionalBean implements Serializable{
 
 	private List<Profissional> profissionais = new ArrayList<>();
+	private Profissional profissional;
 	private String nome;
+	private boolean cadastrar;
 	
 	@PostConstruct
 	public void inicializar() {
@@ -32,6 +34,12 @@ public class ProfissionalBean implements Serializable{
 		}
 	}
 	
+	public void adicionar() {
+		Profissional p = new Profissional();
+		p.setCadastrar(true);
+		System.out.println(p.isCadastrar());
+	}
+	
 	public List<Profissional> getProfissionais() {
 		return profissionais;
 	}
@@ -40,5 +48,17 @@ public class ProfissionalBean implements Serializable{
 	}
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+	public Profissional getProfissional() {
+		return profissional;
+	}
+	public void setProfissionais(List<Profissional> profissionais) {
+		this.profissionais = profissionais;
+	}
+	public boolean isCadastrar() {
+		return cadastrar;
+	}
+	public void setCadastrar(boolean cadastrar) {
+		this.cadastrar = cadastrar;
 	}
 }
