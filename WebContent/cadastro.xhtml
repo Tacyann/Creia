@@ -18,16 +18,22 @@
 		</div>
 		<p:separator />
 		<p:commandButton value="Adicionar" action="#{profissional.adicionar}"/>
-		<p:panel id="cadastro" columns="2" rendered="profissional.cadastrar" >
-			<p:outputLabel value="Nome" />
-			<p:inputText id="nome" value="#{profissional.profissional.nome}"/>
-			<p:outputLabel value="Especialização" />
-			<p:inputText id="especializacao" value="#{profissional.profissional.especializacao}"/>
-			<p:outputLabel value="Numero do Conselho" />
-			<p:inputText id="numeroconselho" value="#{profissional.profissional.numeroconselho}"/>
-		</p:panel>
-		
-		<p:dataTable value="#{profissional.profissionais}" var="p" id="cadastroProfissionais" rendered="#{p.cadastrar}" resizableColumns="true" rows="10" 
+		<div style="width: 40%">
+			<p:panelGrid id="cadastro" layout="grid" columns="2" >
+				<p:outputLabel value="Nome" style="width: 20%"/>
+				<p:inputText id="nome" value="#{profissional.nome}" style="width: 70%"/>
+				<p:outputLabel value="Especialização" style="width: 20%"/>
+				<p:inputText id="especializacao" style="width: 70%"
+					value="#{profissional.especializacao}" />
+				<p:outputLabel value="Numero do Conselho" style="width: 20%"/>
+				<p:inputText id="numeroconselho" style="width: 70%"
+					value="#{profissional.numeroConselho}" />
+			</p:panelGrid>
+			<br />
+			<p:commandButton value="Salvar" action="#{profissional.salvar}" update="messages,cadastroProfissionais"/>
+		</div>
+		<p:separator />
+		<p:dataTable value="#{profissional.profissionais}" var="p" id="cadastroProfissionais" rendered="#{profissional.profissionais.size() > 0}" resizableColumns="true" rows="10" 
 						paginator="true"
 						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 						rowsPerPageTemplate="5,10,15" >
@@ -35,7 +41,7 @@
 				<h:outputText value="#{p.nome}" />
 			</p:column>
 			<p:column headerText="Especialidade" style="width:70px; font-size:15px;">
-				<h:outputText value="#{p.especialidade}" />
+				<h:outputText value="#{p.especializacao}" />
 			</p:column>
 			<p:column headerText="Nº Conselho" style="width:70px; font-size:15px;">
 				<h:outputText value="#{p.numeroconselho}" />

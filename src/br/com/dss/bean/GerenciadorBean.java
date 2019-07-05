@@ -45,6 +45,7 @@ public class GerenciadorBean implements Serializable {
 	private String[] clientes;
 	private String[] descricao;
 	private String[] profissionais;
+	private String profissional;
 	private Double valorTotal = 0.0;
 	private Double valorGlosa = 0.0;
 	private Double valorCreia = 0.0;
@@ -234,42 +235,17 @@ public class GerenciadorBean implements Serializable {
 		guias.sort(new GuiaArgumentComparator());
 		listaCliente = new TreeSet<ClienteArgument>(new ClienteArgumentComparator());
 		listaProced = new TreeSet<Procedimento>(new ProcedimentoComparator());
-		for(int i = 0; i < descricao.length; i++) {
-			
-			for(var guia : guias) {
-				ClienteArgument c = new ClienteArgument();
-				var procedimento = guia.getDetalheGuia().getProcedimento().getDescricao();
-				listaProced.add(guia.getDetalheGuia().getProcedimento());
-				
-				if(Integer.parseInt(descricao[i]) == guia.getDetalheGuia().getProcedimento().getProcedimento()) {
-					var nome = guia.getBeneficiario().getNome();
-					
-					vlrInformado = guia.getDetalheGuia().getValorInformado();
-					vlrLiberado = guia.getDetalheGuia().getValorLiberado();
-					vlrGlosa = guia.getDetalheGuia().getValorGlosa();
-					vlrProcessado = guia.getDetalheGuia().getValorProcessado();
-					
-					c.setBeneficiario(nome);
-					c.setProcedimento(procedimento);
-					c.setValorInformado(vlrInformado);
-					c.setValorLiberado(vlrLiberado);
-					c.setValorGlosa(vlrGlosa);
-					c.setValorProcessado(vlrProcessado);
-					listaCliente.add(c);
-				}				
-			}
-		}
 		
-		
-		for(var guia : listaCliente) {
+		for(var guia : guias) {
 			ClienteArgument c = new ClienteArgument();
-			var nome = guia.getBeneficiario();
-			var procedimento = guia.getProcedimento();
+			var procedimento = guia.getDetalheGuia().getProcedimento().getDescricao();
+			listaProced.add(guia.getDetalheGuia().getProcedimento());
+			var nome = guia.getBeneficiario().getNome();
 			
-			vlrInformado = guia.getValorInformado();
-			vlrLiberado = guia.getValorLiberado();
-			vlrGlosa = guia.getValorGlosa();
-			vlrProcessado = guia.getValorProcessado();
+			vlrInformado = guia.getDetalheGuia().getValorInformado();
+			vlrLiberado = guia.getDetalheGuia().getValorLiberado();
+			vlrGlosa = guia.getDetalheGuia().getValorGlosa();
+			vlrProcessado = guia.getDetalheGuia().getValorProcessado();
 			
 			c.setBeneficiario(nome);
 			c.setProcedimento(procedimento);
@@ -277,8 +253,27 @@ public class GerenciadorBean implements Serializable {
 			c.setValorLiberado(vlrLiberado);
 			c.setValorGlosa(vlrGlosa);
 			c.setValorProcessado(vlrProcessado);
-			clienteArgs.add(c);
+			clienteArgs.add(c);				
 		}
+		
+//		for(var guia : listaCliente) {
+//			ClienteArgument c = new ClienteArgument();
+//			var nome = guia.getBeneficiario();
+//			var procedimento = guia.getProcedimento();
+//			
+//			vlrInformado = guia.getValorInformado();
+//			vlrLiberado = guia.getValorLiberado();
+//			vlrGlosa = guia.getValorGlosa();
+//			vlrProcessado = guia.getValorProcessado();
+//			
+//			c.setBeneficiario(nome);
+//			c.setProcedimento(procedimento);
+//			c.setValorInformado(vlrInformado);
+//			c.setValorLiberado(vlrLiberado);
+//			c.setValorGlosa(vlrGlosa);
+//			c.setValorProcessado(vlrProcessado);
+//			clienteArgs.add(c);
+//		}
 		
 //		for(var n : nomes) {
 //			ClienteArgument c = new ClienteArgument();
@@ -492,5 +487,13 @@ public class GerenciadorBean implements Serializable {
 
 	public void setListaProced(Set<Procedimento> listaProced) {
 		this.listaProced = listaProced;
+	}
+
+	public String getProfissional() {
+		return profissional;
+	}
+
+	public void setProfissional(String profissional) {
+		this.profissional = profissional;
 	}
 }

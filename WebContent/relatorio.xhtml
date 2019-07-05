@@ -17,10 +17,10 @@
 	<br />
 	<div id="main" style="margin-left:15%;">
 	<h:form id="form" >
-		<p:repeat var="g" value="#{gerenciador.listaProced}">
+		<p:repeat var="g" value="#{gerenciador.clienteArgs}">
 			<p:panel style="width:70%;">
 				<div style="text-align: center;">
-					<p:outputLabel value="#{g.descricao}" />
+					<p:outputLabel value="#{g.procedimento}" />
 				</div>
 				<p:separator />
 					<div style="margin-bottom: 2px;">
