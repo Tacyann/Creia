@@ -2,8 +2,11 @@ package br.com.dss.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
@@ -16,10 +19,14 @@ import br.com.dss.argument.GuiaArgument;
 import br.com.dss.modelo.Beneficiario;
 import br.com.dss.modelo.DetalheGuia;
 import br.com.dss.modelo.Guia;
+import br.com.dss.modelo.Procedimento;
 import br.com.dss.servico.Service;
 import br.com.dss.servico.ServiceBeneficiario;
 import br.com.dss.servico.ServiceDetalheGuia;
 import br.com.dss.servico.ServiceGuia;
+import br.com.dss.util.ClienteArgumentComparator;
+import br.com.dss.util.GuiaArgumentComparator;
+import br.com.dss.util.ProcedimentoComparator;
 
 @Named("gerenciador")
 @SessionScoped
@@ -28,7 +35,8 @@ public class GerenciadorBean implements Serializable {
 	@Inject
 	private FacesContext facescontext;
 
-	private List<ClienteArgument> listaCliente; 
+	private Set<ClienteArgument> listaCliente; 
+	private Set<Procedimento> listaProced;
 	private List<GuiaArgument> guias;
 	private List<Double> valoresLiberados;
 	private List<Double> valoresGlosa;
@@ -211,28 +219,118 @@ public class GerenciadorBean implements Serializable {
 	}
 
 	public String gerarImpressao() {
-		
+		double vlrInformado = 0.0;
+		double vlrLiberado = 0.0;
+		double vlrGlosa = 0.0;
+		double vlrProcessado = 0.0;
+
 		if(guias == null && guias.size()==0) {
 			limpar();
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum cliente foi selecionado para a consulta.");
 			facescontext.addMessage(null, msg);
 		}
-		
+
 		clienteArgs = new ArrayList<ClienteArgument>();
-		
-		for(var guia :  guias) {
-			ClienteArgument clienteArg = new ClienteArgument();
+		guias.sort(new GuiaArgumentComparator());
+		listaCliente = new TreeSet<ClienteArgument>(new ClienteArgumentComparator());
+		listaProced = new TreeSet<Procedimento>(new ProcedimentoComparator());
+		for(int i = 0; i < descricao.length; i++) {
 			
-			clienteArg.setBeneficiario(guia.getBeneficiario());
-			clienteArg.setProcedimento(guia.getDetalheGuia().getProcedimento());
-			clienteArg.setValorInformado(guia.getDetalheGuia().getValorInformado());
-			clienteArg.setValorGlosa(guia.getDetalheGuia().getValorGlosa());
-			clienteArg.setValorProcessado(guia.getDetalheGuia().getValorProcessado());
-			clienteArg.setValorLiberado(guia.getDetalheGuia().getValorLiberado());
-			
-			clienteArgs.add(clienteArg);
+			for(var guia : guias) {
+				ClienteArgument c = new ClienteArgument();
+				var procedimento = guia.getDetalheGuia().getProcedimento().getDescricao();
+				listaProced.add(guia.getDetalheGuia().getProcedimento());
+				
+				if(Integer.parseInt(descricao[i]) == guia.getDetalheGuia().getProcedimento().getProcedimento()) {
+					var nome = guia.getBeneficiario().getNome();
+					
+					vlrInformado = guia.getDetalheGuia().getValorInformado();
+					vlrLiberado = guia.getDetalheGuia().getValorLiberado();
+					vlrGlosa = guia.getDetalheGuia().getValorGlosa();
+					vlrProcessado = guia.getDetalheGuia().getValorProcessado();
+					
+					c.setBeneficiario(nome);
+					c.setProcedimento(procedimento);
+					c.setValorInformado(vlrInformado);
+					c.setValorLiberado(vlrLiberado);
+					c.setValorGlosa(vlrGlosa);
+					c.setValorProcessado(vlrProcessado);
+					listaCliente.add(c);
+				}				
+			}
 		}
 		
+		
+		for(var guia : listaCliente) {
+			ClienteArgument c = new ClienteArgument();
+			var nome = guia.getBeneficiario();
+			var procedimento = guia.getProcedimento();
+			
+			vlrInformado = guia.getValorInformado();
+			vlrLiberado = guia.getValorLiberado();
+			vlrGlosa = guia.getValorGlosa();
+			vlrProcessado = guia.getValorProcessado();
+			
+			c.setBeneficiario(nome);
+			c.setProcedimento(procedimento);
+			c.setValorInformado(vlrInformado);
+			c.setValorLiberado(vlrLiberado);
+			c.setValorGlosa(vlrGlosa);
+			c.setValorProcessado(vlrProcessado);
+			clienteArgs.add(c);
+		}
+		
+//		for(var n : nomes) {
+//			ClienteArgument c = new ClienteArgument();
+//			vlrInformado = 0.0;
+//			vlrLiberado = 0.0;
+//			vlrGlosa = 0.0;
+//			vlrProcessado = 0.0;
+//	
+//			for(var p : nomeProcedimentos) {
+//				for(var guia : guias) {
+//					vlrInformado += guia.getDetalheGuia().getValorInformado();
+//					vlrLiberado += guia.getDetalheGuia().getValorLiberado();
+//					vlrGlosa += guia.getDetalheGuia().getValorGlosa();
+//					vlrProcessado += guia.getDetalheGuia().getValorProcessado();
+//				}
+//				c.setProcedimento(p);
+//			}
+//			c.setBeneficiario(n);
+//			c.setValorInformado(vlrInformado);
+//			c.setValorLiberado(vlrLiberado);
+//			c.setValorGlosa(vlrGlosa);
+//			c.setValorProcessado(vlrProcessado);
+//			clienteArgs.add(c);
+//		}
+		
+
+//		for(var guia : guias) {
+//			vlrInformado += vlrInformado + guia.getDetalheGuia().getValorInformado();
+//			vlrLiberado += vlrLiberado + guia.getDetalheGuia().getValorLiberado();
+//			vlrGlosa += vlrGlosa + guia.getDetalheGuia().getValorGlosa();
+//			vlrProcessado += vlrProcessado + guia.getDetalheGuia().getValorProcessado();
+//			
+//			ClienteArgument c = new ClienteArgument();
+//			c.setBeneficiario(nome);
+//			c.setProcedimento(procedimento);
+//			c.setValorInformado(vlrInformado);
+//			c.setValorLiberado(vlrLiberado);
+//			c.setValorGlosa(vlrGlosa);
+//			c.setValorProcessado(vlrProcessado);
+//			listaCliente.add(c);
+//		}
+//		for(var lista : listaCliente) {
+//			ClienteArgument c = new ClienteArgument();
+//			c.setBeneficiario(lista.getBeneficiario());
+//			c.setProcedimento(lista.getProcedimento());
+//			c.setValorInformado(lista.getValorInformado());
+//			c.setValorLiberado(lista.getValorLiberado());
+//			c.setValorGlosa(lista.getValorGlosa());
+//			c.setValorProcessado(lista.getValorProcessado());
+//			clienteArgs.add(c);
+//		}
+
 		return "relatorio";
 	}
 
@@ -388,11 +486,11 @@ public class GerenciadorBean implements Serializable {
 		this.clienteArgs = clienteArgs;
 	}
 
-	public List<ClienteArgument> getListaCliente() {
-		return listaCliente;
+	public Set<Procedimento> getListaProced() {
+		return listaProced;
 	}
 
-	public void setListaCliente(List<ClienteArgument> listaCliente) {
-		this.listaCliente = listaCliente;
+	public void setListaProced(Set<Procedimento> listaProced) {
+		this.listaProced = listaProced;
 	}
 }

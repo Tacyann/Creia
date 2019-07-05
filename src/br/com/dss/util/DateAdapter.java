@@ -1,4 +1,4 @@
-package br.com.dss.controle;
+package br.com.dss.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 

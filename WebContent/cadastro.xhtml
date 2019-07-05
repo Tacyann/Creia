@@ -14,7 +14,7 @@
 	<h:form>
 		<p:growl id="messages" showSummary="false" showDetail="true"/>
 		<div style="text-align: center;">
-			<p:outputLabel value="Cadastro de especialistas" />
+			<p:outputLabel value="Cadastro de Especialistas" />
 		</div>
 		<p:separator />
 		<p:commandButton value="Adicionar" action="#{profissional.adicionar}"/>
@@ -42,6 +42,9 @@
 			</p:column>
 		</p:dataTable>
 	</h:form>
-
+	<h:form id="sair">
+		<p:commandButton value="Sair" action="#{gerenciador.sair}" />
+	</h:form>
+	
 </h:body>
 </html>

@@ -1,27 +1,24 @@
 package br.com.dss.argument;
 
-import br.com.dss.modelo.Beneficiario;
-import br.com.dss.modelo.Procedimento;
-
 public class ClienteArgument {
 
-	private Beneficiario beneficiario;
-	private Procedimento procedimento;
+	private String beneficiario;
+	private String procedimento;
 	private Double valorInformado;
 	private Double valorLiberado;
 	private Double valorProcessado;
 	private Double valorGlosa;
 	
-	public Beneficiario getBeneficiario() {
+	public String getBeneficiario() {
 		return beneficiario;
 	}
-	public void setBeneficiario(Beneficiario beneficiario) {
+	public void setBeneficiario(String beneficiario) {
 		this.beneficiario = beneficiario;
 	}
-	public Procedimento getProcedimento() {
+	public String getProcedimento() {
 		return procedimento;
 	}
-	public void setProcedimento(Procedimento procedimento) {
+	public void setProcedimento(String procedimento) {
 		this.procedimento = procedimento;
 	}
 	public Double getValorInformado() {
