@@ -45,9 +45,11 @@ public class ProfissionalBean implements Serializable{
 	}
 	
 	public void adicionar() {
+		this.setCadastrar(true);
 		Profissional p = new Profissional();
 		p.setCadastrar(true);
 		System.out.println(p.isCadastrar());
+		System.out.println(cadastrar);
 	}
 	
 	public void salvar() {
@@ -66,7 +68,9 @@ public class ProfissionalBean implements Serializable{
 		if(add) {
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Cadastro adicionado com sucesso.");
 			context.addMessage(null, msg);
-			
+			this.setNome("");
+			this.setEspecializacao("");
+			this.setNumeroConselho("");
 			inicializar();
 		}else {
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Falha ao adicionar o cadastro.");

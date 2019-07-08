@@ -53,49 +53,91 @@
 </h:head>
 <h:body >
 
-	<h1 style="text-align:center; color:black; text-shadow: 5px 3px 5px #050;">Gerenciador das guias de atendimento</h1>
+	<h1 style="text-align:center; color:black; text-shadow: 5px 3px 5px gray;">Gerenciador das guias de atendimento</h1>
 	<h:form id="form">
 	<p:messages id="msg" globalOnly="true" showDetail="true" />
 		<p:panel>
-			<p:selectCheckboxMenu id="cliente" value="#{gerenciador.clientes}" label="Clientes" filter="true" filterMatchMode="startsWith" panelStyle="width:310px">
-				<f:selectItems value="#{cliente.beneficiarios}" var="c" itemLabel="#{c.nome}" itemValue="#{c.nome}" />
+			<p:selectCheckboxMenu id="cliente" 
+									value="#{gerenciador.clientes}" 
+									label="Clientes" 
+									filter="true" 
+									filterMatchMode="startsWith" 
+									panelStyle="width:310px">
+				<f:selectItems value="#{cliente.beneficiarios}" 
+								var="c" 
+								itemLabel="#{c.nome}" 
+								itemValue="#{c.nome}" />
 			</p:selectCheckboxMenu>
 			&nbsp;
-			<p:outputLabel for="dtInicial" value="Data Inicial:" /> &nbsp;
-			<p:datePicker id="dtInicial" value="#{gerenciador.dtInicial}" locale="pt_BR" monthNavigator="true" showButtonBar="false" showIcon="true" pattern="dd/MM/yyyy"/>
-			<p:outputLabel for="dtFinal" value="Data Final:" /> &nbsp;
-			<p:datePicker id="dtFinal" value="#{gerenciador.dtFinal}" locale="pt_BR" monthNavigator="true"  showButtonBar="false" showIcon="true" pattern="dd/MM/yyyy"/>
-		</p:panel>		
-		
-		<br/>
+			<p:outputLabel for="dtInicial" 
+							value="Data Inicial:" /> 
+			&nbsp;
+			<p:datePicker id="dtInicial" 
+							value="#{gerenciador.dtInicial}" 
+							locale="pt_BR" 
+							monthNavigator="true" 
+							showButtonBar="false" 
+							showIcon="true" 
+							pattern="dd/MM/yyyy"/>
+			<p:outputLabel for="dtFinal" 
+							value="Data Final:" /> 
+			&nbsp;
+			<p:datePicker id="dtFinal" 
+							value="#{gerenciador.dtFinal}" 
+							locale="pt_BR" 
+							monthNavigator="true" 
+							showButtonBar="false" 
+							showIcon="true" 
+							pattern="dd/MM/yyyy"/>
+		<p:separator />
 		<div style="text-align: right;">
 			&nbsp;
-			<p:commandButton value="Consultar" action="#{gerenciador.registros}"
-				update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg" />
+			<p:commandButton value="Consultar" 
+								action="#{gerenciador.registros}" 
+								update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg" />
 			&nbsp;
-			<p:commandButton value="Limpar" action="#{gerenciador.limpar}"
-				update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg" />
+			<p:commandButton value="Limpar" 
+								action="#{gerenciador.limpar}" 
+								update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg" />
 			<br />
 		</div>
 		<p:separator/>
 		<div style="text-align: right;">
-			<p:selectCheckboxMenu id="profissional" value="#{gerenciador.profissionais}" label="Profissionais" filter="true" filterMatchMode="startsWith" panelStyle="width:250px" rendered="#{profissional.profissionais.size() > 0}">
-				<f:selectItems value="#{profissional.profissionais}" var="p" itemLabel="#{p.nome}" itemValue="#{p.nome}" />
+			<p:selectCheckboxMenu id="procedimento" 
+									value="#{gerenciador.descricao}" 
+									label="Procedimentos" 
+									filter="true" 
+									filterMatchMode="startsWith" 
+									panelStyle="width:250px">
+				<f:selectItems value="#{procedimento.procedimentos}" 
+								var="p" 
+								itemLabel="#{p.descricao}" 
+								itemValue="#{p.procedimento}"/>
 			</p:selectCheckboxMenu>
 			&nbsp;
-			<p:selectCheckboxMenu id="procedimento" value="#{gerenciador.descricao}" label="Procedimentos" filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
-				<f:selectItems value="#{procedimento.procedimentos}" var="p" itemLabel="#{p.descricao}" itemValue="#{p.procedimento}"/>
-			</p:selectCheckboxMenu>
-			&nbsp;
-			<p:commandButton value="Filtrar" action="#{gerenciador.filtroProcedimento}"
-				update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg" />
-			<br /> <br />
+			<p:commandButton id="filtrar" 
+								value="Filtrar" 
+								action="#{gerenciador.filtroProcedimento}" 
+								update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg" />
 		</div>
-		<p:dataTable value="#{gerenciador.guias}" var="g" id="registrosGuias" resizableColumns="true" rows="10" 
+		</p:panel>		
+		<div>
+			<p:outputLabel id="nomeProf" value="#{gerenciador.selectProfissionais}"/>
+		</div>
+		<br /> 
+
+		<p:dataTable value="#{gerenciador.guias}" 
+						var="g" 
+						id="registrosGuias" 
+						resizableColumns="true" 
+						rows="10" 
 						paginator="true"
 						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 						rowsPerPageTemplate="5,10,15" >
-			<p:column headerText="Beneficiario" sortBy="#{g.beneficiario.nome}" style="width:290px; font-size:15px;">
+			<p:column headerText="Beneficiario" 
+						sortBy="#{g.beneficiario.nome}" 
+						style="width:290px; 
+						font-size:15px;">
 				<h:outputText value="#{g.beneficiario.nome}" />
 			</p:column>
 			<p:column headerText="Data" style="width:70px; font-size:15px;">
@@ -127,12 +169,6 @@
 					<f:convertNumber type="currency" lacale="pt_BR" />
 				</h:outputText>
 			</p:column>
-<!-- 			<f:facet name="paginatorTopLeft"> -->
-<!-- 				<p:commandButton type="button" icon="pi-refresh" /> -->
-<!-- 			</f:facet> -->
-<!-- 			<f:facet name="paginatorBottomRight"> -->
-<!-- 				<p:commandButton type="button" icon="pi-cloud-upload" /> -->
-<!-- 			</f:facet> -->
 		</p:dataTable>
 		<p:separator/>
 		<p:panelGrid columns="2">
@@ -149,11 +185,26 @@
 				<f:convertNumber type="currency" lacale="pt_BR" />
 			</h:outputText>
 			<h:outputText value="Total do Profissional: " />
-			<h:outputText value="#{gerenciador.valorProfissional}" id="valorProfissional">
-				<f:convertNumber type="currency" lacale="pt_BR" />
+			<h:outputText value="#{gerenciador.valorProfissional}" 
+							id="valorProfissional">
+				<f:convertNumber type="currency" 
+								lacale="pt_BR" />
 			</h:outputText>
 		</p:panelGrid>
 		<p:separator/>
+		<p:selectCheckboxMenu id="profissional" 
+								value="#{gerenciador.selectProfissionais}" 
+								label="Relacionar o Profissional" 
+								filter="true" 
+								filterMatchMode="startsWith" 
+								panelStyle="width:310px" 
+								>
+			<f:selectItems value="#{profissional.profissionais}" 
+							var="p" 
+							itemLabel="#{p.nome}" 
+							itemValue="#{p.nome}" />
+		</p:selectCheckboxMenu>
+			&nbsp;
 		<p:commandButton value="Gerar Impressão" action="#{gerenciador.gerarImpressao}" />
 		<p:commandButton value="Sair" action="#{gerenciador.sair}" />
 	</h:form>

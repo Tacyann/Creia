@@ -17,7 +17,7 @@
 			<p:outputLabel value="Cadastro de Especialistas" />
 		</div>
 		<p:separator />
-		<p:commandButton value="Adicionar" action="#{profissional.adicionar}"/>
+
 		<div style="width: 40%">
 			<p:panelGrid id="cadastro" layout="grid" columns="2" >
 				<p:outputLabel value="Nome" style="width: 20%"/>
@@ -30,7 +30,7 @@
 					value="#{profissional.numeroConselho}" />
 			</p:panelGrid>
 			<br />
-			<p:commandButton value="Salvar" action="#{profissional.salvar}" update="messages,cadastroProfissionais"/>
+			<p:commandButton value="Salvar" action="#{profissional.salvar}" ajax="false" update="messages,cadastroProfissionais"/>
 		</div>
 		<p:separator />
 		<p:dataTable value="#{profissional.profissionais}" var="p" id="cadastroProfissionais" rendered="#{profissional.profissionais.size() > 0}" resizableColumns="true" rows="10" 

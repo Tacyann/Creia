@@ -2,7 +2,6 @@ package br.com.dss.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -24,7 +23,6 @@ import br.com.dss.servico.Service;
 import br.com.dss.servico.ServiceBeneficiario;
 import br.com.dss.servico.ServiceDetalheGuia;
 import br.com.dss.servico.ServiceGuia;
-import br.com.dss.util.ClienteArgumentComparator;
 import br.com.dss.util.GuiaArgumentComparator;
 import br.com.dss.util.ProcedimentoComparator;
 
@@ -34,8 +32,15 @@ public class GerenciadorBean implements Serializable {
 
 	@Inject
 	private FacesContext facescontext;
+	
+	public void nomeProf() {
+		if(selectProfissionais.length > 0) {
+			for(int i = 0; i < selectProfissionais.length; i++) {
+				this.setProfissional(selectProfissionais[i].toString());				
+			}
+		}
+	}
 
-	private Set<ClienteArgument> listaCliente; 
 	private Set<Procedimento> listaProced;
 	private List<GuiaArgument> guias;
 	private List<Double> valoresLiberados;
@@ -44,7 +49,7 @@ public class GerenciadorBean implements Serializable {
 	private ClienteArgument clienteArg;
 	private String[] clientes;
 	private String[] descricao;
-	private String[] profissionais;
+	private String[] selectProfissionais;
 	private String profissional;
 	private Double valorTotal = 0.0;
 	private Double valorGlosa = 0.0;
@@ -95,15 +100,6 @@ public class GerenciadorBean implements Serializable {
 					guia.setBeneficiario(item.getBeneficiario());					
 				}
 				guia.setDataIni(item.getDataIni());
-
-				//				var glosa = item.getGlosa();
-				//				
-				//				if(glosa != null) {
-				//					guia.setGlosa(glosa);	
-				//					for(var g : glosa) {
-				//						System.out.println(g.getDescricao());
-				//					}
-				//				}
 
 				var detalheGuia = (DetalheGuia) servico.Obter(sdg, guia.getPrestador());
 
@@ -233,7 +229,6 @@ public class GerenciadorBean implements Serializable {
 
 		clienteArgs = new ArrayList<ClienteArgument>();
 		guias.sort(new GuiaArgumentComparator());
-		listaCliente = new TreeSet<ClienteArgument>(new ClienteArgumentComparator());
 		listaProced = new TreeSet<Procedimento>(new ProcedimentoComparator());
 		
 		for(var guia : guias) {
@@ -255,76 +250,6 @@ public class GerenciadorBean implements Serializable {
 			c.setValorProcessado(vlrProcessado);
 			clienteArgs.add(c);				
 		}
-		
-//		for(var guia : listaCliente) {
-//			ClienteArgument c = new ClienteArgument();
-//			var nome = guia.getBeneficiario();
-//			var procedimento = guia.getProcedimento();
-//			
-//			vlrInformado = guia.getValorInformado();
-//			vlrLiberado = guia.getValorLiberado();
-//			vlrGlosa = guia.getValorGlosa();
-//			vlrProcessado = guia.getValorProcessado();
-//			
-//			c.setBeneficiario(nome);
-//			c.setProcedimento(procedimento);
-//			c.setValorInformado(vlrInformado);
-//			c.setValorLiberado(vlrLiberado);
-//			c.setValorGlosa(vlrGlosa);
-//			c.setValorProcessado(vlrProcessado);
-//			clienteArgs.add(c);
-//		}
-		
-//		for(var n : nomes) {
-//			ClienteArgument c = new ClienteArgument();
-//			vlrInformado = 0.0;
-//			vlrLiberado = 0.0;
-//			vlrGlosa = 0.0;
-//			vlrProcessado = 0.0;
-//	
-//			for(var p : nomeProcedimentos) {
-//				for(var guia : guias) {
-//					vlrInformado += guia.getDetalheGuia().getValorInformado();
-//					vlrLiberado += guia.getDetalheGuia().getValorLiberado();
-//					vlrGlosa += guia.getDetalheGuia().getValorGlosa();
-//					vlrProcessado += guia.getDetalheGuia().getValorProcessado();
-//				}
-//				c.setProcedimento(p);
-//			}
-//			c.setBeneficiario(n);
-//			c.setValorInformado(vlrInformado);
-//			c.setValorLiberado(vlrLiberado);
-//			c.setValorGlosa(vlrGlosa);
-//			c.setValorProcessado(vlrProcessado);
-//			clienteArgs.add(c);
-//		}
-		
-
-//		for(var guia : guias) {
-//			vlrInformado += vlrInformado + guia.getDetalheGuia().getValorInformado();
-//			vlrLiberado += vlrLiberado + guia.getDetalheGuia().getValorLiberado();
-//			vlrGlosa += vlrGlosa + guia.getDetalheGuia().getValorGlosa();
-//			vlrProcessado += vlrProcessado + guia.getDetalheGuia().getValorProcessado();
-//			
-//			ClienteArgument c = new ClienteArgument();
-//			c.setBeneficiario(nome);
-//			c.setProcedimento(procedimento);
-//			c.setValorInformado(vlrInformado);
-//			c.setValorLiberado(vlrLiberado);
-//			c.setValorGlosa(vlrGlosa);
-//			c.setValorProcessado(vlrProcessado);
-//			listaCliente.add(c);
-//		}
-//		for(var lista : listaCliente) {
-//			ClienteArgument c = new ClienteArgument();
-//			c.setBeneficiario(lista.getBeneficiario());
-//			c.setProcedimento(lista.getProcedimento());
-//			c.setValorInformado(lista.getValorInformado());
-//			c.setValorLiberado(lista.getValorLiberado());
-//			c.setValorGlosa(lista.getValorGlosa());
-//			c.setValorProcessado(lista.getValorProcessado());
-//			clienteArgs.add(c);
-//		}
 
 		return "relatorio";
 	}
@@ -343,15 +268,6 @@ public class GerenciadorBean implements Serializable {
 			guia.setOperadora(item.getOperadora());
 			guia.setBeneficiario(item.getBeneficiario());
 			guia.setDataIni(item.getDataIni());
-
-			//			var glosa = item.getGlosa();
-			//			
-			//			if(glosa != null) {
-			//				guia.setGlosa(glosa);	
-			//				for(var g : glosa) {
-			//					System.out.println(g.getDescricao());
-			//				}
-			//			}
 
 			var detalheGuia = (DetalheGuia) servico.Obter(sdg, guia.getPrestador());			
 			guia.setDetalheGuia(detalheGuia);
@@ -408,15 +324,7 @@ public class GerenciadorBean implements Serializable {
 	public void setDescricao(String[] descricao) {
 		this.descricao = descricao;
 	}
-
-	public String[] getProfissionais() {
-		return profissionais;
-	}
-
-	public void setPrifissionais(String[] profissionais) {
-		this.profissionais = profissionais;
-	}
-
+	
 	public Double getValorTotal() {
 		return valorTotal;
 	}
@@ -495,5 +403,13 @@ public class GerenciadorBean implements Serializable {
 
 	public void setProfissional(String profissional) {
 		this.profissional = profissional;
+	}
+	
+	public String[] getSelectProfissionais() {
+		return selectProfissionais;
+	}
+	
+	public void setSelectProfissionais(String[] selectProfissionais) {
+		this.selectProfissionais = selectProfissionais;
 	}
 }
