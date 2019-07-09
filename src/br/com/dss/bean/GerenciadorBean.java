@@ -215,45 +215,45 @@ public class GerenciadorBean implements Serializable {
 	}
 
 	public String gerarImpressao() {
-		double vlrInformado = 0.0;
-		double vlrLiberado = 0.0;
-		double vlrGlosa = 0.0;
-		double vlrProcessado = 0.0;
+//		double vlrInformado = 0.0;
+//		double vlrLiberado = 0.0;
+//		double vlrGlosa = 0.0;
+//		double vlrProcessado = 0.0;
+//
+//		if(guias == null && guias.size()==0) {
+//			limpar();
+//			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum cliente foi selecionado para a consulta.");
+//			context.addMessage(null, msg);
+//		}
 
-		if(guias == null && guias.size()==0) {
-			limpar();
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum cliente foi selecionado para a consulta.");
-			context.addMessage(null, msg);
-		}
-
-		clienteArgs = new ArrayList<ClienteArgument>();
-		guias.sort(new GuiaArgumentComparator());
-		listaProced = new TreeSet<Procedimento>(new ProcedimentoComparator());
-		
-		for(var guia : guias) {
-			ClienteArgument c = new ClienteArgument();
-			var procedimento = guia.getDetalheGuia().getProcedimento().getDescricao();
-			listaProced.add(guia.getDetalheGuia().getProcedimento());
-			var nome = guia.getBeneficiario().getNome();
-			
-			vlrInformado = guia.getDetalheGuia().getValorInformado();
-			vlrLiberado = guia.getDetalheGuia().getValorLiberado();
-			vlrGlosa = guia.getDetalheGuia().getValorGlosa();
-			vlrProcessado = guia.getDetalheGuia().getValorProcessado();
-			
-			c.setBeneficiario(nome);
-			c.setProcedimento(procedimento);
-			c.setValorInformado(vlrInformado);
-			c.setValorLiberado(vlrLiberado);
-			c.setValorGlosa(vlrGlosa);
-			c.setValorProcessado(vlrProcessado);
-			clienteArgs.add(c);				
-		}
+//		clienteArgs = new ArrayList<ClienteArgument>();
+//		guias.sort(new GuiaArgumentComparator());
+//		listaProced = new TreeSet<Procedimento>(new ProcedimentoComparator());
+//		
+//		for(var guia : guias) {
+//			ClienteArgument c = new ClienteArgument();
+//			var procedimento = guia.getDetalheGuia().getProcedimento().getDescricao();
+//			listaProced.add(guia.getDetalheGuia().getProcedimento());
+//			var nome = guia.getBeneficiario().getNome();
+//			
+//			vlrInformado = guia.getDetalheGuia().getValorInformado();
+//			vlrLiberado = guia.getDetalheGuia().getValorLiberado();
+//			vlrGlosa = guia.getDetalheGuia().getValorGlosa();
+//			vlrProcessado = guia.getDetalheGuia().getValorProcessado();
+//			
+//			c.setBeneficiario(nome);
+//			c.setProcedimento(procedimento);
+//			c.setValorInformado(vlrInformado);
+//			c.setValorLiberado(vlrLiberado);
+//			c.setValorGlosa(vlrGlosa);
+//			c.setValorProcessado(vlrProcessado);
+//			clienteArgs.add(c);				
+//		}
 		
 		Set<String> nomeProced = new TreeSet<String>();
-		Set<String> nomeCliente = new TreeSet<String>();
+
 		listaRelatorio = new ArrayList<>();
-		var procedimento = "";
+		var proc = "";
 		
 		Service servico = new Service();
 		ServiceProcedimento sp = new ServiceProcedimento();
@@ -273,42 +273,39 @@ public class GerenciadorBean implements Serializable {
 		}
 		var countLoop = 0;
 		for(int i = 0; i < codigos.size(); i++) {
-			StringBuilder nomeClientes = new StringBuilder();
+
 			var vInformado = 0.0;
 			var qtd = 0;
 			var vGlosa = 0.0;
 			var vProcessado = 0.0;
 			var vLiberado = 0.0;
 			RelatorioProcedimento relatorio = new RelatorioProcedimento();
+			System.out.println("Qtd de Guias: " + guias.size());
 			for(var guia : guias) {
-				nomeCliente.clear();
 				
 				if(Integer.parseInt(codigos.get(i)) == guia.getDetalheGuia().getProcedimento().getProcedimento()) {
 					nomeProced.add(guia.getDetalheGuia().getProcedimento().getDescricao());
-					nomeCliente.add(guia.getBeneficiario().getNome());
-					for(var n : nomeCliente) {
-						nomeClientes.append(n).append(",");						
-					}
+					
 					vInformado += vInformado + guia.getDetalheGuia().getValorInformado();
 					qtd += qtd + guia.getDetalheGuia().getQtdExecutada();
 					vGlosa += vGlosa + guia.getDetalheGuia().getValorGlosa();
 					vProcessado += vProcessado + guia.getDetalheGuia().getValorProcessado();
 					vLiberado += vLiberado + guia.getDetalheGuia().getValorLiberado();
-					countLoop++;
-					procedimento = "";
+					proc = "";
 					for(var proced : nomeProced) {
-						procedimento = proced;
+						proc = proced;
 					}
 					
 					relatorio.setQuantidade(qtd);
-					relatorio.setVlrInformado(vInformado);
+					relatorio.setVlrInformado(vInformado * 54.5 / 100);
 					relatorio.setVlrGlosa(vGlosa);
-					relatorio.setVlrProcessado(vProcessado);
-					relatorio.setVlrLiberado(vLiberado);
+					relatorio.setVlrProcessado(vProcessado * 54.5 / 100);
+					relatorio.setVlrLiberado(vLiberado * 54.5 / 100);
 				}
-				relatorio.setNomeProcedimento(procedimento);
-				relatorio.setClientes(nomeClientes.toString());
+				countLoop++;
 			}
+			
+			relatorio.setNomeProcedimento(proc);
 			listaRelatorio.add(relatorio);
 			System.out.println("Qtd loop: " + countLoop);
 		}

@@ -17,17 +17,22 @@
 	<br />
 	<div id="main" style="margin-left:15%;">
 	<h:form id="form" >
-		
+		<p:panel style="width:70%;">
+			<div style="margin-bottom: 2px;">
+				<p:outputLabel value="Cliente(s):" />&nbsp;
+			</div>
+			<p:repeat var="c" value="#{gerenciador.clientes}">
+				&nbsp;&nbsp;<p:outputLabel value="#{c}" />
+				<br/>
+			</p:repeat>
+		</p:panel>
+		<br/>
 		<p:repeat var="g" value="#{gerenciador.listaRelatorio}">
 			<p:panel style="width:70%;">
 				<div style="text-align: center;">
 					<p:outputLabel value="#{g.nomeProcedimento}" />
 				</div>
 				<p:separator />
-				<div style="margin-bottom: 2px;">
-					<p:outputLabel value="Cliente:" />&nbsp;
-				</div>
-				<p:outputLabel value="#{g.clientes}" />
 					
 				<p:panelGrid columns="2" layout="grid">
 					<p:outputLabel value="Valor Informado" />
@@ -55,8 +60,16 @@
 				</p:panelGrid>
 			</p:panel>
 			<br />
-			<br />
 		</p:repeat>
+		<p:panel style="width:70%;">
+			<h:outputText value="Total do Profissional: " />
+				<h:outputText value="#{gerenciador.valorProfissional}" 
+								id="valorProfissional">
+				<f:convertNumber type="currency" 
+								lacale="pt_BR" />
+			</h:outputText>
+		</p:panel>
+		<br />
 	</h:form>
 	</div>
 	<h:form id="sair">
