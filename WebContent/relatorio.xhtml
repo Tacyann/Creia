@@ -17,35 +17,39 @@
 	<br />
 	<div id="main" style="margin-left:15%;">
 	<h:form id="form" >
-		<p:repeat var="g" value="#{gerenciador.clienteArgs}">
+		
+		<p:repeat var="g" value="#{gerenciador.listaRelatorio}">
 			<p:panel style="width:70%;">
 				<div style="text-align: center;">
-					<p:outputLabel value="#{g.procedimento}" />
+					<p:outputLabel value="#{g.nomeProcedimento}" />
 				</div>
 				<p:separator />
-					<div style="margin-bottom: 2px;">
-						<p:outputLabel value="Cliente:" />&nbsp;
-					</div>
-					<p:outputLabel value="#{g.beneficiario}" />
+				<div style="margin-bottom: 2px;">
+					<p:outputLabel value="Cliente:" />&nbsp;
+				</div>
+				<p:outputLabel value="#{g.clientes}" />
 					
 				<p:panelGrid columns="2" layout="grid">
 					<p:outputLabel value="Valor Informado" />
-					<p:outputLabel value="#{g.valorInformado}">
+					<p:outputLabel value="#{g.vlrInformado}">
 						<f:convertNumber type="currency" lacale="pt_BR" />
 					</p:outputLabel>
 					
+					<p:outputLabel value="Qtd Executada" />
+					<p:outputLabel value="#{g.quantidade}" />
+					
 					<p:outputLabel value="Valor Liberado" />
-					<p:outputLabel value="#{g.valorLiberado}">
+					<p:outputLabel value="#{g.vlrLiberado}">
 						<f:convertNumber type="currency" lacale="pt_BR" />
 					</p:outputLabel>
 					
 					<p:outputLabel value="Valor Processado" />
-					<p:outputLabel value="#{g.valorProcessado}">
+					<p:outputLabel value="#{g.vlrProcessado}">
 						<f:convertNumber type="currency" lacale="pt_BR" />
 					</p:outputLabel>
 					
 					<p:outputLabel value="Valor Glosa" />
-					<p:outputLabel value="#{g.valorGlosa}">
+					<p:outputLabel value="#{g.vlrGlosa}">
 						<f:convertNumber type="currency" lacale="pt_BR" />
 					</p:outputLabel>
 				</p:panelGrid>

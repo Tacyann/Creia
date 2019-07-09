@@ -10,6 +10,7 @@ import java.util.TreeSet;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -23,23 +24,20 @@ import br.com.dss.servico.Service;
 import br.com.dss.servico.ServiceBeneficiario;
 import br.com.dss.servico.ServiceDetalheGuia;
 import br.com.dss.servico.ServiceGuia;
+import br.com.dss.servico.ServiceProcedimento;
 import br.com.dss.util.GuiaArgumentComparator;
 import br.com.dss.util.ProcedimentoComparator;
+import br.com.dss.util.RelatorioProcedimento;
 
 @Named("gerenciador")
 @SessionScoped
 public class GerenciadorBean implements Serializable {
 
 	@Inject
-	private FacesContext facescontext;
+	private FacesContext context;
 	
-	public void nomeProf() {
-		if(selectProfissionais.length > 0) {
-			for(int i = 0; i < selectProfissionais.length; i++) {
-				this.setProfissional(selectProfissionais[i].toString());				
-			}
-		}
-	}
+	@Inject
+	private Flash flash;
 
 	private Set<Procedimento> listaProced;
 	private List<GuiaArgument> guias;
@@ -47,9 +45,10 @@ public class GerenciadorBean implements Serializable {
 	private List<Double> valoresGlosa;
 	private List<ClienteArgument> clienteArgs;
 	private ClienteArgument clienteArg;
+	private List<RelatorioProcedimento> listaRelatorio;
 	private String[] clientes;
 	private String[] descricao;
-	private String[] selectProfissionais;
+	private String selectProfissionais;
 	private String profissional;
 	private Double valorTotal = 0.0;
 	private Double valorGlosa = 0.0;
@@ -71,7 +70,7 @@ public class GerenciadorBean implements Serializable {
 		if(clientes.length == 0) {
 			limpar();
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum cliente foi selecionado para a consulta.");
-			facescontext.addMessage(null, msg);
+			context.addMessage(null, msg);
 		}else {
 			if(descricao.length > 0) {
 				var tam = descricao.length;
@@ -82,7 +81,7 @@ public class GerenciadorBean implements Serializable {
 					texto = " procedimentos estão selecionados.";
 				}
 				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, descricao.length + texto);
-				facescontext.addMessage(null, msg);
+				context.addMessage(null, msg);
 			}
 
 			java.sql.Date dt1 = new java.sql.Date(getDtInicial().getTime());
@@ -142,15 +141,15 @@ public class GerenciadorBean implements Serializable {
 			if(clientes.length == 0) {
 				limpar();
 				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum cliente foi selecionado para a consulta.");
-				facescontext.addMessage(null, msg);
+				context.addMessage(null, msg);
 			}else if(descricao.length == 0) {
 				limpar();
 				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum Procedimento foi selecionado para a consulta.");
-				facescontext.addMessage(null, msg);
+				context.addMessage(null, msg);
 			}else if(clientes.length == 0 && descricao.length == 0) {
 				limpar();
 				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum Procedimento foi selecionado para a consulta.");
-				facescontext.addMessage(null, msg);
+				context.addMessage(null, msg);
 			}else {
 				java.sql.Date dt1 = new java.sql.Date(getDtInicial().getTime());
 				java.sql.Date dt2 = new java.sql.Date(getDtFinal().getTime());
@@ -196,7 +195,7 @@ public class GerenciadorBean implements Serializable {
 		}else {
 			limpar();
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum cliente foi selecionado para a consulta.");
-			facescontext.addMessage(null, msg);
+			context.addMessage(null, msg);
 		}
 	}
 
@@ -224,7 +223,7 @@ public class GerenciadorBean implements Serializable {
 		if(guias == null && guias.size()==0) {
 			limpar();
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum cliente foi selecionado para a consulta.");
-			facescontext.addMessage(null, msg);
+			context.addMessage(null, msg);
 		}
 
 		clienteArgs = new ArrayList<ClienteArgument>();
@@ -250,7 +249,70 @@ public class GerenciadorBean implements Serializable {
 			c.setValorProcessado(vlrProcessado);
 			clienteArgs.add(c);				
 		}
-
+		
+		Set<String> nomeProced = new TreeSet<String>();
+		Set<String> nomeCliente = new TreeSet<String>();
+		listaRelatorio = new ArrayList<>();
+		var procedimento = "";
+		
+		Service servico = new Service();
+		ServiceProcedimento sp = new ServiceProcedimento();
+		
+		List<String> codigos = new ArrayList<>();
+		
+		if(descricao.length == 0) {
+			@SuppressWarnings("unchecked")
+			var listaProcedimento = (List<Procedimento>) servico.Listar(sp);
+			for(var codigo : listaProcedimento) {
+				codigos.add(Integer.toString(codigo.getProcedimento()));
+			}
+		}else {
+			for(int i = 0; i < descricao.length; i++) {
+				codigos.add(descricao[i]);
+			}
+		}
+		var countLoop = 0;
+		for(int i = 0; i < codigos.size(); i++) {
+			StringBuilder nomeClientes = new StringBuilder();
+			var vInformado = 0.0;
+			var qtd = 0;
+			var vGlosa = 0.0;
+			var vProcessado = 0.0;
+			var vLiberado = 0.0;
+			RelatorioProcedimento relatorio = new RelatorioProcedimento();
+			for(var guia : guias) {
+				nomeCliente.clear();
+				
+				if(Integer.parseInt(codigos.get(i)) == guia.getDetalheGuia().getProcedimento().getProcedimento()) {
+					nomeProced.add(guia.getDetalheGuia().getProcedimento().getDescricao());
+					nomeCliente.add(guia.getBeneficiario().getNome());
+					for(var n : nomeCliente) {
+						nomeClientes.append(n).append(",");						
+					}
+					vInformado += vInformado + guia.getDetalheGuia().getValorInformado();
+					qtd += qtd + guia.getDetalheGuia().getQtdExecutada();
+					vGlosa += vGlosa + guia.getDetalheGuia().getValorGlosa();
+					vProcessado += vProcessado + guia.getDetalheGuia().getValorProcessado();
+					vLiberado += vLiberado + guia.getDetalheGuia().getValorLiberado();
+					countLoop++;
+					procedimento = "";
+					for(var proced : nomeProced) {
+						procedimento = proced;
+					}
+					
+					relatorio.setQuantidade(qtd);
+					relatorio.setVlrInformado(vInformado);
+					relatorio.setVlrGlosa(vGlosa);
+					relatorio.setVlrProcessado(vProcessado);
+					relatorio.setVlrLiberado(vLiberado);
+				}
+				relatorio.setNomeProcedimento(procedimento);
+				relatorio.setClientes(nomeClientes.toString());
+			}
+			listaRelatorio.add(relatorio);
+			System.out.println("Qtd loop: " + countLoop);
+		}
+		
 		return "relatorio";
 	}
 
@@ -294,11 +356,11 @@ public class GerenciadorBean implements Serializable {
 	}
 
 	public FacesContext getFacescontext() {
-		return facescontext;
+		return context;
 	}
 
 	public void setFacescontext(FacesContext facescontext) {
-		this.facescontext = facescontext;
+		this.context = facescontext;
 	}
 
 	public List<GuiaArgument> getGuias() {
@@ -405,11 +467,14 @@ public class GerenciadorBean implements Serializable {
 		this.profissional = profissional;
 	}
 	
-	public String[] getSelectProfissionais() {
+	public String getSelectProfissionais() {
 		return selectProfissionais;
 	}
 	
-	public void setSelectProfissionais(String[] selectProfissionais) {
+	public void setSelectProfissionais(String selectProfissionais) {
 		this.selectProfissionais = selectProfissionais;
+	}
+	public List<RelatorioProcedimento> getListaRelatorio() {
+		return listaRelatorio;
 	}
 }

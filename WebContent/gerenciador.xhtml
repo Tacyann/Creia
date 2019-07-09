@@ -121,9 +121,6 @@
 								update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg" />
 		</div>
 		</p:panel>		
-		<div>
-			<p:outputLabel id="nomeProf" value="#{gerenciador.selectProfissionais}"/>
-		</div>
 		<br /> 
 
 		<p:dataTable value="#{gerenciador.guias}" 
@@ -171,41 +168,46 @@
 			</p:column>
 		</p:dataTable>
 		<p:separator/>
-		<p:panelGrid columns="2">
-			<h:outputText value="Total Geral: " />
-			<h:outputText value="#{gerenciador.valorTotal}" id="valorTotal">
-				<f:convertNumber type="currency" lacale="pt_BR" />
-			</h:outputText>
-			<h:outputText value="Total da Creia: " />
-			<h:outputText value="#{gerenciador.valorCreia}" id="valorCreia">
-				<f:convertNumber type="currency" lacale="pt_BR" />
-			</h:outputText>
-			<h:outputText value="Total de Glosa: " />
-			<h:outputText value="#{gerenciador.valorGlosa}" id="valorGlosa">
-				<f:convertNumber type="currency" lacale="pt_BR" />
-			</h:outputText>
-			<h:outputText value="Total do Profissional: " />
-			<h:outputText value="#{gerenciador.valorProfissional}" 
-							id="valorProfissional">
-				<f:convertNumber type="currency" 
-								lacale="pt_BR" />
-			</h:outputText>
+		<p:messages id="msgProfissional" globalOnly="true" showDetail="true" />	
+		<p:panelGrid columns="2" layout="grid">
+			<p:panelGrid columns="2">
+				<h:outputText value="Total Geral: " />
+				<h:outputText value="#{gerenciador.valorTotal}" id="valorTotal">
+					<f:convertNumber type="currency" lacale="pt_BR" />
+				</h:outputText>
+				<h:outputText value="Total da Creia: " />
+				<h:outputText value="#{gerenciador.valorCreia}" id="valorCreia">
+					<f:convertNumber type="currency" lacale="pt_BR" />
+				</h:outputText>
+				<h:outputText value="Total de Glosa: " />
+				<h:outputText value="#{gerenciador.valorGlosa}" id="valorGlosa">
+					<f:convertNumber type="currency" lacale="pt_BR" />
+				</h:outputText>
+				<h:outputText value="Total do Profissional: " />
+				<h:outputText value="#{gerenciador.valorProfissional}" 
+								id="valorProfissional">
+					<f:convertNumber type="currency" 
+									lacale="pt_BR" />
+				</h:outputText>
+			</p:panelGrid>
+			<p:panel>
+			<p:outputLabel value="Relacionar o Profissional"/> &nbsp;
+			<p:selectOneMenu id="profissional" 
+								value="#{gerenciador.selectProfissionais}"
+								filter="true"
+								filterMatchMode="startsWith"
+								panelStyle="width:310px">
+				<f:selectItem noSelectionOption="true"/>
+				<f:selectItems value="#{profissional.profissionais}"
+								var="p"
+								itemLabel="#{p.nome}"
+								itemValue="#{p.nome}"/>
+			</p:selectOneMenu>
+			</p:panel>
 		</p:panelGrid>
-		<p:separator/>
-		<p:selectCheckboxMenu id="profissional" 
-								value="#{gerenciador.selectProfissionais}" 
-								label="Relacionar o Profissional" 
-								filter="true" 
-								filterMatchMode="startsWith" 
-								panelStyle="width:310px" 
-								>
-			<f:selectItems value="#{profissional.profissionais}" 
-							var="p" 
-							itemLabel="#{p.nome}" 
-							itemValue="#{p.nome}" />
-		</p:selectCheckboxMenu>
+		<p:separator/>		
 			&nbsp;
-		<p:commandButton value="Gerar Impressão" action="#{gerenciador.gerarImpressao}" />
+		<p:commandButton value="Gerar Impressão" action="#{gerenciador.gerarImpressao}" update="msgProfissional"/>
 		<p:commandButton value="Sair" action="#{gerenciador.sair}" />
 	</h:form>
 

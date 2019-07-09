@@ -41,21 +41,17 @@ public class ProfissionalBean implements Serializable{
 		for(var item : listagem) {
 			profissionais.add(item);
 		}
-		System.out.println("Qtd profissionais: " + profissionais.size());
 	}
 	
 	public void adicionar() {
 		this.setCadastrar(true);
 		Profissional p = new Profissional();
 		p.setCadastrar(true);
-		System.out.println(p.isCadastrar());
-		System.out.println(cadastrar);
 	}
 	
 	public void salvar() {
 		Service servico = new Service();
 		ServiceProfissional sp = new ServiceProfissional();
-		
 		
 		Profissional prof = new Profissional();
 		
