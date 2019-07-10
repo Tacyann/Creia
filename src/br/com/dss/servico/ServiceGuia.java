@@ -17,7 +17,6 @@ public class ServiceGuia implements IListagem, IListagemPorData{
 
 	@Override
 	public Object obter(Object objeto) {
-		// TODO Auto-generated method stub
 		return null;		
 	}
 
