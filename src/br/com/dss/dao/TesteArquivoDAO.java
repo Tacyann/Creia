@@ -31,7 +31,7 @@ public class TesteArquivoDAO {
 	}
 	
 	public static void Testar() {
-		ArquivoDao arquivo = new ArquivoDao();
+//		ArquivoDao arquivo = new ArquivoDao();
 	}
 	
 	public static void Processar() {

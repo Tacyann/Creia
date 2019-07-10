@@ -16,9 +16,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import br.com.dss.Conexao;
 import br.com.dss.modelo.Arquivo;
@@ -120,13 +120,15 @@ public class ArquivoDao {
 		String item = null;
 		Integer codigoGlosa = 0;
 		String descricaoGlosa = "";
+//		Double valorGlosa = 0.0;
+//		Integer tipoGlosa = 0;
 		List<Lote> lotes = new ArrayList<Lote>();
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
 		File f = new File("D:/ArquivoXml"); 
 		var auxDir = f.list();
 
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		for(var arquivo : auxDir) {
 			Arquivo arq = new Arquivo();
 			var extencaoArquivo = arquivo.substring(arquivo.indexOf('.')+1);
@@ -176,20 +178,20 @@ public class ArquivoDao {
 								var dt = formato.parse(eGuia.getElementsByTagName("dataInicioFat").item(0).getTextContent());
 								dataInicioFat.setTime(dt);
 								situacaoGuia = Integer.parseInt(eGuia.getElementsByTagName("situacaoGuia").item(0).getTextContent());
-
+								
 								NodeList nListDetalhes = nodeGuia.getChildNodes();
-
+								
 								for(int g = 0; g < nListDetalhes.getLength(); g++) {
 									Node nodeMotivoGlosa = nListDetalhes.item(g);
 									if(nodeMotivoGlosa.getNodeType() == Node.ELEMENT_NODE) {
 										Element eMotivoGlosa = (Element) nodeMotivoGlosa;
-
+										
 										switch (eMotivoGlosa.getTagName()) {
 										case "motivoGlosaGuia":
 											Glosa glosa = new Glosa();
 											codigoGlosa = Integer.parseInt(eMotivoGlosa.getElementsByTagName("codigoGlosa").item(0).getTextContent());
 											descricaoGlosa = eMotivoGlosa.getElementsByTagName("descricaoGlosa").item(0).getTextContent();
-
+											
 											glosa.setCodigo(codigoGlosa);
 											glosa.setDescricao(descricaoGlosa);
 											glosas.add(glosa);
@@ -197,9 +199,18 @@ public class ArquivoDao {
 										}
 									}
 								}
+								
+//								StringBuilder separador = new StringBuilder();
+//								for(int s = 0; s < 100; s++) {
+//									separador.append("-");
+//								}
+//								System.out.println(separador.toString());
+//								System.out.println("Cod Glosa: " + codigoGlosa + ", Descrição: " + descricaoGlosa);
+//								System.out.println("Nº prestador: " + numeroGuiaPrestador + ", Nº operadora: " + numeroGuiaOperadora);
+//								System.out.println(nomeBeneficiario);
 
 								List<DetalheGuia> detalhes = new ArrayList<DetalheGuia>();
-
+								
 								for(int k = 0; k < nListDetalhes.getLength(); k++) {
 									Node nodeDetalhesGuia = nListDetalhes.item(k);
 									DetalheGuia detalheGuia = new DetalheGuia();
@@ -210,7 +221,7 @@ public class ArquivoDao {
 
 										switch(eDetalhes.getTagName()) {
 										case "detalhesGuia":
-
+											
 											dt = formato.parse(eDetalhes.getElementsByTagName("dataRealizacao").item(0).getTextContent());
 											dataRealizacao.setTime(dt);
 											codigoTabela = Integer.parseInt(eDetalhes.getElementsByTagName("codigoTabela").item(0).getTextContent());
@@ -221,7 +232,7 @@ public class ArquivoDao {
 											qtdExecutada = Integer.parseInt(eDetalhes.getElementsByTagName("qtdExecutada").item(0).getTextContent());
 											valorProcessado = Double.parseDouble(eDetalhes.getElementsByTagName("valorProcessado").item(0).getTextContent());
 											valorLiberado = Double.parseDouble(eDetalhes.getElementsByTagName("valorLiberado").item(0).getTextContent());
-
+											
 											detalheGuia.setDataRealizacao(dataRealizacao);
 											procedimento.setTabela(codigoTabela);
 											procedimento.setProcedimento(codigoProcedimento);
@@ -232,7 +243,34 @@ public class ArquivoDao {
 											detalheGuia.setQtdExecutada(qtdExecutada);
 											detalheGuia.setValorProcessado(valorProcessado);
 											detalheGuia.setValorLiberado(valorLiberado);
-
+											
+//											System.out.println("Procedimento: " + descricaoProcedimento);
+//											System.out.println("Vlr Informado: " + valorInformado + ", Qtd Exec: " + qtdExecutada + ", Vlr Liberado: " + valorLiberado + ", Vlr Processado: " + valorProcessado);
+											
+											/**
+											 * Trecho que atende o valor da Glosa, comentado aguardando o retorno do Sergio.
+											 * */
+//											NodeList nListDetalhesFliho = eDetalhes.getChildNodes();
+//											for(int r = 0; r < nListDetalhesFliho.getLength(); r++) {
+//												Node nodeRelacaoGlosa = nListDetalhesFliho.item(r);
+//												
+//												if(nodeRelacaoGlosa.getNodeType() == Node.ELEMENT_NODE) {
+//													Element eRelacao = (Element) nodeRelacaoGlosa;
+//													
+//													switch (eRelacao.getTagName()) {
+//													case "relacaoGlosa":
+//														valorGlosa = Double.parseDouble(eRelacao.getElementsByTagName("valorGlosa").item(0).getTextContent());
+//														tipoGlosa = Integer.parseInt(eRelacao.getElementsByTagName("tipoGlosa").item(0).getTextContent());
+//														
+//														glosa.setTipo(tipoGlosa);
+//														glosa.setValor(valorGlosa);
+//														
+//														detalheGuia.setGlosa(glosa);
+////														System.out.println("Vlr Glosa: " + valorGlosa + ", Tipo Glosa: " + tipoGlosa);
+//														break;
+//													}
+//												}
+//											}
 											detalhes.add(detalheGuia);
 											guia.setDetalheGuia(detalhes);
 											break;
@@ -257,6 +295,10 @@ public class ArquivoDao {
 							guia.setValorProcessadoGuia(valorProcessadoGuia);
 							guia.setValorLiberadoGuia(valorLiberadoGuia);
 							guias.add(guia);
+
+//							System.out.println("--------------");
+//							System.out.println("Totais da Guia");
+//							System.out.println("Vlr Inf Guia: " + valorInformadoGuia + ", Vlr Process Guia: " + valorProcessadoGuia + ", Vlr Lib Guia: " + valorLiberadoGuia);
 						}
 
 						lote.setGuia(guias);
