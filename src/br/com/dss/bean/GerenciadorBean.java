@@ -5,12 +5,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.context.Flash;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -25,9 +23,7 @@ import br.com.dss.servico.ServiceBeneficiario;
 import br.com.dss.servico.ServiceDetalheGuia;
 import br.com.dss.servico.ServiceGuia;
 import br.com.dss.servico.ServiceProcedimento;
-import br.com.dss.util.GuiaArgumentComparator;
-import br.com.dss.util.ProcedimentoComparator;
-import br.com.dss.util.RelatorioProcedimento;
+import br.com.dss.util.Relatorio;
 
 @Named("gerenciador")
 @SessionScoped
@@ -35,17 +31,14 @@ public class GerenciadorBean implements Serializable {
 
 	@Inject
 	private FacesContext context;
-	
-	@Inject
-	private Flash flash;
 
 	private Set<Procedimento> listaProced;
 	private List<GuiaArgument> guias;
 	private List<Double> valoresLiberados;
 	private List<Double> valoresGlosa;
+	private List<Relatorio> relatorios; 
 	private List<ClienteArgument> clienteArgs;
 	private ClienteArgument clienteArg;
-	private List<RelatorioProcedimento> listaRelatorio;
 	private String[] clientes;
 	private String[] descricao;
 	private String selectProfissionais;
@@ -215,99 +208,48 @@ public class GerenciadorBean implements Serializable {
 	}
 
 	public String gerarImpressao() {
-//		double vlrInformado = 0.0;
-//		double vlrLiberado = 0.0;
-//		double vlrGlosa = 0.0;
-//		double vlrProcessado = 0.0;
-//
-//		if(guias == null && guias.size()==0) {
-//			limpar();
-//			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum cliente foi selecionado para a consulta.");
-//			context.addMessage(null, msg);
-//		}
-
-//		clienteArgs = new ArrayList<ClienteArgument>();
-//		guias.sort(new GuiaArgumentComparator());
-//		listaProced = new TreeSet<Procedimento>(new ProcedimentoComparator());
-//		
-//		for(var guia : guias) {
-//			ClienteArgument c = new ClienteArgument();
-//			var procedimento = guia.getDetalheGuia().getProcedimento().getDescricao();
-//			listaProced.add(guia.getDetalheGuia().getProcedimento());
-//			var nome = guia.getBeneficiario().getNome();
-//			
-//			vlrInformado = guia.getDetalheGuia().getValorInformado();
-//			vlrLiberado = guia.getDetalheGuia().getValorLiberado();
-//			vlrGlosa = guia.getDetalheGuia().getValorGlosa();
-//			vlrProcessado = guia.getDetalheGuia().getValorProcessado();
-//			
-//			c.setBeneficiario(nome);
-//			c.setProcedimento(procedimento);
-//			c.setValorInformado(vlrInformado);
-//			c.setValorLiberado(vlrLiberado);
-//			c.setValorGlosa(vlrGlosa);
-//			c.setValorProcessado(vlrProcessado);
-//			clienteArgs.add(c);				
-//		}
 		
-		Set<String> nomeProced = new TreeSet<String>();
-
-		listaRelatorio = new ArrayList<>();
-		var proc = "";
+		relatorios = new ArrayList<>();
 		
-		Service servico = new Service();
-		ServiceProcedimento sp = new ServiceProcedimento();
-		
-		List<String> codigos = new ArrayList<>();
-		
-		if(descricao.length == 0) {
-			@SuppressWarnings("unchecked")
-			var listaProcedimento = (List<Procedimento>) servico.Listar(sp);
-			for(var codigo : listaProcedimento) {
-				codigos.add(Integer.toString(codigo.getProcedimento()));
+		if(descricao.length > 0) {
+			for(var proced : descricao) {
+				Relatorio r = new Relatorio();
+				var nomeP = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == Integer.parseInt(proced)).toString();
+				var qtd = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == Integer.parseInt(proced)).mapToInt(p -> p.getDetalheGuia().getQtdExecutada()).sum();
+				var vlrInf = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == Integer.parseInt(proced)).mapToDouble(p -> p.getDetalheGuia().getValorInformado()).sum();
+				var vlrGl = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == Integer.parseInt(proced)).mapToDouble(p -> p.getDetalheGuia().getValorGlosa()).sum();
+				var vlrProc = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == Integer.parseInt(proced)).mapToDouble(p -> p.getDetalheGuia().getValorProcessado()).sum();
+				var vlrLib = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == Integer.parseInt(proced)).mapToDouble(p -> p.getDetalheGuia().getValorLiberado()).sum();
+				r.setNomeProcedimento(nomeP);
+				r.setQuantidade(qtd);
+				r.setValorInformado(vlrInf * 54.5 / 100);
+				r.setValorGlosa(vlrGl * 54.5 / 100);
+				r.setValorProcessado(vlrProc * 54.5 / 100);
+				r.setValorLiberado(vlrLib * 54.5 / 100);
+				relatorios.add(r);
 			}
 		}else {
-			for(int i = 0; i < descricao.length; i++) {
-				codigos.add(descricao[i]);
-			}
-		}
-		var countLoop = 0;
-		for(int i = 0; i < codigos.size(); i++) {
-
-			var vInformado = 0.0;
-			var qtd = 0;
-			var vGlosa = 0.0;
-			var vProcessado = 0.0;
-			var vLiberado = 0.0;
-			RelatorioProcedimento relatorio = new RelatorioProcedimento();
-			System.out.println("Qtd de Guias: " + guias.size());
-			for(var guia : guias) {
-				
-				if(Integer.parseInt(codigos.get(i)) == guia.getDetalheGuia().getProcedimento().getProcedimento()) {
-					nomeProced.add(guia.getDetalheGuia().getProcedimento().getDescricao());
-					
-					vInformado += vInformado + guia.getDetalheGuia().getValorInformado();
-					qtd += qtd + guia.getDetalheGuia().getQtdExecutada();
-					vGlosa += vGlosa + guia.getDetalheGuia().getValorGlosa();
-					vProcessado += vProcessado + guia.getDetalheGuia().getValorProcessado();
-					vLiberado += vLiberado + guia.getDetalheGuia().getValorLiberado();
-					proc = "";
-					for(var proced : nomeProced) {
-						proc = proced;
-					}
-					
-					relatorio.setQuantidade(qtd);
-					relatorio.setVlrInformado(vInformado * 54.5 / 100);
-					relatorio.setVlrGlosa(vGlosa);
-					relatorio.setVlrProcessado(vProcessado * 54.5 / 100);
-					relatorio.setVlrLiberado(vLiberado * 54.5 / 100);
-				}
-				countLoop++;
-			}
+			ServiceProcedimento sp = new ServiceProcedimento();
+			Service servico = new Service();
 			
-			relatorio.setNomeProcedimento(proc);
-			listaRelatorio.add(relatorio);
-			System.out.println("Qtd loop: " + countLoop);
+			@SuppressWarnings("unchecked")
+			var listagem = (List<Procedimento>) servico.Listar(sp);
+			
+			for(var item : listagem) {
+				Relatorio r = new Relatorio();
+				var qtd = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == item.getProcedimento()).mapToInt(p -> p.getDetalheGuia().getQtdExecutada()).sum();
+				var vlrInf = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == item.getProcedimento()).mapToDouble(p -> p.getDetalheGuia().getValorInformado()).sum();
+				var vlrGl = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == item.getProcedimento()).mapToDouble(p -> p.getDetalheGuia().getValorGlosa()).sum();
+				var vlrProc = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == item.getProcedimento()).mapToDouble(p -> p.getDetalheGuia().getValorProcessado()).sum();
+				var vlrLib = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == item.getProcedimento()).mapToDouble(p -> p.getDetalheGuia().getValorLiberado()).sum();
+				r.setNomeProcedimento(item.getDescricao());
+				r.setQuantidade(qtd);
+				r.setValorInformado(vlrInf * 54.5 / 100);
+				r.setValorGlosa(vlrGl * 54.5 / 100);
+				r.setValorProcessado(vlrProc * 54.5 / 100);
+				r.setValorLiberado(vlrLib * 54.5 / 100);
+				relatorios.add(r);
+			}			
 		}
 		
 		return "relatorio";
@@ -383,7 +325,7 @@ public class GerenciadorBean implements Serializable {
 	public void setDescricao(String[] descricao) {
 		this.descricao = descricao;
 	}
-	
+
 	public Double getValorTotal() {
 		return valorTotal;
 	}
@@ -447,7 +389,9 @@ public class GerenciadorBean implements Serializable {
 	public void setClienteArgs(List<ClienteArgument> clienteArgs) {
 		this.clienteArgs = clienteArgs;
 	}
-
+	public List<Relatorio> getRelatorios() {
+		return relatorios;
+	}
 	public Set<Procedimento> getListaProced() {
 		return listaProced;
 	}
@@ -463,15 +407,12 @@ public class GerenciadorBean implements Serializable {
 	public void setProfissional(String profissional) {
 		this.profissional = profissional;
 	}
-	
+
 	public String getSelectProfissionais() {
 		return selectProfissionais;
 	}
-	
+
 	public void setSelectProfissionais(String selectProfissionais) {
 		this.selectProfissionais = selectProfissionais;
-	}
-	public List<RelatorioProcedimento> getListaRelatorio() {
-		return listaRelatorio;
 	}
 }

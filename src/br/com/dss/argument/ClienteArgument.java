@@ -4,6 +4,7 @@ public class ClienteArgument {
 
 	private String beneficiario;
 	private String procedimento;
+	private Integer quantidade;
 	private Double valorInformado;
 	private Double valorLiberado;
 	private Double valorProcessado;
@@ -20,6 +21,12 @@ public class ClienteArgument {
 	}
 	public void setProcedimento(String procedimento) {
 		this.procedimento = procedimento;
+	}
+	public Integer getQuantidade() {
+		return quantidade;
+	}
+	public void setQuantidade(Integer quantidade) {
+		this.quantidade = quantidade;
 	}
 	public Double getValorInformado() {
 		return valorInformado;

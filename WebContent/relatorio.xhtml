@@ -7,6 +7,7 @@
 	xmlns:p="http://primefaces.org/ui">
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<link rel="icon" href="WebContent/resources/img/favicon.ico" type="image/x-icon"/>
 	<title>Relat&oacute;rio</title>
 </h:head>
 <h:body>
@@ -17,6 +18,9 @@
 	<br />
 	<div id="main" style="margin-left:15%;">
 	<h:form id="form" >
+		<div style="text-align: center; width: 70%;">
+			<p:outputLabel value="#{gerenciador.selectProfissionais}"/>
+		</div>
 		<p:panel style="width:70%;">
 			<div style="margin-bottom: 2px;">
 				<p:outputLabel value="Cliente(s):" />&nbsp;
@@ -27,7 +31,7 @@
 			</p:repeat>
 		</p:panel>
 		<br/>
-		<p:repeat var="g" value="#{gerenciador.listaRelatorio}">
+		<p:repeat var="g" value="#{gerenciador.relatorios}">
 			<p:panel style="width:70%;">
 				<div style="text-align: center;">
 					<p:outputLabel value="#{g.nomeProcedimento}" />
@@ -36,7 +40,7 @@
 					
 				<p:panelGrid columns="2" layout="grid">
 					<p:outputLabel value="Valor Informado" />
-					<p:outputLabel value="#{g.vlrInformado}">
+					<p:outputLabel value="#{g.valorInformado}">
 						<f:convertNumber type="currency" lacale="pt_BR" />
 					</p:outputLabel>
 					
@@ -44,17 +48,17 @@
 					<p:outputLabel value="#{g.quantidade}" />
 					
 					<p:outputLabel value="Valor Liberado" />
-					<p:outputLabel value="#{g.vlrLiberado}">
+					<p:outputLabel value="#{g.valorLiberado}">
 						<f:convertNumber type="currency" lacale="pt_BR" />
 					</p:outputLabel>
 					
 					<p:outputLabel value="Valor Processado" />
-					<p:outputLabel value="#{g.vlrProcessado}">
+					<p:outputLabel value="#{g.valorProcessado}">
 						<f:convertNumber type="currency" lacale="pt_BR" />
 					</p:outputLabel>
 					
 					<p:outputLabel value="Valor Glosa" />
-					<p:outputLabel value="#{g.vlrGlosa}">
+					<p:outputLabel value="#{g.valorGlosa}">
 						<f:convertNumber type="currency" lacale="pt_BR" />
 					</p:outputLabel>
 				</p:panelGrid>
