@@ -8,7 +8,7 @@ public class Usuario {
 	private String complemento;
 	private String numero;
 	private String cidade;
-	public Estado estado;
+	private Integer estado;
 	private String cep;
 	private String ddd;
 	private String telefone;
@@ -92,10 +92,10 @@ public class Usuario {
 	public void setNivel(String nivel) {
 		this.nivel = nivel;
 	}
-	public Estado getEstados() {
+	public Integer getEstado() {
 		return estado;
 	}
-	public void setEstados(Estado estados) {
-		this.estado = estados;
+	public void setEstado(Integer estado) {
+		this.estado = estado;
 	}
 }

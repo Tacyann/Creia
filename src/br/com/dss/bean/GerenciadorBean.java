@@ -214,13 +214,19 @@ public class GerenciadorBean implements Serializable {
 		if(descricao.length > 0) {
 			for(var proced : descricao) {
 				Relatorio r = new Relatorio();
-				var nomeP = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == Integer.parseInt(proced)).toString();
+				var nomeP = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == Integer.parseInt(proced)).map(s ->{return s.getDetalheGuia().getProcedimento().getDescricao();}).toArray();
 				var qtd = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == Integer.parseInt(proced)).mapToInt(p -> p.getDetalheGuia().getQtdExecutada()).sum();
 				var vlrInf = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == Integer.parseInt(proced)).mapToDouble(p -> p.getDetalheGuia().getValorInformado()).sum();
 				var vlrGl = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == Integer.parseInt(proced)).mapToDouble(p -> p.getDetalheGuia().getValorGlosa()).sum();
 				var vlrProc = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == Integer.parseInt(proced)).mapToDouble(p -> p.getDetalheGuia().getValorProcessado()).sum();
 				var vlrLib = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == Integer.parseInt(proced)).mapToDouble(p -> p.getDetalheGuia().getValorLiberado()).sum();
-				r.setNomeProcedimento(nomeP);
+				
+				var n = "";
+				for(var item : nomeP) {
+					n = item.toString();
+				}
+				
+				r.setNomeProcedimento(n);
 				r.setQuantidade(qtd);
 				r.setValorInformado(vlrInf * 54.5 / 100);
 				r.setValorGlosa(vlrGl * 54.5 / 100);

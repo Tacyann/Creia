@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.dss.Conexao;
-import br.com.dss.modelo.Estado;
 import br.com.dss.modelo.Usuario;
 
 public class UsuarioDao {
@@ -20,7 +19,7 @@ public class UsuarioDao {
 	}
 
 	public boolean Adicionar(Usuario usuario) {
-		boolean adicionou;
+		boolean adicionou = false;
 		String sql = "insert into usuario(nomecompleto,endereco,complemento,numero,cidade,estadoID,cep,ddd,telefone,email,usuario,senha,nivel)"+
 				"values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		try {
@@ -31,7 +30,7 @@ public class UsuarioDao {
 			stmt.setString(3, usuario.getComplemento());
 			stmt.setString(4, usuario.getNumero());
 			stmt.setString(5, usuario.getCidade());
-			stmt.setInt(6, usuario.estado.getId());
+			stmt.setInt(6, usuario.getEstado());
 			stmt.setString(7, usuario.getCep());
 			stmt.setString(8, usuario.getDdd());
 			stmt.setString(9, usuario.getTelefone());
@@ -82,9 +81,7 @@ public class UsuarioDao {
 	}
 	
 	public List<Usuario> Listar() {
-		String sql = "select * from usuario a join estado b on b.id = a.estadosID";
-		var user = new Usuario();
-		var estados = new Estado();
+		String sql = "select * from usuario";
 		List<Usuario> usuarios = new ArrayList<Usuario>();
 
 		try {
@@ -93,21 +90,21 @@ public class UsuarioDao {
 			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()) {
-				user.setNomeCompleto(rs.getString("a.nomecompleto"));
-				user.setEndereco(rs.getString("a.endereco"));
-				user.setComplemento(rs.getString("a.complemento"));
-				user.setNumero(rs.getString("a.numero"));
-				user.setCidade(rs.getString("a.cidade"));
-				estados.setNome(rs.getString("b.nome"));
-				estados.setSigla(rs.getString("b.sigla"));
-				user.setEstados(estados);
-				user.setCep(rs.getString("a.cep"));
-				user.setDdd(rs.getString("a.ddd"));
-				user.setTelefone(rs.getString("a.telefone"));
-				user.setEmail(rs.getString("a.email"));
-				user.setUsuario(rs.getString("a.usuario"));
-				user.setSenha(rs.getString("a.senha"));
-				user.setNivel(rs.getString("a.nivel"));
+				var user = new Usuario();
+
+				user.setNomeCompleto(rs.getString("nomecompleto"));
+				user.setEndereco(rs.getString("endereco"));
+				user.setComplemento(rs.getString("complemento"));
+				user.setNumero(rs.getString("numero"));
+				user.setCidade(rs.getString("cidade"));
+				user.setEstado(rs.getInt("estadoID"));
+				user.setCep(rs.getString("cep"));
+				user.setDdd(rs.getString("ddd"));
+				user.setTelefone(rs.getString("telefone"));
+				user.setEmail(rs.getString("email"));
+				user.setUsuario(rs.getString("usuario"));
+				user.setSenha(rs.getString("senha"));
+				user.setNivel(rs.getString("nivel"));
 				usuarios.add(user);
 			}
 			stmt.close();
