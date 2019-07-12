@@ -13,7 +13,6 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import br.com.dss.argument.ClienteArgument;
 import br.com.dss.argument.GuiaArgument;
 import br.com.dss.modelo.Beneficiario;
 import br.com.dss.modelo.DetalheGuia;
@@ -39,8 +38,7 @@ public class GerenciadorBean implements Serializable {
 	private List<Double> valoresLiberados;
 	private List<Double> valoresGlosa;
 	private static List<Relatorio> relatorios; 
-	private List<ClienteArgument> clienteArgs;
-	private ClienteArgument clienteArg;
+	private static List<String> nomeClientes;
 	private String[] clientes;
 	private String[] descricao;
 	private String selectProfissionais;
@@ -228,6 +226,13 @@ public class GerenciadorBean implements Serializable {
 					n = item.toString();
 				}
 				
+				nomeClientes = new ArrayList<>();
+				if(clientes.length > 0) {
+					for(var c : clientes) {
+						nomeClientes.add(c);
+					}
+				}
+				
 				r.setNomeProcedimento(n);
 				r.setQuantidade(qtd);
 				r.setValorInformado(vlrInf * 54.5 / 100);
@@ -264,7 +269,6 @@ public class GerenciadorBean implements Serializable {
 	}
 	
 	public static List<Relatorio> Relatorio() {
-		System.out.println("Lista dados para o relatório.");
 		return relatorios;
 	}
 	
@@ -395,18 +399,6 @@ public class GerenciadorBean implements Serializable {
 	public void setValoresGlosa(List<Double> valoresGlosa) {
 		this.valoresGlosa = valoresGlosa;
 	}
-	public ClienteArgument getClienteArg() {
-		return clienteArg;
-	}
-	public void setClienteArg(ClienteArgument clienteArg) {
-		this.clienteArg = clienteArg;
-	}
-	public List<ClienteArgument> getClienteArgs() {
-		return clienteArgs;
-	}
-	public void setClienteArgs(List<ClienteArgument> clienteArgs) {
-		this.clienteArgs = clienteArgs;
-	}
 	public List<Relatorio> getRelatorios() {
 		return relatorios;
 	}
@@ -432,5 +424,11 @@ public class GerenciadorBean implements Serializable {
 
 	public void setSelectProfissionais(String selectProfissionais) {
 		this.selectProfissionais = selectProfissionais;
+	}
+	public static List<String> getNomeClientes() {
+		return nomeClientes;
+	}
+	public static void setNomeClientes(List<String> nomeClientes) {
+		GerenciadorBean.nomeClientes = nomeClientes;
 	}
 }

@@ -124,7 +124,7 @@ public class ArquivoDao {
 //		Integer tipoGlosa = 0;
 		List<Lote> lotes = new ArrayList<Lote>();
 
-		File f = new File("D:/ArquivoXml"); 
+		File f = new File("C:/ArquivoXml"); 
 		var auxDir = f.list();
 
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();

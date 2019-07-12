@@ -94,7 +94,6 @@ public class GuiaDao {
 			}
 		}
 		
-		System.out.println(sql);
 		List<Guia> guias = new ArrayList<>();
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
