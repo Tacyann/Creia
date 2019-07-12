@@ -53,8 +53,10 @@
 	</style>
 </h:head>
 <h:body >
-	<h:graphicImage library="img" name="logoCreia.png" style="width: 70px; height: 20px;"/>
-	<h1 style="text-align:center; color:black; text-shadow: 5px 3px 5px gray;">Gerenciador das guias de atendimento</h1>
+	<h:graphicImage library="img" name="logoCreia.png" style="width: 70px; height: 20px; margin-bottom: 0;"/>
+	<h1 style="text-align:center; color:black; text-shadow: 5px 3px 5px gray; margin-top: 0;">
+		Gerenciador das guias de atendimento
+	</h1>
 	<h:form id="form">
 	<p:messages id="msg" globalOnly="true" showDetail="true" />
 		<p:panel>
@@ -95,9 +97,11 @@
 			&nbsp;
 			<p:commandButton value="Consultar" 
 								action="#{gerenciador.registros}" 
+								icon="ui-icon-search"
 								update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg" />
 			&nbsp;
 			<p:commandButton value="Limpar" 
+								icon="ui-icon-trash"
 								action="#{gerenciador.limpar}" 
 								update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg" />
 			<br />
@@ -118,6 +122,7 @@
 			&nbsp;
 			<p:commandButton id="filtrar" 
 								value="Filtrar" 
+								icon="ui-icon-gear"
 								action="#{gerenciador.filtroProcedimento}" 
 								update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg" />
 		</div>
@@ -208,8 +213,8 @@
 		</p:panelGrid>
 		<p:separator/>		
 			&nbsp;
-		<p:commandButton value="Gerar Impressão" action="#{gerenciador.gerarImpressao}" update="msgProfissional"/>
-		<p:commandButton value="Sair" action="#{gerenciador.sair}" />
+		<p:commandButton value="Gerar Impressão" icon="ui-icon-print" action="#{gerenciador.gerarImpressao}" update="msgProfissional"/>
+		<p:commandButton value="Sair" icon="ui-icon-close" action="#{gerenciador.sair}" />
 	</h:form>
 
 </h:body>

@@ -3,6 +3,7 @@ package br.com.dss.bean;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -24,6 +25,7 @@ import br.com.dss.servico.ServiceDetalheGuia;
 import br.com.dss.servico.ServiceGuia;
 import br.com.dss.servico.ServiceProcedimento;
 import br.com.dss.util.Relatorio;
+import br.com.dss.util.UtilRelatorios;
 
 @Named("gerenciador")
 @SessionScoped
@@ -36,7 +38,7 @@ public class GerenciadorBean implements Serializable {
 	private List<GuiaArgument> guias;
 	private List<Double> valoresLiberados;
 	private List<Double> valoresGlosa;
-	private List<Relatorio> relatorios; 
+	private static List<Relatorio> relatorios; 
 	private List<ClienteArgument> clienteArgs;
 	private ClienteArgument clienteArg;
 	private String[] clientes;
@@ -258,7 +260,17 @@ public class GerenciadorBean implements Serializable {
 			}			
 		}
 		
-		return "relatorio";
+		return "relatorio?faces-redirect=true";
+	}
+	
+	public static List<Relatorio> Relatorio() {
+		System.out.println("Lista dados para o relatório.");
+		return relatorios;
+	}
+	
+	public void imprimeRelatorio() {
+		HashMap parametros = new HashMap();
+		UtilRelatorios.imprimeRelatorio("especialistas", parametros, relatorios);
 	}
 
 	public void listar() {

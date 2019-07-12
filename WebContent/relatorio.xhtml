@@ -12,10 +12,15 @@
 </h:head>
 <h:body>
 	<h:graphicImage library="img" name="logoCreia.png" style="width: 70px; height: 20px;"/>
-	<p:commandButton value="Imprimir" type="button" icon="print"
-		style="display:block;margin-bottom: 20px">
-		<p:printer target="form" />
+	<h:form>
+	<p:commandButton value="Imprimir" 
+					action="#{gerenciador.imprimeRelatorio}" 
+					ajax="false"
+					icon="ui-icon-print">
+<!-- 					onclick="this.form.target='_blank';"> -->
+<!-- 		<p:printer target=""/> -->
 	</p:commandButton>
+	</h:form>
 	<br />
 	<div id="main" style="margin-left:15%;">
 	<h:form id="form" >
