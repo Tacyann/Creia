@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -38,7 +39,7 @@ public class GerenciadorBean implements Serializable {
 	private List<Double> valoresLiberados;
 	private List<Double> valoresGlosa;
 	private static List<Relatorio> relatorios; 
-	private static List<String> nomeClientes;
+	private static String nomeClientes;
 	private String[] clientes;
 	private String[] descricao;
 	private String selectProfissionais;
@@ -203,7 +204,8 @@ public class GerenciadorBean implements Serializable {
 	}
 
 	public String sair() {
-		limpar();
+		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+		//limpar();
 		return "home?faces-redirect=true";
 	}
 
@@ -224,13 +226,6 @@ public class GerenciadorBean implements Serializable {
 				var n = "";
 				for(var item : nomeP) {
 					n = item.toString();
-				}
-				
-				nomeClientes = new ArrayList<>();
-				if(clientes.length > 0) {
-					for(var c : clientes) {
-						nomeClientes.add(c);
-					}
 				}
 				
 				r.setNomeProcedimento(n);
@@ -265,7 +260,20 @@ public class GerenciadorBean implements Serializable {
 			}			
 		}
 		
-		return "relatorio?faces-redirect=true";
+		if(clientes.length > 0) {
+			Set<String> nCliente = new HashSet<String>();			
+			StringBuilder sb = new StringBuilder();
+			
+			for(var c : clientes) {
+				nCliente.add(c);
+			}
+			for(var c : nCliente) {
+				sb.append(c).append("\n");
+			}
+			setNomeClientes(sb.toString());
+		}
+		
+		return "relatorio";
 	}
 	
 	public static List<Relatorio> Relatorio() {
@@ -274,7 +282,12 @@ public class GerenciadorBean implements Serializable {
 	
 	public void imprimeRelatorio() {
 		HashMap parametros = new HashMap();
+		parametros.put("NOME_ESPECIALISTA", selectProfissionais);
+		parametros.put("NOME_CLIENTE", nomeClientes);
+		parametros.put("TOTAL_PROFISSIONAL", valorProfissional);
 		UtilRelatorios.imprimeRelatorio("especialistas", parametros, relatorios);
+		System.out.println(nomeClientes);
+		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 	}
 
 	public void listar() {
@@ -425,10 +438,10 @@ public class GerenciadorBean implements Serializable {
 	public void setSelectProfissionais(String selectProfissionais) {
 		this.selectProfissionais = selectProfissionais;
 	}
-	public static List<String> getNomeClientes() {
+	public static String getNomeClientes() {
 		return nomeClientes;
 	}
-	public static void setNomeClientes(List<String> nomeClientes) {
+	public static void setNomeClientes(String nomeClientes) {
 		GerenciadorBean.nomeClientes = nomeClientes;
 	}
 }
