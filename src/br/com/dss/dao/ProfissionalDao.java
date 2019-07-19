@@ -148,7 +148,7 @@ public class ProfissionalDao {
 	}
 	
 	public boolean Excluir(int id) {
-		String sql = "delete from profissional where ID = '" + id + "'";		
+		String sql = "delete from profissional where ID = ?";		
 		
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);

@@ -65,6 +65,22 @@ public class ProfissionalBean implements Serializable{
 		context.addMessage(null, msg);
 	}
 	
+	public void onExcluir(Profissional profissional) {
+		Service servico = new Service();
+		ServiceProfissional sp = new ServiceProfissional();
+		var p = profissional;
+		var excluir = servico.Excluir(sp, p.getId());
+		if(excluir) {
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Cadastro excluido com sucesso.");
+			context.addMessage(null, msg);
+			inicializar();
+		}else {
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Falha ao excluir o cadastro.");
+			context.addMessage(null, msg);
+		}
+		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+	}
+	
 	public String cadastro() {
 		return "viewProfissional";
 	}
@@ -80,7 +96,6 @@ public class ProfissionalBean implements Serializable{
 		prof.setNumeroconselho(numeroConselho);
 		
 		var add = servico.Adicionar(sp, prof);
-		System.out.println(prof);
 		profissionais.add(prof);
 		
 		if(add) {

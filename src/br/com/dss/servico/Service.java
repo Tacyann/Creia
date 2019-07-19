@@ -19,6 +19,11 @@ public class Service {
 		return ret;
 	}
 	
+	public boolean Excluir(IExclui exclui, Object objeto) {
+		var ret = exclui.isExcluir(objeto);
+		return ret;
+	}
+	
 	public Object Obter(IListagem listagem, Object objeto) {
 		var ret = listagem.obter(objeto);
 		return ret;

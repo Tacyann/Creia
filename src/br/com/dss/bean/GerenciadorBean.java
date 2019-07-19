@@ -280,6 +280,7 @@ public class GerenciadorBean implements Serializable {
 		return relatorios;
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void imprimeRelatorio() {
 		HashMap parametros = new HashMap();
 		parametros.put("NOME_ESPECIALISTA", selectProfissionais);

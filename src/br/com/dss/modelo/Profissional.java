@@ -40,6 +40,6 @@ public class Profissional {
 	}
 	@Override
 	public String toString() {
-		return "Nome: " + getNome() + ", Especialização: " + getEspecializacao() + ", Nº Conselho: " + getNumeroconselho();
+		return "Id:" + getId() + "Nome: " + getNome() + ", Especialização: " + getEspecializacao() + ", Nº Conselho: " + getNumeroconselho();
 	}
 }

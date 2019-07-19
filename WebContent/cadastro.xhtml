@@ -21,14 +21,14 @@
 		</div>
 		<p:separator />
 		<div style="text-align: right;">
-		<h:form id="sair">
+		
 			<p:commandButton value="Adicionar" action="#{profissional.cadastro}">
 				<f:ajax event="dialogReturn"></f:ajax>
 			</p:commandButton>
-
+			&nbsp;
 			<p:commandButton value="Sair" action="#{gerenciador.sair}" />
-		</h:form>
 		</div>
+			<br />
 		<p:dataTable value="#{profissional.profissionais}" var="p"
 			id="cadastroProfissionais" editable="true"
 			rendered="#{profissional.profissionais.size() > 0}"
@@ -79,8 +79,9 @@
 					</f:facet>
 				</p:cellEditor>
 			</p:column>
-			<p:column width="2%">
-				<p:rowEditor />
+			<p:column style="width:50px;">
+				<p:rowEditor editTitle="Editar Registro" cancelTitle="Cancelar edição"/>
+				<p:commandButton style="margin:5px 0 0 0; padding:0; width:0; height:0;" icon="ui-icon-trash" title="Excluir Registro" actionListener="#{profissional.onExcluir(p)}" update=":form:cadastroProfissionais,:form:messages" ajax="false"/>
 			</p:column>
 		</p:dataTable>
 	</h:form>
