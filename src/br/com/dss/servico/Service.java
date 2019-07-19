@@ -9,6 +9,11 @@ public class Service {
 		return ret;
 	}
 	
+	public boolean Atualizar(IAtualiza update, Object objeto) {
+		var ret = update.atualizar(objeto);
+		return ret;
+	}
+	
 	public boolean Existe(IDados dados, String filtro) {
 		var ret = dados.isExist(filtro);
 		return ret;

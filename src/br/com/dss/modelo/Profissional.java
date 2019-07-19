@@ -5,8 +5,8 @@ public class Profissional {
 	private int id;
 	private String nome;
 	private String especializacao;
-	private int numeroconselho;
-	private boolean cadastrar;
+	private String numeroconselho;
+	private boolean editar;
 	
 	public int getId() {
 		return id;
@@ -26,16 +26,20 @@ public class Profissional {
 	public void setEspecializacao(String especializacao) {
 		this.especializacao = especializacao;
 	}
-	public int getNumeroconselho() {
+	public String getNumeroconselho() {
 		return numeroconselho;
 	}
-	public void setNumeroconselho(int numeroconselho) {
+	public void setNumeroconselho(String numeroconselho) {
 		this.numeroconselho = numeroconselho;
 	}
-	public boolean isCadastrar() {
-		return cadastrar;
+	public boolean isEditar() {
+		return editar;
 	}
-	public void setCadastrar(boolean cadastrar) {
-		this.cadastrar = cadastrar;
+	public void setEditar(boolean editar) {
+		this.editar = editar;
+	}
+	@Override
+	public String toString() {
+		return "Nome: " + getNome() + ", Especialização: " + getEspecializacao() + ", Nº Conselho: " + getNumeroconselho();
 	}
 }

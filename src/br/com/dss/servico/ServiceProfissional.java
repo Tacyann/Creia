@@ -3,7 +3,7 @@ package br.com.dss.servico;
 import br.com.dss.dao.ProfissionalDao;
 import br.com.dss.modelo.Profissional;
 
-public class ServiceProfissional implements IListagem, IAdiciona {
+public class ServiceProfissional implements IListagem, IAdiciona, IAtualiza {
 
 	@Override
 	public Object Lista() {
@@ -26,6 +26,14 @@ public class ServiceProfissional implements IListagem, IAdiciona {
 		
 		ProfissionalDao arquivo = new ProfissionalDao();
 		var isAdiciona = arquivo.Adicionar((Profissional) objeto);
+		return isAdiciona;
+	}
+
+	@Override
+	public boolean atualizar(Object objeto) {
+
+		ProfissionalDao arquivo = new ProfissionalDao();
+		var isAdiciona = arquivo.Atualizar((Profissional) objeto);
 		return isAdiciona;
 	}
 }

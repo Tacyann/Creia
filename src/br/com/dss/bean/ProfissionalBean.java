@@ -11,6 +11,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.primefaces.event.RowEditEvent;
+
 import br.com.dss.modelo.Profissional;
 import br.com.dss.servico.Service;
 import br.com.dss.servico.ServiceProfissional;
@@ -19,7 +21,7 @@ import br.com.dss.servico.ServiceProfissional;
 @RequestScoped
 public class ProfissionalBean implements Serializable{
 
-	private List<Profissional> profissionais;
+	private List<Profissional> profissionais = new ArrayList<>();
 	private Profissional profissional;
 	private String nome;
 	private String especializacao;
@@ -43,13 +45,31 @@ public class ProfissionalBean implements Serializable{
 		}
 	}
 	
-	public void adicionar() {
-		this.setCadastrar(true);
-		Profissional p = new Profissional();
-		p.setCadastrar(true);
+	public void onRowEdit(RowEditEvent event) {
+		Service servico = new Service();
+		ServiceProfissional sp = new ServiceProfissional();
+		var p = (Profissional) event.getObject();
+		var up = servico.Atualizar(sp, p);
+
+		if(up) {
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Cadastro salvo com sucesso.");
+			context.addMessage(null, msg);
+		}else {
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Falha ao salvar o cadastro.");
+			context.addMessage(null, msg);
+		}
 	}
 	
-	public void salvar() {
+	public void onRowCancel(RowEditEvent event) {
+		FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Edição cancelada.");
+		context.addMessage(null, msg);
+	}
+	
+	public String cadastro() {
+		return "viewProfissional";
+	}
+	
+	public void adicionar() {
 		Service servico = new Service();
 		ServiceProfissional sp = new ServiceProfissional();
 		
@@ -57,9 +77,11 @@ public class ProfissionalBean implements Serializable{
 		
 		prof.setNome(nome);
 		prof.setEspecializacao(especializacao);
-		prof.setNumeroconselho(Integer.parseInt(numeroConselho));
+		prof.setNumeroconselho(numeroConselho);
 		
 		var add = servico.Adicionar(sp, prof);
+		System.out.println(prof);
+		profissionais.add(prof);
 		
 		if(add) {
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Cadastro adicionado com sucesso.");
@@ -73,7 +95,7 @@ public class ProfissionalBean implements Serializable{
 			context.addMessage(null, msg);
 		}
 	}
-	
+
 	public List<Profissional> getProfissionais() {
 		return profissionais;
 	}

@@ -287,6 +287,9 @@ public class GerenciadorBean implements Serializable {
 		parametros.put("TOTAL_PROFISSIONAL", valorProfissional);
 		UtilRelatorios.imprimeRelatorio("especialistas", parametros, relatorios);
 		System.out.println(nomeClientes);
+		/**
+		 * Foi incuido instrução para fechar a sessão.
+		 */
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 	}
 

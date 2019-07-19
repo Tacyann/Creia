@@ -26,7 +26,7 @@ public class ProfissionalDao {
 
 			stmt.setString(1, profissional.getNome());
 			stmt.setString(2, profissional.getEspecializacao());
-			stmt.setInt(3, profissional.getNumeroconselho());
+			stmt.setInt(3, Integer.parseInt(profissional.getNumeroconselho()));
 			
 			stmt.execute();
 			stmt.close();
@@ -53,7 +53,7 @@ public class ProfissionalDao {
 				profissional.setId(rs.getInt("Id"));
 				profissional.setNome(rs.getString("nome"));
 				profissional.setEspecializacao(rs.getString("especializacao"));
-				profissional.setNumeroconselho(rs.getInt("numeroconselho"));
+				profissional.setNumeroconselho(rs.getString("numeroconselho"));
 			}
 			stmt.close();
 			rs.close();
@@ -109,7 +109,7 @@ public class ProfissionalDao {
 				profissional.setId(rs.getInt("ID"));
 				profissional.setNome(rs.getString("nome"));
 				profissional.setEspecializacao(rs.getString("especializacao"));
-				profissional.setNumeroconselho(rs.getInt("numeroconselho"));
+				profissional.setNumeroconselho(rs.getString("numeroconselho"));
 								
 				profissionais.add(profissional);
 			}
@@ -117,6 +117,29 @@ public class ProfissionalDao {
 			rs.close();
 			
 			return profissionais;
+		}catch(SQLException e) {
+			throw new RuntimeException(e);
+		}finally {
+			Conexao.FecharConexao();
+		}
+	}
+	
+	public boolean Atualizar(Profissional profissional) {
+		boolean adicionou;
+		String sql = "update profissional set nome = ?, especializacao = ?, numeroconselho = ? where ID = ?";
+		try {
+			PreparedStatement stmt = connection.prepareStatement(sql);
+
+			stmt.setString(1, profissional.getNome());
+			stmt.setString(2, profissional.getEspecializacao());
+			stmt.setInt(3, Integer.parseInt(profissional.getNumeroconselho()));
+			stmt.setInt(4, profissional.getId());
+			
+			stmt.execute();
+			stmt.close();
+
+			adicionou = true;
+			return adicionou;
 		}catch(SQLException e) {
 			throw new RuntimeException(e);
 		}finally {
