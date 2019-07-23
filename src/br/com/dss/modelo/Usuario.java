@@ -20,6 +20,9 @@ public class Usuario {
 	public int getId() {
 		return id;
 	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public String getNomeCompleto() {
 		return nomeCompleto;
 	}
@@ -97,5 +100,10 @@ public class Usuario {
 	}
 	public void setEstado(Integer estado) {
 		this.estado = estado;
+	}
+	
+	@Override
+	public String toString() {
+		return "Id: " + getId() + ", Nome: " + getNomeCompleto() + ", Login: " + getUsuario() + ", Senha: " + getSenha() + ", Estado: " + getEstado();
 	}
 }

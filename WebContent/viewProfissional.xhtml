@@ -7,42 +7,56 @@
 	xmlns:p="http://primefaces.org/ui">
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
-	<link rel="icon" href="WebContent/resources/img/favicon.ico" type="image/x-icon"/>
+	<link rel="icon" href="WebContent/resources/img/favicon.ico"
+		type="image/x-icon" />
 	<title>Profissional</title>
 	<style type="text/css">
-		.ui-widget{
-			font-size: 90%;
-		}
-	</style>
+.ui-widget {
+	font-size: 90%;
+}
+</style>
 </h:head>
 <h:body>
-	<p:dialog visible="true" width="540" height="250" header="Cadastro de Especialista" showHeader="fade" modal="true" resizable="false">
-	<h:panelGrid style="margin: 0 auto;"><h2>Cadastro de Especialista</h2></h:panelGrid>
-	<h:form>
-		<p:growl id="msg" showSummary="false" showDetail="true"/>
+	<p:dialog visible="true" width="540" height="250"
+		header="Cadastro de Especialista" showHeader="fade" modal="true"
+		resizable="false">
+		<h:panelGrid style="margin: 0 auto;">
+			<h2>Cadastro de Especialista</h2>
+		</h:panelGrid>
+		<h:form>
+			<p:growl id="msg" showSummary="false" showDetail="true" />
 			<p:panelGrid id="cadastro" layout="grid" columns="2">
 				<p:outputLabel value="Nome" />
-				<p:inputText id="nome" value="#{profissional.nome}" style="width:95%;"/>
+				<p:inputText id="nome" value="#{profissional.nome}"
+					style="width:95%;" />
 				<p:outputLabel value="Especialização" />
-				<p:inputText id="especializacao" 
-					value="#{profissional.especializacao}" style="width:95%;"/>
+				<p:inputText id="especializacao"
+					value="#{profissional.especializacao}" style="width:95%;" />
 				<p:outputLabel value="Numero do Conselho" />
-				<p:inputText id="numeroconselho" 
-					value="#{profissional.numeroConselho}" style="width:95%;"/>
+				<p:inputText id="numeroconselho"
+					value="#{profissional.numeroConselho}" style="width:95%;" />
 			</p:panelGrid>
 			<br />
-			
-			<p:commandButton id="salvar" value="Salvar" icon="ui-icon-check" actionListener="#{profissional.adicionar}" update="nome,especializacao,numeroconselho,msg">
-				<p:confirm header="Confirmação" message="Deseja confirmar a inclusão?" icon="ui-icon-alert"/>
+
+			<p:commandButton id="salvar" value="Salvar" icon="ui-icon-check"
+				actionListener="#{profissional.adicionar}"
+				update="nome,especializacao,numeroconselho,msg">
+				<p:confirm header="Confirmação"
+					message="Deseja confirmar a inclusão?" icon="ui-icon-alert" />
 			</p:commandButton>
-			<p:commandButton id="sair" value="Fechar" icon="ui-icon-close" action="#{home.cadastrar}"/>
-			
+			<p:commandButton id="sair" value="Fechar" icon="ui-icon-close"
+				action="#{home.cadastrar}" />
+
 			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-				<p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-				<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+				<div style="text-align: center; margin: 0; padding: 0;">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</div>
 			</p:confirmDialog>
-	</h:form>
+		</h:form>
 		<br />
-</p:dialog>
+	</p:dialog>
 </h:body>
 </html>

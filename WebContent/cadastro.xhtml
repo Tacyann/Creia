@@ -21,31 +21,32 @@
 		</div>
 		<p:separator />
 		<div style="text-align: right;">
-		
+
 			<p:commandButton value="Adicionar" action="#{profissional.cadastro}">
 				<f:ajax event="dialogReturn"></f:ajax>
 			</p:commandButton>
 			&nbsp;
 			<p:commandButton value="Sair" action="#{gerenciador.sair}" />
 		</div>
-			<br />
+		<br />
 		<p:dataTable value="#{profissional.profissionais}" var="p"
 			id="cadastroProfissionais" editable="true"
 			rendered="#{profissional.profissionais.size() > 0}"
 			resizableColumns="true" rows="10" paginator="true"
 			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 			rowsPerPageTemplate="5,10,15">
+
 			<p:ajax event="rowEdit" listener="#{profissional.onRowEdit}"
 				update=":form:messages" />
 			<p:ajax event="rowEditCancel" listener="#{profissional.onRowCancel}"
 				update=":form:messages" />
 
-			<p:column headerText="Código" sortBy="#{p.id}" width="10%"
+			<p:column headerText="Código" sortBy="#{p.id}" width="15px"
 				style="font-size:15px;">
 				<h:outputText value="#{p.id}" />
 			</p:column>
 
-			<p:column headerText="Nome" width="40%" style="font-size:15px;">
+			<p:column headerText="Nome" width="30%" style="font-size:15px;">
 				<p:cellEditor>
 					<f:facet name="output">
 						<h:outputText value="#{p.nome}" />
@@ -56,7 +57,7 @@
 				</p:cellEditor>
 			</p:column>
 
-			<p:column headerText="Especialidade" width="20%"
+			<p:column headerText="Especialidade" width="30%"
 				style="font-size:15px;">
 				<p:cellEditor>
 					<f:facet name="output">
@@ -68,7 +69,7 @@
 				</p:cellEditor>
 			</p:column>
 
-			<p:column headerText="Nº Conselho" width="10%"
+			<p:column headerText="Nº Conselho" width="50px"
 				style="font-size:15px;">
 				<p:cellEditor>
 					<f:facet name="output">
@@ -79,11 +80,29 @@
 					</f:facet>
 				</p:cellEditor>
 			</p:column>
-			<p:column style="width:50px;">
-				<p:rowEditor editTitle="Editar Registro" cancelTitle="Cancelar edição"/>
-				<p:commandButton style="margin:5px 0 0 0; padding:0; width:0; height:0;" icon="ui-icon-trash" title="Excluir Registro" actionListener="#{profissional.onExcluir(p)}" update=":form:cadastroProfissionais,:form:messages" ajax="false"/>
+			<p:column style="width:20px; height:10px;">
+				<p:rowEditor editTitle="Editar Registro"
+					cancelTitle="Cancelar edição" />
+			</p:column>
+			<p:column style="width:15px; height:10px;">
+				<p:commandButton
+					style="margin:0 0 0 0; padding:0; width:0; height:0;"
+					icon="ui-icon-trash" title="Excluir Registro"
+					actionListener="#{profissional.onExcluir(p)}"
+					update=":form:cadastroProfissionais,:form:messages" >
+					
+					<p:confirm header="Confirmação" message="Deseja confirmar a exclusão do especialista #{p.nome}?" icon="ui-icon-alert"/>
+					
+				</p:commandButton>
 			</p:column>
 		</p:dataTable>
+		
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
+			<div style="text-align:center; margin: 0; padding: 0;">
+				<p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+			</div>
+			</p:confirmDialog>
 	</h:form>
 </h:body>
 </html>

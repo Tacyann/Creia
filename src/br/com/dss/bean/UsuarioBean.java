@@ -10,6 +10,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.primefaces.event.RowEditEvent;
+
 import br.com.dss.modelo.Usuario;
 import br.com.dss.servico.Service;
 import br.com.dss.servico.ServiceUsuario;
@@ -20,7 +22,7 @@ public class UsuarioBean {
 
 	@Inject
 	private FacesContext context;
-	
+
 	private List<Usuario> usuarios;
 	private boolean cadastrar;
 	private String nomeCompleto;
@@ -36,7 +38,7 @@ public class UsuarioBean {
 	private String usuario;
 	private String senha;
 	private String nivel;
-	
+
 	@PostConstruct
 	public void inicializar() {
 		ServiceUsuario su = new ServiceUsuario();
@@ -45,40 +47,83 @@ public class UsuarioBean {
 
 		@SuppressWarnings("unchecked")
 		var listagem = (List<Usuario>) servico.Listar(su);
-		
-		if(listagem.size() > 0) {
-			for(var item : listagem) {
-				usuarios.add(item);
-			}
+
+		for(var item : listagem) {
+			usuarios.add(item);
 		}
 	}
-	
-	public void adicionar() {
-		this.setCadastrar(true);
+
+	public void onRowEdit(RowEditEvent event) {
+		Service servico = new Service();
+		ServiceUsuario sp = new ServiceUsuario();
+		var user = (Usuario) event.getObject();
+
+		var up = servico.Atualizar(sp, user);
+
+		if(up) {
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Cadastro salvo com sucesso.");
+			context.addMessage(null, msg);
+		}else {
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Falha ao salvar o cadastro.");
+			context.addMessage(null, msg);
+		}
 	}
-	
-	public void salvar() {
+
+	public void onRowCancel(RowEditEvent event) {
+		FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Edição cancelada.");
+		context.addMessage(null, msg);
+	}
+
+	public void onExcluir(Usuario usuario) {
+		Service servico = new Service();
+		ServiceUsuario sp = new ServiceUsuario();
+		var user = usuario;
+		var excluir = servico.Excluir(sp, user.getId());
+		if(excluir) {
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Cadastro excluido com sucesso.");
+			context.addMessage(null, msg);
+			inicializar();
+		}else {
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Falha ao excluir o cadastro.");
+			context.addMessage(null, msg);
+		}
+		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+	}
+
+	public String cadastro() {
+		return "viewUsuario";
+	}
+
+	public void adicionar() {
 		Service servico = new Service();
 		ServiceUsuario su = new ServiceUsuario();
-		
+		String ufSE = null;
+
 		Usuario user = new Usuario();
-		
+
 		user.setNomeCompleto(nomeCompleto);
 		user.setEndereco(endereco);
 		user.setComplemento(complemento);
 		user.setNumero(numero);
 		user.setCidade(cidade);
-		user.setEstado(Integer.parseInt(estado));
+		if(estado.isEmpty()) {
+			ufSE = "25";
+		}else {
+			ufSE = estado;
+		}
+		user.setEstado(Integer.parseInt(ufSE));
 		user.setCep(cep);
 		user.setDdd(ddd);
 		user.setTelefone(telefone);
 		user.setEmail(email);
 		user.setUsuario(usuario);
 		user.setSenha(senha);
-		user.setNivel(nivel);
-		
+		var n = "user";
+		user.setNivel(n);
+
 		var add = servico.Adicionar(su, user);
-		
+		usuarios.add(user);
+
 		if(add) {
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Cadastro adicionado com sucesso.");
 			context.addMessage(null, msg);
@@ -95,22 +140,22 @@ public class UsuarioBean {
 			this.setUsuario("");
 			this.setSenha("");
 			this.setNivel("");
-			
+
 			inicializar();
 		}else {
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Falha ao adicionar o cadastro.");
 			context.addMessage(null, msg);
 		}
 	}
-	
+
 	public List<Usuario> getUsuarios() {
 		return usuarios;
 	}
-	
+
 	public boolean isCadastrar() {
 		return cadastrar;
 	}
-	
+
 	public void setCadastrar(boolean cadastrar) {
 		this.cadastrar = cadastrar;
 	}

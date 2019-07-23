@@ -41,7 +41,7 @@ public class HomeBean implements Serializable{
 	}
 	
 	public String usuario() {
-		return "usuario?faces-redirect=true";
+		return "usuario";
 	}
 	
 	public List<Usuario> getUsuarios() {

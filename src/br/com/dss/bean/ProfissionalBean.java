@@ -49,6 +49,7 @@ public class ProfissionalBean implements Serializable{
 		Service servico = new Service();
 		ServiceProfissional sp = new ServiceProfissional();
 		var p = (Profissional) event.getObject();
+		
 		var up = servico.Atualizar(sp, p);
 
 		if(up) {

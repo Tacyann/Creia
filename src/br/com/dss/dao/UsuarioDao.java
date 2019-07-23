@@ -91,7 +91,8 @@ public class UsuarioDao {
 
 			while(rs.next()) {
 				var user = new Usuario();
-
+				
+				user.setId(rs.getInt("ID"));
 				user.setNomeCompleto(rs.getString("nomecompleto"));
 				user.setEndereco(rs.getString("endereco"));
 				user.setComplemento(rs.getString("complemento"));
@@ -118,8 +119,44 @@ public class UsuarioDao {
 		}
 	}
 	
+	public boolean Atualizar(Usuario usuario) {
+		boolean atualizou = false;
+		String sql = "update usuario set nomecompleto = ?,endereco = ?,complemento = ?,numero = ?,cidade = ?,estadoID = ?,cep = ?,ddd = ?,telefone = ?,email = ?,usuario = ?,senha = ?,nivel = ?"
+				+ "where Id = ?";
+		try {
+			PreparedStatement stmt = connection.prepareStatement(sql);
+
+			stmt.setString(1, usuario.getNomeCompleto());
+			stmt.setString(2, usuario.getEndereco());
+			stmt.setString(3, usuario.getComplemento());
+			stmt.setString(4, usuario.getNumero());
+			stmt.setString(5, usuario.getCidade());
+			stmt.setInt(6, usuario.getEstado());
+			stmt.setString(7, usuario.getCep());
+			stmt.setString(8, usuario.getDdd());
+			stmt.setString(9, usuario.getTelefone());
+			stmt.setString(10, usuario.getEmail());
+			stmt.setString(11, usuario.getUsuario());
+			stmt.setString(12, usuario.getSenha());
+			stmt.setString(13, usuario.getNivel());
+			stmt.setInt(14, usuario.getId());
+
+			stmt.execute();
+			stmt.close();
+
+			atualizou = true;
+			return atualizou;
+		}catch(SQLException e) {
+			//throw new RuntimeException(e);
+			System.out.println(e);
+			return atualizou = false;
+		}finally {
+			Conexao.FecharConexao();
+		}
+	}
+	
 	public boolean Excluir(int id) {
-		String sql = "delete from usuario where ID = '" + id + "'";		
+		String sql = "delete from usuario where ID = ?";		
 		
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);

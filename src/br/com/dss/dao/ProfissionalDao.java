@@ -127,6 +127,8 @@ public class ProfissionalDao {
 	public boolean Atualizar(Profissional profissional) {
 		boolean adicionou;
 		String sql = "update profissional set nome = ?, especializacao = ?, numeroconselho = ? where ID = ?";
+		var num = Integer.parseInt(profissional.getNumeroconselho());
+		System.out.println(num);
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
 
