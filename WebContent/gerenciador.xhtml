@@ -57,6 +57,13 @@
 	<h1 style="text-align:center; color:black; text-shadow: 5px 3px 5px gray; margin-top: 0;">
 		Gerenciador das guias de atendimento
 	</h1>
+	<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+
+	<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+		closable="false" resizable="false" showHeader="false">
+		<h:graphicImage library="img" name="ajaxloadingbar.gif" />
+	</p:dialog>
+
 	<h:form id="form">
 	<p:messages id="msg" globalOnly="true" showDetail="true" />
 		<p:panel>
@@ -98,6 +105,7 @@
 			<p:commandButton value="Consultar" 
 								action="#{gerenciador.registros}" 
 								icon="ui-icon-search"
+								process="@all"
 								update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg" />
 			&nbsp;
 			<p:commandButton value="Limpar" 
@@ -122,6 +130,7 @@
 			&nbsp;
 			<p:commandButton id="filtrar" 
 								value="Filtrar" 
+								process="@all"
 								icon="ui-icon-gear"
 								action="#{gerenciador.filtroProcedimento}" 
 								update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg" />
@@ -213,7 +222,7 @@
 		</p:panelGrid>
 		<p:separator/>		
 			&nbsp;
-		<p:commandButton value="Gerar Impressão" icon="ui-icon-print" action="#{gerenciador.gerarImpressao}" update="msgProfissional"/>
+		<p:commandButton value="Gerar Impressão" icon="ui-icon-print" process="@all" action="#{gerenciador.gerarImpressao}" update="msgProfissional"/>
 		<p:commandButton value="Sair" icon="ui-icon-close" action="#{gerenciador.sair}" />
 	</h:form>
 

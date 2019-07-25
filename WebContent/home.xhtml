@@ -11,7 +11,7 @@
 </h:head>
 <h:body>
 	<h:graphicImage library="img" name="logoCreia.png" style="width: 70px; height: 20px;"/>
-
+	
 	<h:form>
 		<p:growl id="messages" showSummary="false" showDetail="true"/>
 
@@ -31,6 +31,11 @@
 			</p:submenu>
 		</p:menubar>
 	</h:form>
+	<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
 
+	<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+		closable="false" resizable="false" showHeader="false">
+		<h:graphicImage library="img" name="ajaxloadingbar.gif" />
+	</p:dialog>
 </h:body>
 </html>
