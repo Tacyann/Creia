@@ -124,7 +124,7 @@ public class ArquivoDao {
 //		Integer tipoGlosa = 0;
 		List<Lote> lotes = new ArrayList<Lote>();
 
-		File f = new File("C:/ArquivoXml"); 
+		File f = new File("D:/ArquivoXml"); 
 		var auxDir = f.list();
 
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -132,7 +132,7 @@ public class ArquivoDao {
 		for(var arquivo : auxDir) {
 			Arquivo arq = new Arquivo();
 			var extencaoArquivo = arquivo.substring(arquivo.indexOf('.')+1);
-
+			System.out.println("É um arquivo XML: " + extencaoArquivo.equals("xml"));
 			if(extencaoArquivo.equals("xml")) {	
 				item = Obter(arquivo);
 

@@ -11,11 +11,18 @@ public class Guia{
 	private int operadora;
 	private int senha;
 	private Beneficiario beneficiario;
+	private Procedimento procedimento;
 	private Calendar dataIni;
+	private Calendar dtRealizacao;
 	private int situacaoGuia;
 	private double valorInformadoGuia;
 	private double valorProcessadoGuia;
 	private double valorLiberadoGuia;
+	private double valorInformado;
+	private double valorProcessado;
+	private double valorLiberado;
+	private Integer qtdExecutada;
+	private Integer codProced;
 	private List<Glosa> glosa;
 	private List<DetalheGuia> detalheGuia;
 	
@@ -96,5 +103,47 @@ public class Guia{
 	}
 	public void setGlosa(List<Glosa> glosa) {
 		this.glosa = glosa;
+	}
+	public double getValorInformado() {
+		return valorInformado;
+	}
+	public void setValorInformado(double valorInformado) {
+		this.valorInformado = valorInformado;
+	}
+	public double getValorProcessado() {
+		return valorProcessado;
+	}
+	public void setValorProcessado(double valorProcessado) {
+		this.valorProcessado = valorProcessado;
+	}
+	public double getValorLiberado() {
+		return valorLiberado;
+	}
+	public void setValorLiberado(double valorLiberado) {
+		this.valorLiberado = valorLiberado;
+	}
+	public Integer getQtdExecutada() {
+		return qtdExecutada;
+	}
+	public void setQtdExecutada(Integer qtdExecutada) {
+		this.qtdExecutada = qtdExecutada;
+	}
+	public Integer getCodProced() {
+		return codProced;
+	}
+	public void setCodProced(Integer codProced) {
+		this.codProced = codProced;
+	}
+	public Calendar getDtRealizacao() {
+		return dtRealizacao;
+	}
+	public void setDtRealizacao(Calendar dtRealizacao) {
+		this.dtRealizacao = dtRealizacao;
+	}
+	public Procedimento getProcedimento() {
+		return procedimento;
+	}
+	public void setProcedimento(Procedimento procedimento) {
+		this.procedimento = procedimento;
 	}
 }

@@ -1,5 +1,8 @@
 package br.com.dss.dao;
 
+import java.sql.Date;
+import java.util.Calendar;
+
 public class TesteArquivoDAO {
 
 	public static void main(String[] args) {
@@ -26,12 +29,21 @@ public class TesteArquivoDAO {
 //			
 //			e.printStackTrace();
 //		}
-		Processar();
-		//Testar();
+		//Processar();
+		Testar();
 	}
 	
 	public static void Testar() {
-//		ArquivoDao arquivo = new ArquivoDao();
+		var guia = new GuiaDao();
+		var d1 = Date.valueOf("2018-12-01");
+		var d2 = Date.valueOf("2019-07-08");
+		var count = 0;
+		var lista = guia.Obter(d1, d2);
+		for(var item : lista) {
+			System.out.println(item.getBeneficiario().getNome());
+			count++;
+		}
+		System.out.println(count);
 	}
 	
 	public static void Processar() {

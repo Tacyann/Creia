@@ -29,6 +29,11 @@ public class Service {
 		return ret;
 	}
 	
+	public Object Obter(IListagemPorData listagem, Date dtIni, Date dtFim) {
+		var ret = listagem.obter(dtIni, dtFim);
+		return ret;
+	}
+	
 	public Object Obter(IListagemPorData listagem, Object objeto1, Object objeto2, Date dtIni, Date dtFim) {
 		var ret = listagem.obter(objeto1, objeto2, dtIni, dtFim);
 		return ret;
@@ -36,6 +41,11 @@ public class Service {
 	
 	public Object Listar(IListagem listagem) {
 		var ret = listagem.Lista();
+		return ret;
+	}
+	
+	public Object Quantidade(IQuantidade qtd) {
+		var ret = qtd.quantidade();
 		return ret;
 	}
 }

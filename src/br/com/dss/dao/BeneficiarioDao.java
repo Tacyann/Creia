@@ -93,6 +93,30 @@ public class BeneficiarioDao {
 		}
 	}
 	
+	public int qtdClientes() {
+		String sql = "select count(*) as QTD from beneficiario";		
+		int qtd = 0;
+		
+		try {
+			PreparedStatement stmt = connection.prepareStatement(sql);
+
+			ResultSet rs = stmt.executeQuery();
+
+			while(rs.next()) {
+				qtd =rs.getInt("QTD");
+			}
+			
+			stmt.close();
+			rs.close();
+			
+			return qtd;
+		}catch(SQLException e) {
+			throw new RuntimeException(Conexao.status);
+		}finally {
+			Conexao.FecharConexao();
+		}
+	}
+	
 	public boolean Existe(Beneficiario beneficiario) {
 		String sql = "select count(*) as QTD from beneficiario where nome = '" + beneficiario.getNome() + "' and numerocarteira = '" + beneficiario.getNumeroCarteira() + "'";		
 		int qtd = 0;

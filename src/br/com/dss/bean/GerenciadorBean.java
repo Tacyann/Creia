@@ -2,6 +2,7 @@ package br.com.dss.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,7 +22,6 @@ import br.com.dss.modelo.Guia;
 import br.com.dss.modelo.Procedimento;
 import br.com.dss.servico.Service;
 import br.com.dss.servico.ServiceBeneficiario;
-import br.com.dss.servico.ServiceDetalheGuia;
 import br.com.dss.servico.ServiceGuia;
 import br.com.dss.servico.ServiceProcedimento;
 import br.com.dss.util.Relatorio;
@@ -59,33 +59,29 @@ public class GerenciadorBean implements Serializable {
 
 		Service servico = new Service();
 		ServiceGuia sg = new ServiceGuia();
-		ServiceDetalheGuia sdg = new ServiceDetalheGuia();
 
-		if(clientes.length == 0) {
-			limpar();
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum cliente foi selecionado para a consulta.");
-			context.addMessage(null, msg);
-		}else {
-			if(descricao.length > 0) {
-				var tam = descricao.length;
-				String texto = "";
-				if(tam == 1) {
-					texto = " procedimento está selecionado.";
-				}else {
-					texto = " procedimentos estão selecionados.";
-				}
-				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, descricao.length + texto);
-				context.addMessage(null, msg);
+
+		if(descricao.length > 0) {
+			var tam = descricao.length;
+			String texto = "";
+			if(tam == 1) {
+				texto = " procedimento está selecionado.";
+			}else {
+				texto = " procedimentos estão selecionados.";
 			}
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, descricao.length + texto);
+			context.addMessage(null, msg);
+		}
 
-			java.sql.Date dt1 = new java.sql.Date(getDtInicial().getTime());
-			java.sql.Date dt2 = new java.sql.Date(getDtFinal().getTime());
+		java.sql.Date dt1 = new java.sql.Date(getDtInicial().getTime());
+		java.sql.Date dt2 = new java.sql.Date(getDtFinal().getTime());
 
-			@SuppressWarnings("unchecked")
-			var listagemGuia = (List<Guia>) servico.Obter(sg, clientes, descricao, dt1, dt2);
-
+		@SuppressWarnings("unchecked")
+		var listagemGuia = (Collection<Guia>) servico.Obter(sg, clientes, descricao, dt1, dt2);
+		try {
 			for(var item : listagemGuia) {
 				var guia = new GuiaArgument();
+				var detalhe = new DetalheGuia();
 				guia.setPrestador(item.getPrestador());
 				guia.setOperadora(item.getOperadora());
 				var cliente = item.getBeneficiario();
@@ -94,103 +90,52 @@ public class GerenciadorBean implements Serializable {
 				}
 				guia.setDataIni(item.getDataIni());
 
-				var detalheGuia = (DetalheGuia) servico.Obter(sdg, guia.getPrestador());
+				detalhe.setDataRealizacao(item.getDtRealizacao());
 
-				guia.setDetalheGuia(detalheGuia);
-				valoresLiberados.add(detalheGuia.getValorLiberado());
-				valoresGlosa.add(detalheGuia.getValorGlosa());
+				var procedimento = item.getProcedimento();
+				if(procedimento != null) {
+					guia.setProcedimento(procedimento);						
+				}
+
+				var informado = item.getValorInformado();
+				detalhe.setValorInformado(informado);
+				detalhe.setQtdExecutada(item.getQtdExecutada());
+				detalhe.setValorProcessado(item.getValorProcessado());
+				var liberado = item.getValorLiberado();
+				detalhe.setValorLiberado(liberado);
+
+				if(liberado == 0.0) {
+					valoresGlosa.add(informado);
+					detalhe.setValorGlosa(informado);
+				}
+
+				valoresLiberados.add(liberado);
+
+				guia.setDetalheGuia(detalhe);
+
 				guias.add(guia);
 			}
-
-			valorTotal = 0.0;
-			valorGlosa = 0.0;
-			valorCreia = 0.0;
-			valorProfissional = 0.0;
-
-			for(var total : valoresLiberados) {
-				valorTotal =+ valorTotal + total;
-			}
-
-			valorCreia = valorTotal * 45.5 / 100;
-
-			for(var glosa : valoresGlosa) {
-				valorGlosa =+ valorGlosa + glosa;				
-			}
-
-			valorProfissional = valorTotal * 54.5 / 100;
+		}catch(NullPointerException e) {
+			System.out.println(e.getCause());
+			System.out.println(e.getClass());
+			System.out.println(e.getMessage());
+			System.out.println(e.getLocalizedMessage());
 		}
-	}
 
-	public void filtroProcedimento() {
+		valorTotal = 0.0;
+		valorGlosa = 0.0;
+		valorCreia = 0.0;
+		valorProfissional = 0.0;
 
-		if(guias != null && guias.size()>0) {
-			guias.clear();
-			valoresLiberados.clear();
-			valoresGlosa.clear();
-
-			Service servico = new Service();
-			ServiceGuia sg = new ServiceGuia();
-			ServiceDetalheGuia sdg = new ServiceDetalheGuia();
-
-			if(clientes.length == 0) {
-				limpar();
-				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum cliente foi selecionado para a consulta.");
-				context.addMessage(null, msg);
-			}else if(descricao.length == 0) {
-				limpar();
-				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum Procedimento foi selecionado para a consulta.");
-				context.addMessage(null, msg);
-			}else if(clientes.length == 0 && descricao.length == 0) {
-				limpar();
-				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum Procedimento foi selecionado para a consulta.");
-				context.addMessage(null, msg);
-			}else {
-				java.sql.Date dt1 = new java.sql.Date(getDtInicial().getTime());
-				java.sql.Date dt2 = new java.sql.Date(getDtFinal().getTime());
-
-				@SuppressWarnings("unchecked")
-				var listagemGuia = (List<Guia>) servico.Obter(sg, clientes, descricao, dt1, dt2);
-
-				for(var item : listagemGuia) {
-					var guia = new GuiaArgument();
-					guia.setPrestador(item.getPrestador());
-					guia.setOperadora(item.getOperadora());
-					var cliente = item.getBeneficiario();
-					if(cliente != null) {
-						guia.setBeneficiario(item.getBeneficiario());					
-					}
-					guia.setDataIni(item.getDataIni());
-
-					var detalheGuia = (DetalheGuia) servico.Obter(sdg, guia.getPrestador());
-
-					guia.setDetalheGuia(detalheGuia);
-					valoresLiberados.add(detalheGuia.getValorLiberado());
-					valoresGlosa.add(detalheGuia.getValorGlosa());
-					guias.add(guia);
-				}
-
-				valorTotal = 0.0;
-				valorGlosa = 0.0;
-				valorCreia = 0.0;
-				valorProfissional = 0.0;
-
-				for(var total : valoresLiberados) {
-					valorTotal =+ valorTotal + total;
-				}
-
-				valorCreia = valorTotal * 45.5 / 100;
-
-				for(var glosa : valoresGlosa) {
-					valorGlosa =+ valorGlosa + glosa;				
-				}
-
-				valorProfissional = valorTotal * 54.5 / 100;
-			}
-		}else {
-			limpar();
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Nenhum cliente foi selecionado para a consulta.");
-			context.addMessage(null, msg);
+		for(var total : valoresLiberados) {
+			valorTotal =+ valorTotal + total;
 		}
+		valorCreia = valorTotal * 45.5 / 100;
+
+		for(var glosa : valoresGlosa) {
+			valorGlosa =+ valorGlosa + glosa;				
+		}
+		valorProfissional = valorTotal * 54.5 / 100;
 	}
 
 	public void limpar() {
@@ -205,29 +150,29 @@ public class GerenciadorBean implements Serializable {
 
 	public String sair() {
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-		//limpar();
+		limpar();
 		return "home?faces-redirect=true";
 	}
 
 	public String gerarImpressao() {
-		
+
 		relatorios = new ArrayList<>();
-		
+		System.out.println("Qtd de registros: " + guias.size());
 		if(descricao.length > 0) {
 			for(var proced : descricao) {
 				Relatorio r = new Relatorio();
-				var nomeP = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == Integer.parseInt(proced)).map(s ->{return s.getDetalheGuia().getProcedimento().getDescricao();}).toArray();
-				var qtd = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == Integer.parseInt(proced)).mapToInt(p -> p.getDetalheGuia().getQtdExecutada()).sum();
-				var vlrInf = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == Integer.parseInt(proced)).mapToDouble(p -> p.getDetalheGuia().getValorInformado()).sum();
-				var vlrGl = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == Integer.parseInt(proced)).mapToDouble(p -> p.getDetalheGuia().getValorGlosa()).sum();
-				var vlrProc = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == Integer.parseInt(proced)).mapToDouble(p -> p.getDetalheGuia().getValorProcessado()).sum();
-				var vlrLib = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == Integer.parseInt(proced)).mapToDouble(p -> p.getDetalheGuia().getValorLiberado()).sum();
-				
+				var nomeP = guias.stream().filter(p -> p.getProcedimento().getProcedimento() == Integer.parseInt(proced)).map(s ->{return s.getDetalheGuia().getProcedimento().getDescricao();}).toArray();
+				var qtd = guias.stream().filter(p -> p.getProcedimento().getProcedimento() == Integer.parseInt(proced)).mapToInt(p -> p.getDetalheGuia().getQtdExecutada()).sum();
+				var vlrInf = guias.stream().filter(p -> p.getProcedimento().getProcedimento() == Integer.parseInt(proced)).mapToDouble(p -> p.getDetalheGuia().getValorInformado()).sum();
+				var vlrGl = guias.stream().filter(p -> p.getProcedimento().getProcedimento() == Integer.parseInt(proced)).mapToDouble(p -> p.getDetalheGuia().getValorGlosa()).sum();
+				var vlrProc = guias.stream().filter(p -> p.getProcedimento().getProcedimento() == Integer.parseInt(proced)).mapToDouble(p -> p.getDetalheGuia().getValorProcessado()).sum();
+				var vlrLib = guias.stream().filter(p -> p.getProcedimento().getProcedimento() == Integer.parseInt(proced)).mapToDouble(p -> p.getDetalheGuia().getValorLiberado()).sum();
+
 				var n = "";
 				for(var item : nomeP) {
 					n = item.toString();
 				}
-				
+
 				r.setNomeProcedimento(n);
 				r.setQuantidade(qtd);
 				r.setValorInformado(vlrInf * 54.5 / 100);
@@ -236,20 +181,22 @@ public class GerenciadorBean implements Serializable {
 				r.setValorLiberado(vlrLib * 54.5 / 100);
 				relatorios.add(r);
 			}
+		}else if(guias.size() == 0){
+			return null;
 		}else {
 			ServiceProcedimento sp = new ServiceProcedimento();
 			Service servico = new Service();
-			
+
 			@SuppressWarnings("unchecked")
 			var listagem = (List<Procedimento>) servico.Listar(sp);
-			
+
 			for(var item : listagem) {
 				Relatorio r = new Relatorio();
-				var qtd = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == item.getProcedimento()).mapToInt(p -> p.getDetalheGuia().getQtdExecutada()).sum();
-				var vlrInf = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == item.getProcedimento()).mapToDouble(p -> p.getDetalheGuia().getValorInformado()).sum();
-				var vlrGl = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == item.getProcedimento()).mapToDouble(p -> p.getDetalheGuia().getValorGlosa()).sum();
-				var vlrProc = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == item.getProcedimento()).mapToDouble(p -> p.getDetalheGuia().getValorProcessado()).sum();
-				var vlrLib = guias.stream().filter(p -> p.getDetalheGuia().getProcedimento().getProcedimento() == item.getProcedimento()).mapToDouble(p -> p.getDetalheGuia().getValorLiberado()).sum();
+				var qtd = guias.stream().filter(p -> p.getProcedimento().getProcedimento() == item.getProcedimento()).mapToInt(p -> p.getDetalheGuia().getQtdExecutada()).sum();
+				var vlrInf = guias.stream().filter(p -> p.getProcedimento().getProcedimento() == item.getProcedimento()).mapToDouble(p -> p.getDetalheGuia().getValorInformado()).sum();
+				var vlrGl = guias.stream().filter(p -> p.getProcedimento().getProcedimento() == item.getProcedimento()).mapToDouble(p -> p.getDetalheGuia().getValorGlosa()).sum();
+				var vlrProc = guias.stream().filter(p -> p.getProcedimento().getProcedimento() == item.getProcedimento()).mapToDouble(p -> p.getDetalheGuia().getValorProcessado()).sum();
+				var vlrLib = guias.stream().filter(p -> p.getProcedimento().getProcedimento() == item.getProcedimento()).mapToDouble(p -> p.getDetalheGuia().getValorLiberado()).sum();
 				r.setNomeProcedimento(item.getDescricao());
 				r.setQuantidade(qtd);
 				r.setValorInformado(vlrInf * 54.5 / 100);
@@ -259,13 +206,30 @@ public class GerenciadorBean implements Serializable {
 				relatorios.add(r);
 			}			
 		}
-		
+
 		if(clientes.length > 0) {
 			Set<String> nCliente = new HashSet<String>();			
 			StringBuilder sb = new StringBuilder();
-			
+
 			for(var c : clientes) {
 				nCliente.add(c);
+			}
+			for(var c : nCliente) {
+				sb.append(c).append("\n");
+			}
+			setNomeClientes(sb.toString());
+		}else {
+			ServiceBeneficiario sbn = new ServiceBeneficiario();
+			Service servico = new Service();
+
+			@SuppressWarnings("unchecked")
+			var listagem = (List<Beneficiario>) servico.Listar(sbn);
+			
+			Set<String> nCliente = new HashSet<String>();			
+			StringBuilder sb = new StringBuilder();
+
+			for(var c : listagem) {
+				nCliente.add(c.getNome());
 			}
 			for(var c : nCliente) {
 				sb.append(c).append("\n");
@@ -275,11 +239,11 @@ public class GerenciadorBean implements Serializable {
 		
 		return "relatorio";
 	}
-	
+
 	public static List<Relatorio> Relatorio() {
 		return relatorios;
 	}
-	
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void imprimeRelatorio() {
 		HashMap parametros = new HashMap();
@@ -294,48 +258,24 @@ public class GerenciadorBean implements Serializable {
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 	}
 
-	public void listar() {
-
-		Service servico = new Service();
-		ServiceGuia sg = new ServiceGuia();
-		ServiceDetalheGuia sdg = new ServiceDetalheGuia();
-		@SuppressWarnings("unchecked")
-		var listagemGuia = (List<Guia>) servico.Listar(sg);
-
-		for(var item : listagemGuia) {
-			var guia = new GuiaArgument();
-			guia.setPrestador(item.getPrestador());
-			guia.setOperadora(item.getOperadora());
-			guia.setBeneficiario(item.getBeneficiario());
-			guia.setDataIni(item.getDataIni());
-
-			var detalheGuia = (DetalheGuia) servico.Obter(sdg, guia.getPrestador());			
-			guia.setDetalheGuia(detalheGuia);
-
-			guias.add(guia);
-		}
-
-		limpar();
-	}
-
-	public List<String> nomeBeneficiario(){
-
-		List<String> nomes = new ArrayList<>();
-		Service servico = new Service();
-		ServiceBeneficiario sb = new ServiceBeneficiario();
-
-		@SuppressWarnings("unchecked")
-		var listagem = (List<Beneficiario>) servico.Listar(sb);
-
-		for(var item : listagem) {
-			nomes.add(item.getNome());
-		}
-		return nomes;
-	}
-
-	public FacesContext getFacescontext() {
-		return context;
-	}
+//	public List<String> nomeBeneficiario(){
+//
+//		List<String> nomes = new ArrayList<>();
+//		Service servico = new Service();
+//		ServiceBeneficiario sb = new ServiceBeneficiario();
+//
+//		@SuppressWarnings("unchecked")
+//		var listagem = (List<Beneficiario>) servico.Listar(sb);
+//
+//		for(var item : listagem) {
+//			nomes.add(item.getNome());
+//		}
+//		return nomes;
+//	}
+//
+//	public FacesContext getFacescontext() {
+//		return context;
+//	}
 
 	public void setFacescontext(FacesContext facescontext) {
 		this.context = facescontext;

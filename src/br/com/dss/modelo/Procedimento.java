@@ -2,27 +2,26 @@ package br.com.dss.modelo;
 
 public class Procedimento {
 
-	private int id;
-	private int tabela;
-	private int procedimento;
+	private Integer id;
+	private Integer tabela;
+	private Integer procedimento;
 	private String descricao;
-	
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
-	public int getTabela() {
+	public Integer getTabela() {
 		return tabela;
 	}
-	public void setTabela(int tabela) {
+	public void setTabela(Integer tabela) {
 		this.tabela = tabela;
 	}
-	public int getProcedimento() {
+	public Integer getProcedimento() {
 		return procedimento;
 	}
-	public void setProcedimento(int procedimento) {
+	public void setProcedimento(Integer procedimento) {
 		this.procedimento = procedimento;
 	}
 	public String getDescricao() {

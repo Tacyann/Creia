@@ -12,6 +12,7 @@ import java.util.List;
 import br.com.dss.Conexao;
 import br.com.dss.modelo.Beneficiario;
 import br.com.dss.modelo.Guia;
+import br.com.dss.modelo.Procedimento;
 
 public class GuiaDao {
 	private Connection connection;
@@ -55,8 +56,11 @@ public class GuiaDao {
 	public List<Guia> Obter(String[] listaCliente, String[] listaProcedimento, Date dtIni, Date dtFim) {
 		String sql;
 		
-		if(listaCliente.length == 0) {
-			sql = "select * from guia";
+		if(listaCliente.length == 0 && listaProcedimento.length == 0) {
+			sql = "SELECT DISTINCT a.*, b.numPrestador, b.procedimento, c.descricaoProcedimento, b.valorInformado, b.qtdExecutada, b.valorProcessado, b.valorLiberado FROM guia a "
+					+"JOIN detalhesguia b ON a.numeroGuiaPrestador = b.numPrestador "
+					+"AND b.dataRealizacao >= '" + dtIni + "' AND b.dataRealizacao <= '" + dtFim + "'"
+					+"JOIN procedimento c ON b.procedimento = c.codigoProcedimento";
 		}else {
 			int count = 0;
 			StringBuilder sbCliente = new StringBuilder();
@@ -70,10 +74,11 @@ public class GuiaDao {
 
 			var paramCliente = sbCliente.toString();
 			if(listaProcedimento.length == 0) {
-				sql = "SELECT DISTINCT a.* FROM guia a "
+				sql = "SELECT DISTINCT a.*, b.numPrestador, b.procedimento, c.descricaoProcedimento, b.valorInformado, b.qtdExecutada, b.valorProcessado, b.valorLiberado FROM guia a "
 						+"JOIN detalhesguia b ON a.numeroGuiaPrestador = b.numPrestador "
-						+"WHERE a.nomeBeneficiario IN (" + paramCliente + ") "
-						+"AND b.dataRealizacao >= '" + dtIni + "' AND b.dataRealizacao <= '" + dtFim + "'";							
+						+"AND b.dataRealizacao >= '" + dtIni + "' AND b.dataRealizacao <= '" + dtFim + "'"
+						+"LEFT JOIN procedimento c ON b.procedimento = c.codigoProcedimento "
+						+"WHERE a.nomeBeneficiario IN (" + paramCliente + ") ";				
 			}else {
 				int countP = 0;
 				StringBuilder sbProcedimento = new StringBuilder();
@@ -84,20 +89,23 @@ public class GuiaDao {
 						sbProcedimento.append(",");
 					}
 				}
-				
 				var paramProcedimento = sbProcedimento.toString();
-				sql = "SELECT DISTINCT a.* FROM guia a "
+
+				sql = "SELECT DISTINCT a.*, b.numPrestador, b.procedimento, c.descricaoProcedimento, b.valorInformado, b.qtdExecutada, b.valorProcessado, b.valorLiberado FROM guia a "
 						+"JOIN detalhesguia b ON a.numeroGuiaPrestador = b.numPrestador "
-						+"WHERE a.nomeBeneficiario IN (" + paramCliente + ") "
 						+"AND b.dataRealizacao >= '" + dtIni + "' AND b.dataRealizacao <= '" + dtFim + "'"
-						+"AND b.procedimento IN (" + paramProcedimento + ")";	
+						+"JOIN procedimento c ON b.procedimento = c.codigoProcedimento ";
+				if(listaCliente.length == 0) {							
+					sql +="WHERE b.procedimento IN (" + paramProcedimento + ")";	
+				}else {
+					sql +="WHERE a.nomeBeneficiario IN (" + paramCliente + ") AND b.procedimento IN (" + paramProcedimento + ")";
+				}
 			}
 		}
-		
+
 		List<Guia> guias = new ArrayList<>();
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
-
 			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()) {
@@ -110,6 +118,10 @@ public class GuiaDao {
 				beneficiario.setNome(rs.getString("nomeBeneficiario"));
 				beneficiario.setNumeroCarteira(rs.getString("numeroCarteira"));
 				guia.setBeneficiario(beneficiario);
+				var procedimento = new Procedimento();
+				procedimento.setProcedimento(rs.getInt("b.procedimento"));
+				procedimento.setDescricao(rs.getString("c.descricaoProcedimento"));
+				guia.setProcedimento(procedimento);
 				var calendario = Calendar.getInstance(); 
 				calendario.setTime(rs.getDate("dataInicioFat"));
 				guia.setDataIni(calendario);
@@ -117,10 +129,14 @@ public class GuiaDao {
 				guia.setValorInformadoGuia(rs.getDouble("valorInformadoGuia"));
 				guia.setValorProcessadoGuia(rs.getDouble("valorProcessadoGuia"));
 				guia.setValorLiberadoGuia(rs.getDouble("valorLiberadoGuia"));
-				
+				guia.setValorInformado(rs.getDouble("valorInformado"));
+				guia.setValorProcessado(rs.getDouble("valorProcessado"));
+				guia.setValorLiberado(rs.getDouble("valorLiberado"));
+				guia.setQtdExecutada(rs.getInt("qtdExecutada"));
+
 				guias.add(guia);
 			}
-			
+
 			stmt.close();
 			rs.close();
 
@@ -131,9 +147,61 @@ public class GuiaDao {
 			Conexao.FecharConexao();
 		}
 	}
-	
+
+	public List<Guia> Obter(Date dtIni, Date dtFim) {
+		String sql = "SELECT DISTINCT a.*, b.numPrestador, b.procedimento, c.descricaoProcedimento, b.valorInformado, b.qtdExecutada, b.valorProcessado, b.valorLiberado FROM guia a "
+				+"JOIN detalhesguia b ON a.numeroGuiaPrestador = b.numPrestador "
+				+"AND b.dataRealizacao >= '" + dtIni + "' AND b.dataRealizacao <= '" + dtFim + "'"
+				+"JOIN procedimento c ON b.procedimento = c.codigoProcedimento";
+		List<Guia> guias = new ArrayList<Guia>();
+		System.out.println(sql);
+		try {
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			ResultSet rs = stmt.executeQuery();
+
+			while(rs.next()) {
+				var guia = new Guia();
+				guia.setId(rs.getInt("Id"));
+				guia.setPrestador(rs.getInt("numeroGuiaPrestador"));
+				guia.setOperadora(rs.getInt("numeroGuiaOperadora"));
+				guia.setSenha(rs.getInt("senha"));
+				var beneficiario = new Beneficiario();
+				beneficiario.setNome(rs.getString("nomeBeneficiario"));
+				beneficiario.setNumeroCarteira(rs.getString("numeroCarteira"));
+				guia.setBeneficiario(beneficiario);
+				var procedimento = new Procedimento();
+				procedimento.setProcedimento(rs.getInt("b.procedimento"));
+				procedimento.setDescricao(rs.getString("c.descricaoProcedimento"));
+				guia.setProcedimento(procedimento);
+				var calendario = Calendar.getInstance(); 
+				calendario.setTime(rs.getDate("dataInicioFat"));
+				guia.setDataIni(calendario);
+				guia.setSituacaoGuia(rs.getInt("situacaoGuia"));
+				guia.setValorInformadoGuia(rs.getDouble("valorInformadoGuia"));
+				guia.setValorProcessadoGuia(rs.getDouble("valorProcessadoGuia"));
+				guia.setValorLiberadoGuia(rs.getDouble("valorLiberadoGuia"));
+				guia.setValorInformado(rs.getDouble("valorInformado"));
+				guia.setValorProcessado(rs.getDouble("valorProcessado"));
+				guia.setValorLiberado(rs.getDouble("valorLiberado"));
+				guia.setQtdExecutada(rs.getInt("qtdExecutada"));
+
+				guias.add(guia);
+			}
+			stmt.close();
+			rs.close();
+
+			return guias;
+		}catch(SQLException e) {
+			throw new RuntimeException(e.getSQLState());
+		}finally {
+			Conexao.FecharConexao();
+		}
+	}
+
 	public List<Guia> Listar() {
-		String sql = "select * from guia";
+		String sql = "SELECT DISTINCT a.* FROM guia a "
+				+"JOIN detalhesguia b ON a.numeroGuiaPrestador = b.numPrestador ";
+
 		List<Guia> guias = new ArrayList<Guia>();
 
 		try {
@@ -143,7 +211,6 @@ public class GuiaDao {
 
 			while(rs.next()) {
 				var guia = new Guia();
-
 				guia.setId(rs.getInt("Id"));
 				guia.setPrestador(rs.getInt("numeroGuiaPrestador"));
 				guia.setOperadora(rs.getInt("numeroGuiaOperadora"));
@@ -159,31 +226,31 @@ public class GuiaDao {
 				guia.setValorInformadoGuia(rs.getDouble("valorInformadoGuia"));
 				guia.setValorProcessadoGuia(rs.getDouble("valorProcessadoGuia"));
 				guia.setValorLiberadoGuia(rs.getDouble("valorLiberadoGuia"));
-				
+
 				guias.add(guia);
 			}
 			stmt.close();
 			rs.close();
-			
+
 			return guias;
 		}catch(SQLException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException(Conexao.status);
 		}finally {
 			Conexao.FecharConexao();
 		}
 	}
-	
+
 	public boolean Excluir(int lote) {
 		String sql = "delete from guia where ID = '" + lote + "'";		
-		
+
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
 
 			stmt.setInt(1, lote);
-			
+
 			stmt.execute();
 			stmt.close();
-			
+
 			return true;
 		}catch(SQLException e) {
 			throw new RuntimeException(e);

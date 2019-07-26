@@ -4,5 +4,6 @@ import java.sql.Date;
 
 public interface IListagemPorData {
 
+	public Object obter(Date dtIni, Date dtFim);
 	public Object obter(Object objeto1, Object objeto2, Date dtIni, Date dtFim);
 }

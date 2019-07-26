@@ -50,27 +50,30 @@ public class DetalhesGuiaDao {
 	}
 
 	public DetalheGuia Obter(int numPrestador) {
-		String sql = "select * from detalhesguia a join procedimento b on b.codigoProcedimento = a.procedimento where numPrestador = " + numPrestador;		
+		String sql = "select * from detalhesguia a join procedimento b on b.codigoProcedimento = a.procedimento where numPrestador = ?";		
 		DetalheGuia detalheguia = new DetalheGuia();
 
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
-
+			stmt.setInt(1, numPrestador);
 			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()) {
 				var calendario = Calendar.getInstance(); 
 				calendario.setTime(rs.getDate("a.dataRealizacao"));
 				detalheguia.setDataRealizacao(calendario);
+				
 				var procedimento = new Procedimento();
 				procedimento.setId(rs.getInt("b.id"));
 				procedimento.setTabela(rs.getInt("b.codigoTabela"));
 				procedimento.setProcedimento(rs.getInt("b.codigoProcedimento"));
 				procedimento.setDescricao(rs.getString("b.descricaoProcedimento"));
+				
 				detalheguia.setProcedimento(procedimento);
 				detalheguia.setGrauParticipacao(rs.getInt("a.grauParticipacao"));
 				detalheguia.setValorInformado(rs.getDouble("a.valorInformado"));
 				detalheguia.setQtdExecutada(rs.getInt("a.qtdExecutada"));
+				
 				var vlrLiberado = rs.getDouble("a.valorLiberado");
 				var vlrGlosa = 0.0;
 				if(vlrLiberado == 0.0) {
@@ -82,7 +85,7 @@ public class DetalhesGuiaDao {
 			}
 			stmt.close();
 			rs.close();
-
+			
 			return detalheguia;
 		}catch(SQLException e) {
 			throw new RuntimeException(e);
