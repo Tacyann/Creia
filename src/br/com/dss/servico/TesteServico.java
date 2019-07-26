@@ -2,31 +2,43 @@ package br.com.dss.servico;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import br.com.dss.argument.GuiaArgument;
 import br.com.dss.modelo.Guia;
+import br.com.dss.util.Relatorio;
 
 public class TesteServico {
 	public static void main(String[] args) {
-		List<Double> valoresLiberados = new ArrayList<>();
-		List<Double> valoresGlosa = new ArrayList<>();
-		var lista = teste();
+		//var guias = teste();
+		var relato = gerarImpressao();
+	}
 
-		Double totalLib = 0.0;
-		for(var item : lista) {
-			valoresLiberados.add(item.getValorLiberado());
-			System.out.println(item.getValorLiberado());
-			totalLib += totalLib + item.getValorLiberado();
-		}
-		Double totalGlo = 0.0;
+	public static List<GuiaArgument> gerarImpressao() {
+		List<GuiaArgument> guias = new ArrayList<>();
+		String[] clientes = {};
+		String[] codProced = {};
 		
-		System.out.println(totalLib);
+		var dt1 = Date.valueOf("2018-12-01");
+		var dt2 = Date.valueOf("2019-07-08");
+		
+		Service servico = new Service();
+		ServiceGuia sg = new ServiceGuia();
+		
+		@SuppressWarnings("unchecked")
+		var listagem = (List<Relatorio>) servico.Somar(sg, clientes, codProced, dt1, dt2);
+		
+		for(var item : listagem) {
+			System.out.println(item.getNomeProcedimento() + "Qtd: " + item.getQuantidade());
+		}
+		return guias;
 	}
 
 	public static List<GuiaArgument> teste(){
 		List<GuiaArgument> guias = new ArrayList<>();
+		String[] clientes = {};
+		String[] codProced = {};
 
 		Service servico = new Service();
 		ServiceGuia sg = new ServiceGuia();
@@ -35,7 +47,7 @@ public class TesteServico {
 		var dt2 = Date.valueOf("2019-07-08");
 
 		@SuppressWarnings("unchecked")
-		var listagemGuia = (Collection<Guia>) servico.Obter(sg, dt1, dt2);
+		var listagemGuia = (List<Guia>) servico.Obter(sg, clientes, codProced, dt1, dt2);
 		try {
 			for(var item : listagemGuia) {
 				var guia = new GuiaArgument();
@@ -59,6 +71,7 @@ public class TesteServico {
 			System.out.println(e.getMessage());
 			System.out.println(e.getLocalizedMessage());
 		}
+		
 		return guias;
 	}
 }

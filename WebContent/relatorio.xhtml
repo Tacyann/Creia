@@ -16,8 +16,8 @@
 	<p:commandButton value="Imprimir" 
 					action="#{gerenciador.imprimeRelatorio}" 
 					ajax="false"
-					icon="ui-icon-print">
-<!-- 					onclick="this.form.target='_blank';"> -->
+					icon="ui-icon-print"
+					onclick="this.form.target='_blank';">
 <!-- 		<p:printer target=""/> -->
 	</p:commandButton>
 	</h:form>
@@ -37,34 +37,34 @@
 			</p:repeat>
 		</p:panel>
 		<br/>
-		<p:repeat var="g" value="#{gerenciador.relatorios}">
+		<p:repeat var="r" value="#{gerenciador.relatorios}">
 			<p:panel style="width:70%;">
 				<div style="text-align: center;">
-					<p:outputLabel value="#{g.nomeProcedimento}" />
+					<p:outputLabel value="#{r.nomeProcedimento}" />
 				</div>
 				<p:separator />
 					
 				<p:panelGrid columns="2" layout="grid">
 					<p:outputLabel value="Valor Informado" />
-					<p:outputLabel value="#{g.valorInformado}">
+					<p:outputLabel value="#{r.valorInformado}">
 						<f:convertNumber type="currency" lacale="pt_BR" />
 					</p:outputLabel>
 					
 					<p:outputLabel value="Qtd Executada" />
-					<p:outputLabel value="#{g.quantidade}" />
+					<p:outputLabel value="#{r.quantidade}" />
 					
 					<p:outputLabel value="Valor Liberado" />
-					<p:outputLabel value="#{g.valorLiberado}">
+					<p:outputLabel value="#{r.valorLiberado}">
 						<f:convertNumber type="currency" lacale="pt_BR" />
 					</p:outputLabel>
 					
 					<p:outputLabel value="Valor Processado" />
-					<p:outputLabel value="#{g.valorProcessado}">
+					<p:outputLabel value="#{r.valorProcessado}">
 						<f:convertNumber type="currency" lacale="pt_BR" />
 					</p:outputLabel>
 					
 					<p:outputLabel value="Valor Glosa" />
-					<p:outputLabel value="#{g.valorGlosa}">
+					<p:outputLabel value="#{r.valorGlosa}">
 						<f:convertNumber type="currency" lacale="pt_BR" />
 					</p:outputLabel>
 				</p:panelGrid>

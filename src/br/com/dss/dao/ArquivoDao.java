@@ -100,9 +100,7 @@ public class ArquivoDao {
 		Integer senha = 0;
 		String nomeBeneficiario = "";
 		String numeroCarteira = "";
-		Calendar dataInicioFat = Calendar.getInstance();
 		Integer situacaoGuia = 0;
-		Calendar dataRealizacao = Calendar.getInstance();
 		Integer codigoTabela = 0;
 		Integer codigoProcedimento = 0;
 		String descricaoProcedimento = "";
@@ -132,7 +130,7 @@ public class ArquivoDao {
 		for(var arquivo : auxDir) {
 			Arquivo arq = new Arquivo();
 			var extencaoArquivo = arquivo.substring(arquivo.indexOf('.')+1);
-			System.out.println("É um arquivo XML: " + extencaoArquivo.equals("xml"));
+//			System.out.println("É um arquivo XML: " + extencaoArquivo.equals("xml"));
 			if(extencaoArquivo.equals("xml")) {	
 				item = Obter(arquivo);
 
@@ -166,6 +164,7 @@ public class ArquivoDao {
 							Beneficiario beneficiario = new Beneficiario();
 							Guia guia = new Guia();
 							List<Glosa> glosas = new ArrayList<>();
+							Calendar dataInicioFat = Calendar.getInstance();
 
 							if(nodeGuia.getNodeType() == Node.ELEMENT_NODE) {
 								Element eGuia = (Element) nodeGuia;
@@ -175,8 +174,8 @@ public class ArquivoDao {
 								senha = Integer.parseInt(eGuia.getElementsByTagName("senha").item(0).getTextContent());
 								nomeBeneficiario = eGuia.getElementsByTagName("nomeBeneficiario").item(0).getTextContent();
 								numeroCarteira = eGuia.getElementsByTagName("numeroCarteira").item(0).getTextContent();
-								var dt = formato.parse(eGuia.getElementsByTagName("dataInicioFat").item(0).getTextContent());
-								dataInicioFat.setTime(dt);
+								var dtIniFat = formato.parse(eGuia.getElementsByTagName("dataInicioFat").item(0).getTextContent());
+								dataInicioFat.setTime(dtIniFat);
 								situacaoGuia = Integer.parseInt(eGuia.getElementsByTagName("situacaoGuia").item(0).getTextContent());
 								
 								NodeList nListDetalhes = nodeGuia.getChildNodes();
@@ -221,9 +220,9 @@ public class ArquivoDao {
 
 										switch(eDetalhes.getTagName()) {
 										case "detalhesGuia":
-											
-											dt = formato.parse(eDetalhes.getElementsByTagName("dataRealizacao").item(0).getTextContent());
-											dataRealizacao.setTime(dt);
+											Calendar dataRealizacao = Calendar.getInstance();
+											var dtReal = formato.parse(eDetalhes.getElementsByTagName("dataRealizacao").item(0).getTextContent());
+											dataRealizacao.setTime(dtReal);
 											codigoTabela = Integer.parseInt(eDetalhes.getElementsByTagName("codigoTabela").item(0).getTextContent());
 											codigoProcedimento = Integer.parseInt(eDetalhes.getElementsByTagName("codigoProcedimento").item(0).getTextContent());
 											descricaoProcedimento = eDetalhes.getElementsByTagName("descricaoProcedimento").item(0).getTextContent();

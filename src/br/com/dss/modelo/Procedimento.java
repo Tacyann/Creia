@@ -4,7 +4,7 @@ public class Procedimento {
 
 	private Integer id;
 	private Integer tabela;
-	private Integer procedimento;
+	private int procedimento;
 	private String descricao;
 	public Integer getId() {
 		return id;

@@ -48,4 +48,10 @@ public class Service {
 		var ret = qtd.quantidade();
 		return ret;
 	}
+	
+	public Object Somar(IObtemSoma soma, Object objeto1, Object objeto2, Date dtIni, Date dtFim) {
+		System.out.println("Service:");
+		var ret = soma.somar(objeto1, objeto2, dtIni, dtFim);
+		return ret;
+	}
 }
