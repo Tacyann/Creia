@@ -29,11 +29,6 @@ public class Service {
 		return ret;
 	}
 	
-	public Object Obter(IListagemPorData listagem, Date dtIni, Date dtFim) {
-		var ret = listagem.obter(dtIni, dtFim);
-		return ret;
-	}
-	
 	public Object Obter(IListagemPorData listagem, Object objeto1, Object objeto2, Date dtIni, Date dtFim) {
 		var ret = listagem.obter(objeto1, objeto2, dtIni, dtFim);
 		return ret;
@@ -50,7 +45,6 @@ public class Service {
 	}
 	
 	public Object Somar(IObtemSoma soma, Object objeto1, Object objeto2, Date dtIni, Date dtFim) {
-		System.out.println("Service:");
 		var ret = soma.somar(objeto1, objeto2, dtIni, dtFim);
 		return ret;
 	}

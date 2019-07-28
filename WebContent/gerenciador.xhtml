@@ -7,7 +7,6 @@
 	xmlns:p="http://primefaces.org/ui">
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
-	<link rel="icon" href="WebContent/resources/img/favicon.ico" type="image/x-icon"/>
 	<title>Gerenciador</title>
 	<script type="text/javascript">
 	PrimeFaces.locales ['pt_BR'] = {
@@ -45,12 +44,13 @@
     }
     //]]>
 	</script>
- 
+ 	<ui:remove>
 	<style type="text/css">
 	    .value {
 	        font-weight: bold;
 	    }
 	</style>
+ 	</ui:remove>
 </h:head>
 <h:body >
 	<h:graphicImage library="img" name="logoCreia.png" style="width: 70px; height: 20px; margin-bottom: 0;"/>
@@ -65,44 +65,76 @@
 	</p:dialog>
 
 	<h:form id="form">
+	<p:growl id="msg" showDetail="true" showSummary="false" globalOnly="true"/>
+	<ui:remove>
 	<p:messages id="msg" globalOnly="true" showDetail="true" />
+	</ui:remove>
 		<p:panel>
-			<p:outputLabel for="dtInicial" 
-							value="Data Inicial:" /> 
+			<div id="datas" style="float: left;">
+				<p:outputLabel for="dtInicial" 
+								value="Data Inicial:" /> 
+				&nbsp;
+				<p:datePicker id="dtInicial" 
+								value="#{gerenciador.dtInicial}" 
+								locale="pt_BR" 
+								required="true"
+								monthNavigator="true" 
+								showButtonBar="false" 
+								showIcon="true" 
+								pattern="dd/MM/yyyy"/>
+				
+				<p:outputLabel for="dtFinal" 
+								value="Data Final:" /> 
+				&nbsp;
+				<p:datePicker id="dtFinal" 
+								value="#{gerenciador.dtFinal}" 
+								locale="pt_BR" 
+								required="true"
+								monthNavigator="true" 
+								showButtonBar="false" 
+								showIcon="true" 
+								pattern="dd/MM/yyyy"/>
+			</div>
+			<div style="text-align: right;">
+				<p:outputLabel value="Relacionar o Profissional"/> &nbsp;
+				<p:selectOneMenu id="profissional" 
+									value="#{gerenciador.selectProfissionais}"
+									filter="true"
+									filterMatchMode="startsWith"
+									panelStyle="width:310px">
+					<f:selectItem noSelectionOption="true"/>
+					<f:selectItems value="#{profissional.profissionais}"
+									var="p"
+									itemLabel="#{p.nome}"
+									itemValue="#{p.nome}"/>
+				</p:selectOneMenu>
+			</div>			
+		<p:separator />
+		<div id="botoes" style="float: left;">
+			<p:commandButton value="Consultar" action="#{gerenciador.registros}" 
+				icon="ui-icon-search" process="@all"
+				update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg,dtInicial,dtFinal" />
 			&nbsp;
-			<p:datePicker id="dtInicial" 
-							value="#{gerenciador.dtInicial}" 
-							locale="pt_BR" 
-							required="true"
-							monthNavigator="true" 
-							showButtonBar="false" 
-							showIcon="true" 
-							pattern="dd/MM/yyyy"/>
-			<p:outputLabel for="dtFinal" 
-							value="Data Final:" /> 
-			
+			<p:commandButton value="Limpar" icon="ui-icon-trash" process="@all"
+				action="#{gerenciador.limpar}"
+				update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg,dtInicial,dtFinal" />
 			&nbsp;
-			<p:datePicker id="dtFinal" 
-							value="#{gerenciador.dtFinal}" 
-							locale="pt_BR" 
-							required="true"
-							monthNavigator="true" 
-							showButtonBar="false" 
-							showIcon="true" 
-							pattern="dd/MM/yyyy"/>
-			&nbsp;&nbsp;&nbsp;
+			<p:commandButton value="Imprimir" icon="ui-icon-print" ajax="false"
+					actionListener="#{gerenciador.gerarImpressao}" onclick="this.form.target='_blank';" update="msg"/>
+		</div>
+		<div id="filtro" style="text-align: right;">
 			<p:selectCheckboxMenu id="procedimento" 
 									value="#{gerenciador.descricao}" 
 									label="Procedimentos" 
 									filter="true" 
 									filterMatchMode="startsWith" 
-									panelStyle="width:250px">
+									panelStyle="width:310px">
 				<f:selectItems value="#{procedimento.procedimentos}" 
 								var="p" 
 								itemLabel="#{p.descricao}" 
 								itemValue="#{p.procedimento}"/>
 			</p:selectCheckboxMenu>
-			&nbsp;
+			&nbsp;&nbsp;&nbsp;
 			<p:selectCheckboxMenu id="cliente" 
 									value="#{gerenciador.clientes}" 
 									label="Clientes" 
@@ -114,19 +146,9 @@
 								itemLabel="#{c.nome}" 
 								itemValue="#{c.nome}" />
 			</p:selectCheckboxMenu>
-		<p:separator />
-			&nbsp;
-			<p:commandButton value="Consultar" action="#{gerenciador.registros}" 
-				icon="ui-icon-search" process="@all"
-				update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg,dtInicial,dtFinal" />
-			&nbsp;
-			<p:commandButton value="Limpar" icon="ui-icon-trash" process="@all"
-				action="#{gerenciador.limpar}"
-				update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg,dtInicial,dtFinal" />
-			<br />
-		</p:panel>		
+		</div>
+		</p:panel>
 		<br /> 
-
 		<p:dataTable value="#{gerenciador.guias}" 
 						var="g" 
 						id="registrosGuias" 
@@ -173,7 +195,7 @@
 			</p:column>
 		</p:dataTable>
 		<p:separator/>
-		<p:panelGrid columns="2" layout="grid">
+		<p:panelGrid id="totais" columns="2" layout="grid">
 			<p:panelGrid columns="2">
 				<h:outputText value="Total Geral: " />
 				<h:outputText value="#{gerenciador.valorTotal}" id="valorTotal">
@@ -194,28 +216,11 @@
 									lacale="pt_BR" />
 				</h:outputText>
 			</p:panelGrid>
-			<p:panel>
-			<p:outputLabel value="Relacionar o Profissional"/> &nbsp;
-			<p:selectOneMenu id="profissional" 
-								value="#{gerenciador.selectProfissionais}"
-								filter="true"
-								filterMatchMode="startsWith"
-								panelStyle="width:310px">
-				<f:selectItem noSelectionOption="true"/>
-				<f:selectItems value="#{profissional.profissionais}"
-								var="p"
-								itemLabel="#{p.nome}"
-								itemValue="#{p.nome}"/>
-			</p:selectOneMenu>
-			</p:panel>
 		</p:panelGrid>
-		<p:separator/>		
-			&nbsp;
-		<p:commandButton value="Gerar Impressão" icon="ui-icon-print" action="#{gerenciador.gerarImpressao}" update="msg"/>
+		<p:separator/>
 	</h:form>
-	<br/>
 	<h:form id="sairForm">
-		&nbsp;&nbsp;<p:commandButton value="Sair" icon="ui-icon-close" action="#{gerenciador.sair}" />
+		&nbsp;&nbsp;<p:commandButton value="Sair" icon="ui-icon-close" action="#{gerenciador.sair}"/>
 	</h:form>
 
 </h:body>

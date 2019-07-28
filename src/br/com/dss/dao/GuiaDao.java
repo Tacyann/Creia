@@ -56,7 +56,7 @@ public class GuiaDao {
 
 	public List<Guia> Obter(String[] listaCliente, String[] listaProcedimento, Date dtIni, Date dtFim) {
 		String sql;
-		System.out.println("GuiaDao: Obter");
+
 		if(listaCliente.length == 0 && listaProcedimento.length == 0) {
 			sql = "SELECT DISTINCT a.*, b.numPrestador, b.procedimento, c.descricaoProcedimento, b.dataRealizacao, b.valorInformado, b.qtdExecutada, b.valorProcessado, b.valorLiberado FROM guia a "
 					+"JOIN detalhesguia b ON a.numeroGuiaPrestador = b.numPrestador "
@@ -145,99 +145,8 @@ public class GuiaDao {
 
 			return guias;
 		}catch(SQLException e) {
+			System.out.println("GuiaDao: Obter");
 			throw new RuntimeException(e);
-		}finally {
-			Conexao.FecharConexao();
-		}
-	}
-
-	public List<Guia> Obter(Date dtIni, Date dtFim) {
-		String sql = "SELECT DISTINCT a.*, b.numPrestador, b.procedimento, c.descricaoProcedimento, b.valorInformado, b.qtdExecutada, b.valorProcessado, b.valorLiberado FROM guia a "
-				+"JOIN detalhesguia b ON a.numeroGuiaPrestador = b.numPrestador "
-				+"AND b.dataRealizacao >= '" + dtIni + "' AND b.dataRealizacao <= '" + dtFim + "'"
-				+"JOIN procedimento c ON b.procedimento = c.codigoProcedimento";
-		List<Guia> guias = new ArrayList<Guia>();
-		
-		try {
-			PreparedStatement stmt = connection.prepareStatement(sql);
-			ResultSet rs = stmt.executeQuery();
-
-			while(rs.next()) {
-				var guia = new Guia();
-				guia.setId(rs.getInt("Id"));
-				guia.setPrestador(rs.getInt("numeroGuiaPrestador"));
-				guia.setOperadora(rs.getInt("numeroGuiaOperadora"));
-				guia.setSenha(rs.getInt("senha"));
-				var beneficiario = new Beneficiario();
-				beneficiario.setNome(rs.getString("nomeBeneficiario"));
-				beneficiario.setNumeroCarteira(rs.getString("numeroCarteira"));
-				guia.setBeneficiario(beneficiario);
-				var procedimento = new Procedimento();
-				procedimento.setProcedimento(rs.getInt("b.procedimento"));
-				procedimento.setDescricao(rs.getString("c.descricaoProcedimento"));
-				guia.setProcedimento(procedimento);
-				var calendario = Calendar.getInstance(); 
-				calendario.setTime(rs.getDate("dataInicioFat"));
-				guia.setDataIni(calendario);
-				guia.setSituacaoGuia(rs.getInt("situacaoGuia"));
-				guia.setValorInformadoGuia(rs.getDouble("valorInformadoGuia"));
-				guia.setValorProcessadoGuia(rs.getDouble("valorProcessadoGuia"));
-				guia.setValorLiberadoGuia(rs.getDouble("valorLiberadoGuia"));
-				guia.setValorInformado(rs.getDouble("valorInformado"));
-				guia.setValorProcessado(rs.getDouble("valorProcessado"));
-				guia.setValorLiberado(rs.getDouble("valorLiberado"));
-				guia.setQtdExecutada(rs.getInt("qtdExecutada"));
-
-				guias.add(guia);
-			}
-			stmt.close();
-			rs.close();
-
-			return guias;
-		}catch(SQLException e) {
-			throw new RuntimeException(e.getSQLState());
-		}finally {
-			Conexao.FecharConexao();
-		}
-	}
-
-	public List<Guia> Listar() {
-		String sql = "SELECT DISTINCT a.* FROM guia a "
-				+"JOIN detalhesguia b ON a.numeroGuiaPrestador = b.numPrestador ";
-
-		List<Guia> guias = new ArrayList<Guia>();
-
-		try {
-			PreparedStatement stmt = connection.prepareStatement(sql);
-
-			ResultSet rs = stmt.executeQuery();
-
-			while(rs.next()) {
-				var guia = new Guia();
-				guia.setId(rs.getInt("Id"));
-				guia.setPrestador(rs.getInt("numeroGuiaPrestador"));
-				guia.setOperadora(rs.getInt("numeroGuiaOperadora"));
-				guia.setSenha(rs.getInt("senha"));
-				var beneficiario = new Beneficiario();
-				beneficiario.setNome(rs.getString("nomeBeneficiario"));
-				beneficiario.setNumeroCarteira(rs.getString("numeroCarteira"));
-				guia.setBeneficiario(beneficiario);
-				var calendario = Calendar.getInstance(); 
-				calendario.setTime(rs.getDate("dataInicioFat"));
-				guia.setDataIni(calendario);
-				guia.setSituacaoGuia(rs.getInt("situacaoGuia"));
-				guia.setValorInformadoGuia(rs.getDouble("valorInformadoGuia"));
-				guia.setValorProcessadoGuia(rs.getDouble("valorProcessadoGuia"));
-				guia.setValorLiberadoGuia(rs.getDouble("valorLiberadoGuia"));
-
-				guias.add(guia);
-			}
-			stmt.close();
-			rs.close();
-
-			return guias;
-		}catch(SQLException e) {
-			throw new RuntimeException(Conexao.status);
 		}finally {
 			Conexao.FecharConexao();
 		}
@@ -245,7 +154,7 @@ public class GuiaDao {
 
 	public List<Relatorio> ObtemSoma(String[] listaCliente, String[] listaProcedimento, Date dtIni, Date dtFim) {
 		String sql;
-		System.out.println("GuiaDao: ObtemSoma");
+		
 		if(listaCliente.length == 0 && listaProcedimento.length == 0) {
 			sql = "SELECT b.procedimento AS codigo, c.descricaoProcedimento AS descricao, SUM(b.valorInformado) AS valorInformado, "
 					+"SUM(b.qtdExecutada) AS qtdExecutada, SUM(b.valorProcessado) AS valorProcessado,SUM(b.valorLiberado) AS valorLiberado, "
@@ -305,7 +214,7 @@ public class GuiaDao {
 				}
 			}
 		}
-		System.out.println(sql);
+		
 		List<Relatorio> relatorios = new ArrayList<>();
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);

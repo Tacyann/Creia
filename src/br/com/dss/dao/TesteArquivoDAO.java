@@ -35,10 +35,12 @@ public class TesteArquivoDAO {
 	
 	public static void Testar() {
 		var guia = new GuiaDao();
+		String[] clientes = {};
+		String[] detalhes = {};
 		var d1 = Date.valueOf("2018-12-01");
 		var d2 = Date.valueOf("2019-07-08");
 		var count = 0;
-		var lista = guia.Obter(d1, d2);
+		var lista = guia.Obter(clientes, detalhes, d1, d2);
 		for(var item : lista) {
 			System.out.println(item.getBeneficiario().getNome());
 			count++;

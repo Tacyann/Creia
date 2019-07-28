@@ -54,22 +54,33 @@ public class GerenciadorBean implements Serializable {
 		guias = new ArrayList<>();
 		valoresLiberados = new ArrayList<>();
 		valoresGlosa = new ArrayList<>();
-
 		Service servico = new Service();
 		ServiceGuia sg = new ServiceGuia();
 
-
-		if(descricao.length > 0) {
-			var tam = descricao.length;
-			String texto = "";
-			if(tam == 1) {
-				texto = " procedimento está selecionado.";
-			}else {
-				texto = " procedimentos estão selecionados.";
-			}
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, descricao.length + texto);
-			context.addMessage(null, msg);
+		var tamProc = descricao.length;
+		String textoProc = "";
+		if(tamProc == 0) {
+			textoProc = " Nunhum procedimento foi selecionado.";
 		}
+		else if(tamProc == 1) {
+			textoProc = " procedimento está selecionado.";
+		}else {
+			textoProc = " procedimentos estão selecionados.";
+		}
+		FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, tamProc + textoProc);
+		context.addMessage(null, msg);
+		
+		var tamC = clientes.length;
+		String textoCliente = "";
+		if(tamC == 0) {
+			textoCliente = " Nenhum cliente foi selecionado.";
+		}else if(tamC == 1) {
+			textoCliente = " cliente foi selecionado.";
+		}else {
+			textoCliente = " clientes foram selecionados.";
+		}
+		FacesMessage msgCliente = new FacesMessage(FacesMessage.SEVERITY_INFO, null, tamC + textoCliente);
+		context.addMessage(null, msgCliente);
 		
 		java.sql.Date dt1 = new java.sql.Date(getDtInicial().getTime());
 		java.sql.Date dt2 = new java.sql.Date(getDtFinal().getTime());
@@ -115,11 +126,11 @@ public class GerenciadorBean implements Serializable {
 			System.out.println(e.getClass());
 			System.out.println(e.getMessage());
 			System.out.println(e.getLocalizedMessage());
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Erro: " + e.getMessage());
-			context.addMessage(null, msg);
+			FacesMessage msgErro = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Erro: " + e.getMessage());
+			context.addMessage(null, msgErro);
 		}catch(RuntimeException e) {
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Erro: " + e.getMessage());
-			context.addMessage(null, msg);
+			FacesMessage msgErro = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Erro: " + e.getMessage());
+			context.addMessage(null, msgErro);
 		}
 
 		valorTotal = 0.0;
@@ -173,13 +184,6 @@ public class GerenciadorBean implements Serializable {
 			var processado = item.getValorProcessado();
 			var liberado = item.getValorLiberado();
 
-			System.out.println(nome);
-			System.out.println(qtd);
-			System.out.println(informado);
-			System.out.println(glosa);
-			System.out.println(processado);
-			System.out.println(liberado);
-
 			r.setNomeProcedimento(nome);
 			r.setQuantidade(qtd);
 			r.setValorInformado(informado * 54.5 / 100);
@@ -217,12 +221,10 @@ public class GerenciadorBean implements Serializable {
 			}
 			setNomeClientes(sb.toString());
 		}
+		
+		imprimeRelatorio();
 
-		return "relatorio";
-	}
-
-	public static List<Relatorio> Relatorio() {
-		return relatorios;
+		return null;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -232,31 +234,11 @@ public class GerenciadorBean implements Serializable {
 		parametros.put("NOME_CLIENTE", nomeClientes);
 		parametros.put("TOTAL_PROFISSIONAL", valorProfissional);
 		UtilRelatorios.imprimeRelatorio("especialistas", parametros, relatorios);
-		System.out.println(nomeClientes);
-		/**
-		 * Foi incuido instrução para fechar a sessão.
-		 */
-		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 	}
-
-	//	public List<String> nomeBeneficiario(){
-	//
-	//		List<String> nomes = new ArrayList<>();
-	//		Service servico = new Service();
-	//		ServiceBeneficiario sb = new ServiceBeneficiario();
-	//
-	//		@SuppressWarnings("unchecked")
-	//		var listagem = (List<Beneficiario>) servico.Listar(sb);
-	//
-	//		for(var item : listagem) {
-	//			nomes.add(item.getNome());
-	//		}
-	//		return nomes;
-	//	}
-	//
-	//	public FacesContext getFacescontext() {
-	//		return context;
-	//	}
+	
+	public static List<Relatorio> Relatorio() {
+		return relatorios;
+	}
 
 	public void setFacescontext(FacesContext facescontext) {
 		this.context = facescontext;
