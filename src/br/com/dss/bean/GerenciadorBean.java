@@ -7,7 +7,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
+import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -15,6 +17,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.com.dss.argument.GuiaArgument;
+import br.com.dss.ejb.DadosLocal;
 import br.com.dss.modelo.Beneficiario;
 import br.com.dss.modelo.DetalheGuia;
 import br.com.dss.modelo.Guia;
@@ -31,6 +34,9 @@ public class GerenciadorBean implements Serializable {
 
 	@Inject
 	private FacesContext context;
+	
+	@EJB
+	private DadosLocal geraDados;
 
 	private Set<Procedimento> listaProced;
 	private List<GuiaArgument> guias;
@@ -54,8 +60,6 @@ public class GerenciadorBean implements Serializable {
 		guias = new ArrayList<>();
 		valoresLiberados = new ArrayList<>();
 		valoresGlosa = new ArrayList<>();
-		Service servico = new Service();
-		ServiceGuia sg = new ServiceGuia();
 
 		var tamProc = descricao.length;
 		String textoProc = "";
@@ -82,71 +86,86 @@ public class GerenciadorBean implements Serializable {
 		FacesMessage msgCliente = new FacesMessage(FacesMessage.SEVERITY_INFO, null, tamC + textoCliente);
 		context.addMessage(null, msgCliente);
 		
-		java.sql.Date dt1 = new java.sql.Date(getDtInicial().getTime());
-		java.sql.Date dt2 = new java.sql.Date(getDtFinal().getTime());
-
-		@SuppressWarnings("unchecked")
-		var listagemGuia = (List<Guia>) servico.Obter(sg, clientes, descricao, dt1, dt2);
 		try {
-			for(var item : listagemGuia) {
-				var guia = new GuiaArgument();
-				var detalhe = new DetalheGuia();
-				guia.setPrestador(item.getPrestador());
-				guia.setOperadora(item.getOperadora());
-				var cliente = item.getBeneficiario();
-				if(cliente != null) {
-					guia.setBeneficiario(item.getBeneficiario());					
-				}
-				guia.setDataIni(item.getDataIni());
-
-				detalhe.setDataRealizacao(item.getDtRealizacao());
-				var procedimento = item.getProcedimento();
-				if(procedimento != null) {
-					guia.setProcedimento(procedimento);						
-				}
-
-				var informado = item.getValorInformado();
-				detalhe.setValorInformado(informado);
-				detalhe.setQtdExecutada(item.getQtdExecutada());
-				detalhe.setValorProcessado(item.getValorProcessado());
-				var liberado = item.getValorLiberado();
-				detalhe.setValorLiberado(liberado);
-
-				if(liberado == 0.0) {
-					valoresGlosa.add(informado);
-					detalhe.setValorGlosa(informado);
-				}
-
-				valoresLiberados.add(liberado);
-				guia.setDetalheGuia(detalhe);
-				guias.add(guia);
-			}
-		}catch(NullPointerException e) {
-			System.out.println(e.getCause());
-			System.out.println(e.getClass());
-			System.out.println(e.getMessage());
-			System.out.println(e.getLocalizedMessage());
+			guias = geraDados.listar(clientes, descricao, getDtInicial(), getDtFinal()).get();
+			valorTotal = geraDados.valorTotal().get();
+			valorGlosa = geraDados.valorGlosa().get();
+			valorCreia = geraDados.valorCreia().get();
+			valorProfissional = geraDados.valorProfissional().get();
+			
+		} catch (InterruptedException e) {
 			FacesMessage msgErro = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Erro: " + e.getMessage());
 			context.addMessage(null, msgErro);
-		}catch(RuntimeException e) {
+		} catch (ExecutionException e) {
 			FacesMessage msgErro = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Erro: " + e.getMessage());
 			context.addMessage(null, msgErro);
 		}
-
-		valorTotal = 0.0;
-		valorGlosa = 0.0;
-		valorCreia = 0.0;
-		valorProfissional = 0.0;
-
-		for(var total : valoresLiberados) {
-			valorTotal =+ valorTotal + total;
-		}
-		valorCreia = valorTotal * 45.5 / 100;
-
-		for(var glosa : valoresGlosa) {
-			valorGlosa =+ valorGlosa + glosa;				
-		}
-		valorProfissional = valorTotal * 54.5 / 100;
+		
+//		java.sql.Date dt1 = new java.sql.Date(getDtInicial().getTime());
+//		java.sql.Date dt2 = new java.sql.Date(getDtFinal().getTime());
+//
+//		@SuppressWarnings("unchecked")
+//		var listagemGuia = (List<Guia>) servico.Obter(sg, clientes, descricao, dt1, dt2);
+//		try {
+//			for(var item : listagemGuia) {
+//				var guia = new GuiaArgument();
+//				var detalhe = new DetalheGuia();
+//				guia.setPrestador(item.getPrestador());
+//				guia.setOperadora(item.getOperadora());
+//				var cliente = item.getBeneficiario();
+//				if(cliente != null) {
+//					guia.setBeneficiario(item.getBeneficiario());					
+//				}
+//				guia.setDataIni(item.getDataIni());
+//
+//				detalhe.setDataRealizacao(item.getDtRealizacao());
+//				var procedimento = item.getProcedimento();
+//				if(procedimento != null) {
+//					guia.setProcedimento(procedimento);						
+//				}
+//
+//				var informado = item.getValorInformado();
+//				detalhe.setValorInformado(informado);
+//				detalhe.setQtdExecutada(item.getQtdExecutada());
+//				detalhe.setValorProcessado(item.getValorProcessado());
+//				var liberado = item.getValorLiberado();
+//				detalhe.setValorLiberado(liberado);
+//
+//				if(liberado == 0.0) {
+//					valoresGlosa.add(informado);
+//					detalhe.setValorGlosa(informado);
+//				}
+//
+//				valoresLiberados.add(liberado);
+//				guia.setDetalheGuia(detalhe);
+//				guias.add(guia);
+//			}
+//		}catch(NullPointerException e) {
+//			System.out.println(e.getCause());
+//			System.out.println(e.getClass());
+//			System.out.println(e.getMessage());
+//			System.out.println(e.getLocalizedMessage());
+//			FacesMessage msgErro = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Erro: " + e.getMessage());
+//			context.addMessage(null, msgErro);
+//		}catch(RuntimeException e) {
+//			FacesMessage msgErro = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Erro: " + e.getMessage());
+//			context.addMessage(null, msgErro);
+//		}
+//
+//		valorTotal = 0.0;
+//		valorGlosa = 0.0;
+//		valorCreia = 0.0;
+//		valorProfissional = 0.0;
+//
+//		for(var total : valoresLiberados) {
+//			valorTotal =+ valorTotal + total;
+//		}
+//		valorCreia = valorTotal * 45.5 / 100;
+//
+//		for(var glosa : valoresGlosa) {
+//			valorGlosa =+ valorGlosa + glosa;				
+//		}
+//		valorProfissional = valorTotal * 54.5 / 100;
 	}
 
 	public void limpar() {
@@ -166,33 +185,17 @@ public class GerenciadorBean implements Serializable {
 	}
 
 	public String gerarImpressao() {
+		
+		var ret = geraDados.imprimir(clientes, descricao, getDtInicial(), getDtFinal());
 
-		relatorios = new ArrayList<>();
-		ServiceGuia sg = new ServiceGuia();
-		Service servico = new Service();
-		java.sql.Date dt1 = new java.sql.Date(getDtInicial().getTime());
-		java.sql.Date dt2 = new java.sql.Date(getDtFinal().getTime());
-
-		@SuppressWarnings("unchecked")
-		var listagem = (List<Relatorio>) servico.Somar(sg, clientes, descricao, dt1, dt2);
-		for(var item : listagem) {
-			var r = new Relatorio();
-			var nome = item.getNomeProcedimento();
-			var qtd = item.getQuantidade();
-			var informado = item.getValorInformado();
-			var glosa = item.getValorGlosa();
-			var processado = item.getValorProcessado();
-			var liberado = item.getValorLiberado();
-
-			r.setNomeProcedimento(nome);
-			r.setQuantidade(qtd);
-			r.setValorInformado(informado * 54.5 / 100);
-			r.setValorGlosa(glosa * 54.5 / 100);
-			r.setValorProcessado(processado * 54.5 / 100);
-			r.setValorLiberado(liberado * 54.5 / 100);
-			relatorios.add(r);
+		try {
+			relatorios = ret.get();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
 		}
-
+		
 		if(clientes.length > 0) {
 			Set<String> nCliente = new HashSet<String>();			
 			StringBuilder sb = new StringBuilder();
@@ -205,6 +208,7 @@ public class GerenciadorBean implements Serializable {
 			}
 			setNomeClientes(sb.toString());
 		}else {
+			Service servico = new Service();
 			ServiceBeneficiario sbn = new ServiceBeneficiario();
 
 			@SuppressWarnings("unchecked")
