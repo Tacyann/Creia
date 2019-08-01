@@ -8,6 +8,7 @@ public class Relatorio {
 	private Double valorGlosa;
 	private Double valorProcessado;
 	private Double valorLiberado;
+	private String periodo;
 	
 	public String getNomeProcedimento() {
 		return nomeProcedimento;
@@ -45,9 +46,16 @@ public class Relatorio {
 	public void setValorLiberado(Double valorLiberado) {
 		this.valorLiberado = valorLiberado;
 	}
+	public String getPeriodo() {
+		return periodo;
+	}
+	public void setPeriodo(String periodo) {
+		this.periodo = periodo;
+	}
+	
 	@Override
 	public String toString() {
-		return nomeProcedimento + " " + quantidade + " " + valorInformado + " " + valorGlosa + " " + valorProcessado + " " + valorLiberado;
+		return nomeProcedimento + " " + quantidade + " " + valorInformado + " " + valorGlosa + " " + valorProcessado + " " + valorLiberado + " " + periodo;
 	}
 	
 	@Override

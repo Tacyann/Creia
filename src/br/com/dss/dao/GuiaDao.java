@@ -158,7 +158,8 @@ public class GuiaDao {
 		if(listaCliente.length == 0 && listaProcedimento.length == 0) {
 			sql = "SELECT b.procedimento AS codigo, c.descricaoProcedimento AS descricao, SUM(b.valorInformado) AS valorInformado, "
 					+"SUM(b.qtdExecutada) AS qtdExecutada, SUM(b.valorProcessado) AS valorProcessado,SUM(b.valorLiberado) AS valorLiberado, "
-					+"SUM(CASE b.valorLiberado WHEN 0 THEN b.valorInformado ELSE 0 END) AS valorGlosa "
+					+"SUM(CASE b.valorLiberado WHEN 0 THEN b.valorInformado ELSE 0 END) AS valorGlosa, "
+					+"DATE_FORMAT(MAX(b.dataRealizacao),'%m - %Y') AS periodo "
 					+"FROM guia a "
 					+"JOIN detalhesguia b ON a.numeroGuiaPrestador = b.numPrestador "
 					+"AND b.dataRealizacao >= '" + dtIni + "' AND b.dataRealizacao <= '" + dtFim + "' "
@@ -179,7 +180,8 @@ public class GuiaDao {
 			if(listaProcedimento.length == 0) {
 				sql = "SELECT b.procedimento AS codigo, c.descricaoProcedimento AS descricao, SUM(b.valorInformado) AS valorInformado, "
 						+"SUM(b.qtdExecutada) AS qtdExecutada, SUM(b.valorProcessado) AS valorProcessado,SUM(b.valorLiberado) AS valorLiberado, "
-						+"SUM(CASE b.valorLiberado WHEN 0 THEN b.valorInformado ELSE 0 END) AS valorGlosa "
+						+"SUM(CASE b.valorLiberado WHEN 0 THEN b.valorInformado ELSE 0 END) AS valorGlosa, "
+						+"DATE_FORMAT(MAX(b.dataRealizacao),'%m - %Y') AS periodo "
 						+"FROM guia a "
 						+"JOIN detalhesguia b ON a.numeroGuiaPrestador = b.numPrestador "
 						+"AND b.dataRealizacao >= '" + dtIni + "' AND b.dataRealizacao <= '" + dtFim + "' "
@@ -200,7 +202,8 @@ public class GuiaDao {
 
 				sql = "SELECT b.procedimento AS codigo, c.descricaoProcedimento AS descricao, SUM(b.valorInformado) AS valorInformado, "
 						+"SUM(b.qtdExecutada) AS qtdExecutada, SUM(b.valorProcessado) AS valorProcessado,SUM(b.valorLiberado) AS valorLiberado, "
-						+"SUM(CASE b.valorLiberado WHEN 0 THEN b.valorInformado ELSE 0 END) AS valorGlosa "
+						+"SUM(CASE b.valorLiberado WHEN 0 THEN b.valorInformado ELSE 0 END) AS valorGlosa, "
+						+"DATE_FORMAT(MAX(b.dataRealizacao),'%m - %Y') AS periodo "
 						+"FROM guia a "
 						+"JOIN detalhesguia b ON a.numeroGuiaPrestador = b.numPrestador "
 						+"AND b.dataRealizacao >= '" + dtIni + "' AND b.dataRealizacao <= '" + dtFim + "'"
@@ -229,6 +232,7 @@ public class GuiaDao {
 				relatorio.setValorLiberado(rs.getDouble("valorLiberado"));
 				relatorio.setQuantidade(rs.getInt("qtdExecutada"));
 				relatorio.setValorGlosa(rs.getDouble("valorGlosa"));
+				relatorio.setPeriodo(rs.getString("periodo"));
 
 				relatorios.add(relatorio);
 			}

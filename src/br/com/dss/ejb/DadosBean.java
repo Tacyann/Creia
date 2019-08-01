@@ -28,6 +28,7 @@ public class DadosBean implements DadosLocal {
 	List<Double> valoresGlosa = new ArrayList<>();
 	List<Double> valoresLiberados = new ArrayList<>();
 	List<String> clientesSelecionados = new ArrayList<>();
+	Set<String> periodos = new HashSet<>();
 	Double valorTotal;
 
 	@Override
@@ -37,6 +38,7 @@ public class DadosBean implements DadosLocal {
 		ServiceGuia sg = new ServiceGuia();
 		java.sql.Date dt1 = new java.sql.Date(dtIni.getTime());
 		java.sql.Date dt2 = new java.sql.Date(dtFim.getTime());
+		periodos.clear();
 
 		@SuppressWarnings("unchecked")
 		var listagem = (List<Relatorio>) servico.Somar(sg, clientes, descricao, dt1, dt2);
@@ -48,6 +50,8 @@ public class DadosBean implements DadosLocal {
 			var glosa = item.getValorGlosa();
 			var processado = item.getValorProcessado();
 			var liberado = item.getValorLiberado();
+			var periodo = item.getPeriodo();
+			periodos.add(periodo);
 
 			r.setNomeProcedimento(nome);
 			r.setQuantidade(qtd);
@@ -55,6 +59,7 @@ public class DadosBean implements DadosLocal {
 			r.setValorGlosa(glosa * 54.5 / 100);
 			r.setValorProcessado(processado * 54.5 / 100);
 			r.setValorLiberado(liberado * 54.5 / 100);
+			r.setPeriodo(periodo);
 			relatorios.add(r);
 		}
 
@@ -181,6 +186,21 @@ public class DadosBean implements DadosLocal {
 		return new AsyncResult<String>(sb.toString());
 	}
 	
+	@Override
+	public Future<String> periodoRealizacao() {
+		var dt = getPeriodos();
+		StringBuilder sb = new StringBuilder();
+		var count = 0;
+		for(var item : dt) {
+			sb.append(item);
+			count++;
+			if(dt.size() != count) {
+				sb.append(" ");
+			}
+		}
+		return new AsyncResult<String>(sb.toString());
+	}
+	
 	public Double getValorTotal() {
 		return valorTotal;
 	}
@@ -195,5 +215,9 @@ public class DadosBean implements DadosLocal {
 	
 	public List<String> getClientesSelecionados() {
 		return clientesSelecionados;
+	}
+	
+	public Set<String> getPeriodos() {
+		return periodos;
 	}
 }

@@ -20,6 +20,9 @@
 	<parameter name="NOME_CLIENTE" class="java.lang.String">
 		<parameterDescription><![CDATA[Nome dos Clientes]]></parameterDescription>
 	</parameter>
+	<parameter name="PERIODO" class="java.lang.String">
+		<parameterDescription><![CDATA[Periodo de Realização]]></parameterDescription>
+	</parameter>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -62,26 +65,40 @@
 		</band>
 	</title>
 	<pageHeader>
-		<band height="52" splitType="Stretch">
+		<band height="64" splitType="Stretch">
 			<rectangle radius="10">
-				<reportElement x="0" y="13" width="553" height="27" uuid="ab91cea9-ff04-4edc-8507-e4697695a35c"/>
+				<reportElement x="0" y="26" width="553" height="27" uuid="ab91cea9-ff04-4edc-8507-e4697695a35c"/>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</rectangle>
 			<staticText>
-				<reportElement x="2" y="19" width="68" height="18" uuid="4f2fef8c-89e5-4995-b749-c056dda74e29"/>
+				<reportElement x="2" y="32" width="68" height="18" uuid="4f2fef8c-89e5-4995-b749-c056dda74e29"/>
 				<textElement>
 					<font fontName="News701 BT" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Especialista:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="66" y="19" width="482" height="18" uuid="884a3964-6c15-4fbf-a3dd-591685dfee2d"/>
+				<reportElement x="66" y="32" width="482" height="18" uuid="884a3964-6c15-4fbf-a3dd-591685dfee2d"/>
 				<textElement>
 					<font fontName="News701 BT"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{NOME_ESPECIALISTA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="6" width="120" height="18" uuid="ff4ea144-76c7-40c7-a6b2-fb6abed479fb"/>
+				<textElement>
+					<font fontName="News701 BT"/>
+				</textElement>
+				<text><![CDATA[Periodo de Referencia:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="108" y="6" width="210" height="18" uuid="6e349ec3-1776-4698-b9ff-a3971bb4817b"/>
+				<textElement>
+					<font fontName="News701 BT"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{PERIODO}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -230,9 +247,9 @@
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="273">
+		<band height="500">
 			<textField>
-				<reportElement x="20" y="54" width="524" height="217" uuid="13a30c20-8a36-48f0-a987-9524b7835b19">
+				<reportElement x="20" y="54" width="524" height="446" uuid="13a30c20-8a36-48f0-a987-9524b7835b19">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>

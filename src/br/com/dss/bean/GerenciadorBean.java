@@ -3,9 +3,7 @@ package br.com.dss.bean;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import javax.ejb.EJB;
@@ -17,9 +15,6 @@ import javax.inject.Named;
 
 import br.com.dss.argument.GuiaArgument;
 import br.com.dss.ejb.DadosLocal;
-import br.com.dss.modelo.Beneficiario;
-import br.com.dss.servico.Service;
-import br.com.dss.servico.ServiceBeneficiario;
 import br.com.dss.util.Relatorio;
 import br.com.dss.util.UtilRelatorios;
 
@@ -44,6 +39,7 @@ public class GerenciadorBean implements Serializable {
 	private Double valorGlosa = 0.0;
 	private Double valorCreia = 0.0;
 	private Double valorProfissional = 0.0;
+	private static String periodo;
 	private Date dtInicial;
 	private Date dtFinal;
 
@@ -121,41 +117,12 @@ public class GerenciadorBean implements Serializable {
 		try {
 			relatorios = geraDados.imprimir(clientes, descricao, getDtInicial(), getDtFinal()).get();
 			nomeClientes = geraDados.nomeClientes().get();
+			periodo = geraDados.periodoRealizacao().get();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 		}
-		
-//		if(clientes.length > 0) {
-//			Set<String> nCliente = new HashSet<String>();			
-//			StringBuilder sb = new StringBuilder();
-//
-//			for(var c : clientes) {
-//				nCliente.add(c);
-//			}
-//			for(var c : nCliente) {
-//				sb.append(c).append("\n");
-//			}
-//			setNomeClientes(sb.toString());
-//		}else {
-//			Service servico = new Service();
-//			ServiceBeneficiario sbn = new ServiceBeneficiario();
-//
-//			@SuppressWarnings("unchecked")
-//			var listagemC = (List<Beneficiario>) servico.Listar(sbn);
-//
-//			Set<String> nCliente = new HashSet<String>();			
-//			StringBuilder sb = new StringBuilder();
-//
-//			for(var c : listagemC) {
-//				nCliente.add(c.getNome());
-//			}
-//			for(var c : nCliente) {
-//				sb.append(c).append("\n");
-//			}
-//			setNomeClientes(sb.toString());
-//		}
 		
 		imprimeRelatorio();			
 		
@@ -168,6 +135,7 @@ public class GerenciadorBean implements Serializable {
 		parametros.put("NOME_ESPECIALISTA", selectProfissionais);
 		parametros.put("NOME_CLIENTE", nomeClientes);
 		parametros.put("TOTAL_PROFISSIONAL", valorProfissional);
+		parametros.put("PERIODO", periodo);
 		UtilRelatorios.imprimeRelatorio("especialistas", parametros, relatorios);
 	}
 	
@@ -258,10 +226,16 @@ public class GerenciadorBean implements Serializable {
 	public void setSelectProfissionais(String selectProfissionais) {
 		this.selectProfissionais = selectProfissionais;
 	}
+	
 	public static String getNomeClientes() {
 		return nomeClientes;
 	}
+	
 	public static void setNomeClientes(String nomeClientes) {
 		GerenciadorBean.nomeClientes = nomeClientes;
+	}
+	
+	public String getPeriodo() {
+		return periodo;
 	}
 }

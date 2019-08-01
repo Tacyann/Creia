@@ -27,5 +27,7 @@ public interface DadosLocal {
 	@Asynchronous
 	public Future<String> nomeClientes();
 	@Asynchronous
+	public Future<String> periodoRealizacao();
+	@Asynchronous
 	public Future<List<Beneficiario>> pacientes();
 }
