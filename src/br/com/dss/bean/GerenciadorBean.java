@@ -1,7 +1,6 @@
 package br.com.dss.bean;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,12 +18,8 @@ import javax.inject.Named;
 import br.com.dss.argument.GuiaArgument;
 import br.com.dss.ejb.DadosLocal;
 import br.com.dss.modelo.Beneficiario;
-import br.com.dss.modelo.DetalheGuia;
-import br.com.dss.modelo.Guia;
-import br.com.dss.modelo.Procedimento;
 import br.com.dss.servico.Service;
 import br.com.dss.servico.ServiceBeneficiario;
-import br.com.dss.servico.ServiceGuia;
 import br.com.dss.util.Relatorio;
 import br.com.dss.util.UtilRelatorios;
 
@@ -38,10 +33,7 @@ public class GerenciadorBean implements Serializable {
 	@EJB
 	private DadosLocal geraDados;
 
-	private Set<Procedimento> listaProced;
 	private List<GuiaArgument> guias;
-	private List<Double> valoresLiberados;
-	private List<Double> valoresGlosa;
 	private static List<Relatorio> relatorios; 
 	private static String nomeClientes;
 	private String[] clientes;
@@ -56,32 +48,27 @@ public class GerenciadorBean implements Serializable {
 	private Date dtFinal;
 
 	public void registros() {
-
-		guias = new ArrayList<>();
-		valoresLiberados = new ArrayList<>();
-		valoresGlosa = new ArrayList<>();
-
 		var tamProc = descricao.length;
 		String textoProc = "";
 		if(tamProc == 0) {
-			textoProc = " Nunhum procedimento foi selecionado.";
+			textoProc = " Nenhum procedimento selecionado.";
 		}
 		else if(tamProc == 1) {
-			textoProc = " procedimento está selecionado.";
+			textoProc = " procedimento selecionado.";
 		}else {
-			textoProc = " procedimentos estão selecionados.";
+			textoProc = " procedimentos selecionados.";
 		}
-		FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, tamProc + textoProc);
-		context.addMessage(null, msg);
+		FacesMessage msgProc = new FacesMessage(FacesMessage.SEVERITY_INFO, null, tamProc + textoProc);
+		context.addMessage(null, msgProc);
 		
 		var tamC = clientes.length;
 		String textoCliente = "";
 		if(tamC == 0) {
-			textoCliente = " Nenhum cliente foi selecionado.";
+			textoCliente = " Nenhum cliente selecionado.";
 		}else if(tamC == 1) {
-			textoCliente = " cliente foi selecionado.";
+			textoCliente = " cliente selecionado.";
 		}else {
-			textoCliente = " clientes foram selecionados.";
+			textoCliente = " clientes selecionados.";
 		}
 		FacesMessage msgCliente = new FacesMessage(FacesMessage.SEVERITY_INFO, null, tamC + textoCliente);
 		context.addMessage(null, msgCliente);
@@ -93,6 +80,18 @@ public class GerenciadorBean implements Serializable {
 			valorCreia = geraDados.valorCreia().get();
 			valorProfissional = geraDados.valorProfissional().get();
 			
+			if(guias.size() == 0) {
+				StringBuilder sb = new StringBuilder("Não há dados para os parâmetros passados.");
+				if(clientes.length > 0) {
+					sb.append("\nCliente(s): " + clientes.length);
+				}
+				if(descricao.length > 0) {
+					sb.append("\nProcedimento(s): " + descricao.length);
+				}
+				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, null, sb.toString());
+				context.addMessage(null, msg);
+			}
+			
 		} catch (InterruptedException e) {
 			FacesMessage msgErro = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Erro: " + e.getMessage());
 			context.addMessage(null, msgErro);
@@ -100,72 +99,6 @@ public class GerenciadorBean implements Serializable {
 			FacesMessage msgErro = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Erro: " + e.getMessage());
 			context.addMessage(null, msgErro);
 		}
-		
-//		java.sql.Date dt1 = new java.sql.Date(getDtInicial().getTime());
-//		java.sql.Date dt2 = new java.sql.Date(getDtFinal().getTime());
-//
-//		@SuppressWarnings("unchecked")
-//		var listagemGuia = (List<Guia>) servico.Obter(sg, clientes, descricao, dt1, dt2);
-//		try {
-//			for(var item : listagemGuia) {
-//				var guia = new GuiaArgument();
-//				var detalhe = new DetalheGuia();
-//				guia.setPrestador(item.getPrestador());
-//				guia.setOperadora(item.getOperadora());
-//				var cliente = item.getBeneficiario();
-//				if(cliente != null) {
-//					guia.setBeneficiario(item.getBeneficiario());					
-//				}
-//				guia.setDataIni(item.getDataIni());
-//
-//				detalhe.setDataRealizacao(item.getDtRealizacao());
-//				var procedimento = item.getProcedimento();
-//				if(procedimento != null) {
-//					guia.setProcedimento(procedimento);						
-//				}
-//
-//				var informado = item.getValorInformado();
-//				detalhe.setValorInformado(informado);
-//				detalhe.setQtdExecutada(item.getQtdExecutada());
-//				detalhe.setValorProcessado(item.getValorProcessado());
-//				var liberado = item.getValorLiberado();
-//				detalhe.setValorLiberado(liberado);
-//
-//				if(liberado == 0.0) {
-//					valoresGlosa.add(informado);
-//					detalhe.setValorGlosa(informado);
-//				}
-//
-//				valoresLiberados.add(liberado);
-//				guia.setDetalheGuia(detalhe);
-//				guias.add(guia);
-//			}
-//		}catch(NullPointerException e) {
-//			System.out.println(e.getCause());
-//			System.out.println(e.getClass());
-//			System.out.println(e.getMessage());
-//			System.out.println(e.getLocalizedMessage());
-//			FacesMessage msgErro = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Erro: " + e.getMessage());
-//			context.addMessage(null, msgErro);
-//		}catch(RuntimeException e) {
-//			FacesMessage msgErro = new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Erro: " + e.getMessage());
-//			context.addMessage(null, msgErro);
-//		}
-//
-//		valorTotal = 0.0;
-//		valorGlosa = 0.0;
-//		valorCreia = 0.0;
-//		valorProfissional = 0.0;
-//
-//		for(var total : valoresLiberados) {
-//			valorTotal =+ valorTotal + total;
-//		}
-//		valorCreia = valorTotal * 45.5 / 100;
-//
-//		for(var glosa : valoresGlosa) {
-//			valorGlosa =+ valorGlosa + glosa;				
-//		}
-//		valorProfissional = valorTotal * 54.5 / 100;
 	}
 
 	public void limpar() {
@@ -185,54 +118,52 @@ public class GerenciadorBean implements Serializable {
 	}
 
 	public String gerarImpressao() {
-		
-		var ret = geraDados.imprimir(clientes, descricao, getDtInicial(), getDtFinal());
-
 		try {
-			relatorios = ret.get();
+			relatorios = geraDados.imprimir(clientes, descricao, getDtInicial(), getDtFinal()).get();
+			nomeClientes = geraDados.nomeClientes().get();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 		}
 		
-		if(clientes.length > 0) {
-			Set<String> nCliente = new HashSet<String>();			
-			StringBuilder sb = new StringBuilder();
-
-			for(var c : clientes) {
-				nCliente.add(c);
-			}
-			for(var c : nCliente) {
-				sb.append(c).append("\n");
-			}
-			setNomeClientes(sb.toString());
-		}else {
-			Service servico = new Service();
-			ServiceBeneficiario sbn = new ServiceBeneficiario();
-
-			@SuppressWarnings("unchecked")
-			var listagemC = (List<Beneficiario>) servico.Listar(sbn);
-
-			Set<String> nCliente = new HashSet<String>();			
-			StringBuilder sb = new StringBuilder();
-
-			for(var c : listagemC) {
-				nCliente.add(c.getNome());
-			}
-			for(var c : nCliente) {
-				sb.append(c).append("\n");
-			}
-			setNomeClientes(sb.toString());
-		}
+//		if(clientes.length > 0) {
+//			Set<String> nCliente = new HashSet<String>();			
+//			StringBuilder sb = new StringBuilder();
+//
+//			for(var c : clientes) {
+//				nCliente.add(c);
+//			}
+//			for(var c : nCliente) {
+//				sb.append(c).append("\n");
+//			}
+//			setNomeClientes(sb.toString());
+//		}else {
+//			Service servico = new Service();
+//			ServiceBeneficiario sbn = new ServiceBeneficiario();
+//
+//			@SuppressWarnings("unchecked")
+//			var listagemC = (List<Beneficiario>) servico.Listar(sbn);
+//
+//			Set<String> nCliente = new HashSet<String>();			
+//			StringBuilder sb = new StringBuilder();
+//
+//			for(var c : listagemC) {
+//				nCliente.add(c.getNome());
+//			}
+//			for(var c : nCliente) {
+//				sb.append(c).append("\n");
+//			}
+//			setNomeClientes(sb.toString());
+//		}
 		
-		imprimeRelatorio();
-
+		imprimeRelatorio();			
+		
 		return null;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void imprimeRelatorio() {
+	private void imprimeRelatorio() {
 		HashMap parametros = new HashMap();
 		parametros.put("NOME_ESPECIALISTA", selectProfissionais);
 		parametros.put("NOME_CLIENTE", nomeClientes);
@@ -280,14 +211,6 @@ public class GerenciadorBean implements Serializable {
 		this.valorTotal = valorTotal;
 	}
 
-	public List<Double> getValoresLiberados() {
-		return valoresLiberados;
-	}
-
-	public void setValoresLiberados(List<Double> valoresLiberados) {
-		this.valoresLiberados = valoresLiberados;
-	}
-
 	public Date getDtInicial() {
 		return dtInicial;
 	}
@@ -316,22 +239,8 @@ public class GerenciadorBean implements Serializable {
 		return valorGlosa;
 	}
 
-	public List<Double> getValoresGlosa() {
-		return valoresGlosa;
-	}
-
-	public void setValoresGlosa(List<Double> valoresGlosa) {
-		this.valoresGlosa = valoresGlosa;
-	}
 	public List<Relatorio> getRelatorios() {
 		return relatorios;
-	}
-	public Set<Procedimento> getListaProced() {
-		return listaProced;
-	}
-
-	public void setListaProced(Set<Procedimento> listaProced) {
-		this.listaProced = listaProced;
 	}
 
 	public String getProfissional() {

@@ -7,6 +7,7 @@ import javax.ejb.Asynchronous;
 import javax.ejb.Local;
 
 import br.com.dss.argument.GuiaArgument;
+import br.com.dss.modelo.Beneficiario;
 import br.com.dss.util.Relatorio;
 
 @Local
@@ -23,4 +24,8 @@ public interface DadosLocal {
 	public Future<Double> valorProfissional();
 	@Asynchronous
 	public Future<Double> valorCreia();
+	@Asynchronous
+	public Future<String> nomeClientes();
+	@Asynchronous
+	public Future<List<Beneficiario>> pacientes();
 }

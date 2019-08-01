@@ -2,27 +2,32 @@ package br.com.dss.ejb;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Future;
 
 import javax.ejb.AsyncResult;
-import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 
 import br.com.dss.argument.GuiaArgument;
+import br.com.dss.modelo.Beneficiario;
 import br.com.dss.modelo.DetalheGuia;
 import br.com.dss.modelo.Guia;
 import br.com.dss.servico.Service;
+import br.com.dss.servico.ServiceBeneficiario;
 import br.com.dss.servico.ServiceGuia;
 import br.com.dss.util.Relatorio;
 
 /**
- * Session Bean implementation class Imprimir
+ * Session Bean implementation class Dados
  */
-@Stateful
+@Stateless
 public class DadosBean implements DadosLocal {
 	
 	List<Double> valoresGlosa = new ArrayList<>();
 	List<Double> valoresLiberados = new ArrayList<>();
+	List<String> clientesSelecionados = new ArrayList<>();
 	Double valorTotal;
 
 	@Override
@@ -63,6 +68,9 @@ public class DadosBean implements DadosLocal {
 		java.sql.Date dt1 = new java.sql.Date(dtIni.getTime());
 		java.sql.Date dt2 = new java.sql.Date(dtFim.getTime());
 		List<GuiaArgument> guias = new ArrayList<>();
+		valoresLiberados.clear();
+		valoresGlosa.clear();
+		clientesSelecionados.clear();
 		
 		@SuppressWarnings("unchecked")
 		var listagemGuia = (List<Guia>) servico.Obter(sg, clientes, descricao, dt1, dt2);
@@ -74,7 +82,8 @@ public class DadosBean implements DadosLocal {
 				guia.setOperadora(item.getOperadora());
 				var cliente = item.getBeneficiario();
 				if(cliente != null) {
-					guia.setBeneficiario(item.getBeneficiario());					
+					guia.setBeneficiario(item.getBeneficiario());	
+					clientesSelecionados.add(item.getBeneficiario().getNome());
 				}
 				guia.setDataIni(item.getDataIni());
 
@@ -143,6 +152,35 @@ public class DadosBean implements DadosLocal {
 		return new AsyncResult<Double>(valorCreia);
 	}
 	
+	@Override
+	public Future<List<Beneficiario>> pacientes() {
+		ServiceBeneficiario sb = new ServiceBeneficiario();
+		Service servico = new Service();
+
+		@SuppressWarnings("unchecked")
+		var listagem = (List<Beneficiario>) servico.Listar(sb);
+		return new AsyncResult<List<Beneficiario>>(listagem);
+	}
+	
+	@Override
+	public Future<String> nomeClientes() {
+		var clientes = getClientesSelecionados();
+		Set<String> nCliente = new HashSet<String>();
+		StringBuilder sb = new StringBuilder();
+		var count = 0;
+		for(var item : clientes) {
+			nCliente.add(item);
+		}
+		for(var item : nCliente) {
+			sb.append(item);
+			count++;
+			if(nCliente.size() != count) {
+				sb.append("\n");
+			}
+		}
+		return new AsyncResult<String>(sb.toString());
+	}
+	
 	public Double getValorTotal() {
 		return valorTotal;
 	}
@@ -153,5 +191,9 @@ public class DadosBean implements DadosLocal {
 
 	public List<Double> getValoresLiberados() {
 		return valoresLiberados;
+	}
+	
+	public List<String> getClientesSelecionados() {
+		return clientesSelecionados;
 	}
 }
