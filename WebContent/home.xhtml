@@ -8,13 +8,24 @@
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 	<title>Home</title>
+	<style type="text/css">
+		.ui-analog-clock{
+			width: 150px;
+			float: right;
+			margin-top: 15px;
+		}
+	</style>
 </h:head>
 <h:body>
 	<h:graphicImage library="img" name="logoCreia.png" style="width: 70px; height: 20px;"/>
 	
 	<h:form>
 		<p:growl id="messages" showSummary="false" showDetail="true"/>
-
+		
+		<p:idleMonitor timeout="0">
+			<p:ajax event="idle" listener="#{home.logado}"/>
+		</p:idleMonitor>
+		
 		<p:menubar>
 			<p:submenu label="Util">
 				<p:submenu label="Cadastros">
@@ -37,5 +48,9 @@
 		closable="false" resizable="false" showHeader="false">
 		<h:graphicImage library="img" name="ajaxloadingbar.gif" />
 	</p:dialog>
+
+	<h:form id="clock">
+		<p:clock displayMode="analog" />
+	</h:form>
 </h:body>
 </html>
