@@ -10,11 +10,11 @@ import br.com.dss.dao.ProcedimentoDao;
 public class ServiceArquivo implements IDados, IAdiciona {
 
 	@Override
-	public boolean isExist(String filtro) {
+	public boolean isExist(Object filtro) {
 		ArquivoDao arquivo = new ArquivoDao();
 		Processar(arquivo);
 
-		var existeArquivo = arquivo.Obter(filtro);
+		var existeArquivo = arquivo.Obter((String) filtro);
 
 		if(existeArquivo != null) {
 			return true;

@@ -6,9 +6,9 @@ import br.com.dss.modelo.Usuario;
 public class ServiceUsuario implements IDados, IListagem, IAdiciona, IAtualiza, IExclui {
 
 	@Override
-	public boolean isExist(String filtro) {
+	public boolean isExist(Object filtro) {
 		UsuarioDao usuario = new UsuarioDao();
-		var existe = usuario.Obter(filtro);
+		var existe = usuario.Obter((Usuario) filtro);
 		
 		if(existe != null) {
 			return true;
@@ -26,8 +26,10 @@ public class ServiceUsuario implements IDados, IListagem, IAdiciona, IAtualiza, 
 
 	@Override
 	public Object obter(Object objeto) {
+		UsuarioDao usuario = new UsuarioDao();
+		var ret = usuario.Obter((Usuario) objeto);
 		
-		return null;
+		return ret;
 	}
 
 	@Override

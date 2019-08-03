@@ -6,8 +6,7 @@ import br.com.dss.modelo.Glosa;
 public class ServiceGlosa implements IDados, IListagem {
 
 	@Override
-	public boolean isExist(String filtro) {
-		
+	public boolean isExist(Object filtro) {	
 		return false;
 	}
 

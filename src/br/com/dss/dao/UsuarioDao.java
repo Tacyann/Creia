@@ -51,28 +51,31 @@ public class UsuarioDao {
 		}
 	}
 
-	public String[] Obter(String id) {
-		String sql = "select * from usuario where ID = '" + id + "'";		
-		String nome = null;
-		String login = null;
-		String senha = null;
-
+	public Usuario Obter(Usuario usuario) {
+		String sql = "select * from usuario where usuario = ? and senha = ?";		
+		
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
+			
+			stmt.setString(1, usuario.getUsuario());
+			stmt.setString(2, usuario.getSenha());
 
 			ResultSet rs = stmt.executeQuery();
-
+			var count = 0;
+			var u = new Usuario();
 			while(rs.next()) {
-				nome = rs.getString("nomecompleto");
-				login = rs.getString("usuario");
-				senha = rs.getString("senha");
+				u.setNomeCompleto(rs.getString("nomecompleto"));
+				u.setUsuario(rs.getString("usuario"));
+				u.setSenha(rs.getString("senha"));
+				count++;
 			}
 			stmt.close();
 			rs.close();
 			
-			String[] cadastro = {nome,login,senha};
-
-			return cadastro;
+			if(count == 0) {
+				return null;
+			}
+			return u;
 		}catch(SQLException e) {
 			throw new RuntimeException(e);
 		}finally {

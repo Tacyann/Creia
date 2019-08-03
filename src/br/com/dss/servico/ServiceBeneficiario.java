@@ -5,7 +5,7 @@ import br.com.dss.dao.BeneficiarioDao;
 public class ServiceBeneficiario implements IDados, IListagem, IQuantidade {
 
 	@Override
-	public boolean isExist(String filtro) {
+	public boolean isExist(Object filtro) {
 		return false;
 	}
 

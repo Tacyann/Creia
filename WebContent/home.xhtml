@@ -21,10 +21,13 @@
 	
 	<h:form>
 		<p:growl id="messages" showSummary="false" showDetail="true"/>
+		<ui:remove>
+			<p:idleMonitor timeout="0">
+				<p:ajax event="idle" listener="#{login.logado}"/>
+			</p:idleMonitor>
+		</ui:remove>
 		
-		<p:idleMonitor timeout="0">
-			<p:ajax event="idle" listener="#{home.logado}"/>
-		</p:idleMonitor>
+		<f:event type="preRenderView" listener="#{login.logado}"/>
 		
 		<p:menubar>
 			<p:submenu label="Util">
@@ -35,7 +38,7 @@
 				</p:submenu>
 				<p:menuitem value="Gerenciador" url="gerenciador.faces" />
 				<p:separator />
-				<p:menuitem value="Sair" url="home.faces" />
+				<p:menuitem value="Logout" action="#{gerenciador.sair}" />
 			</p:submenu>
 			<p:submenu label="Ajuda">
 				<p:menuitem value="Sobre o Sistema" action="#{home.sobre}"/>

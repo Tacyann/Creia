@@ -32,14 +32,14 @@
 			<p:panelGrid id="cadastroUsuario" layout="grid" columns="1" >				
 				<p:outputLabel id="loginLbl" value="Usuário" style="width: 20%"/>
 				<p:inputText id="login" style="width: 100%;"
-					value="#{usuario.usuario}" />
+					value="#{login.login}" />
 				
 				<p:outputLabel id="senhaLbl" value="Senha" style="width: 20%"/>
-				<p:password id="senha" style="width: 100%;" value="#{usuario.senha}" />
+				<p:password id="senha" style="width: 100%;" value="#{login.senha}" />
 			</p:panelGrid>
 			<br />	
 			<div style="text-align: center;">
-				<p:commandButton id="btnLogin" value="Login" icon="ui-icon-check" actionListener="#{usuario.adicionar}" update="msg,cadastroUsuario"/>
+				<p:commandButton id="btnLogin" value="Login" icon="ui-icon-check" actionListener="#{login.logar}" update=":formLogin:msg,cadastroUsuario"/>
 				&nbsp;
 				<p:commandButton id="btnSair" value="Cadastrar" icon="ui-icon-person" action="#{gerenciador.sair}"/>
 			</div>		
