@@ -14,11 +14,9 @@ import br.com.dss.argument.GuiaArgument;
 import br.com.dss.modelo.Beneficiario;
 import br.com.dss.modelo.DetalheGuia;
 import br.com.dss.modelo.Guia;
-import br.com.dss.modelo.Usuario;
 import br.com.dss.servico.Service;
 import br.com.dss.servico.ServiceBeneficiario;
 import br.com.dss.servico.ServiceGuia;
-import br.com.dss.servico.ServiceUsuario;
 import br.com.dss.util.Relatorio;
 
 /**
@@ -202,24 +200,6 @@ public class DadosBean implements DadosLocal {
 			}
 		}
 		return new AsyncResult<String>(sb.toString());
-	}
-	
-	@Override
-	public Future<Usuario> existeUsuario(String login, String senha) {
-		Service servico = new Service();
-		ServiceUsuario su = new ServiceUsuario();
-		Usuario user = new Usuario();
-		user.setUsuario(login);
-		user.setSenha(senha);
-		var usuario = (Usuario)servico.Obter(su, user);
-		
-		if(usuario != null) {
-			existeUsuario = true;
-		}else {
-			existeUsuario = false;
-		}
-		
-		return new AsyncResult<Usuario>(usuario);
 	}
 	
 	public Double getValorTotal() {

@@ -8,7 +8,6 @@ import javax.ejb.Local;
 
 import br.com.dss.argument.GuiaArgument;
 import br.com.dss.modelo.Beneficiario;
-import br.com.dss.modelo.Usuario;
 import br.com.dss.util.Relatorio;
 
 @Local
@@ -31,6 +30,4 @@ public interface DadosLocal {
 	public Future<String> periodoRealizacao();
 	@Asynchronous
 	public Future<List<Beneficiario>> pacientes();
-	@Asynchronous
-	public Future<Usuario> existeUsuario(String login, String senha);
 }

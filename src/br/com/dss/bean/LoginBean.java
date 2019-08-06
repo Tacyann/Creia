@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 
-import br.com.dss.ejb.DadosLocal;
+import br.com.dss.ejb.UsuarioLogadoLocal;
 import br.com.dss.modelo.Usuario;
 
 @Named("login")
@@ -20,7 +20,7 @@ import br.com.dss.modelo.Usuario;
 public class LoginBean implements Serializable{
 
 	@EJB
-	private DadosLocal geradados;
+	private UsuarioLogadoLocal userLogado;
 	
 	@Inject
 	private FacesContext context;
@@ -44,7 +44,7 @@ public class LoginBean implements Serializable{
 	public String logar() {
 		try {
 			NavigationHandler nh = context.getApplication().getNavigationHandler();
-			var ret = geradados.existeUsuario(login, senha).get();
+			var ret = userLogado.existeUsuario(login, senha).get();
 			
 			if (ret != null) {
 				FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", ret);

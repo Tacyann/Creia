@@ -64,6 +64,8 @@
 		<h:graphicImage library="img" name="ajaxloadingbar.gif" />
 	</p:dialog>
 
+	<f:event type="preRenderView" listener="#{login.logado}"/>
+	
 	<h:form id="form">
 	<p:growl id="msg" showDetail="true" showSummary="false" globalOnly="true"/>
 	<ui:remove>
@@ -149,11 +151,10 @@
 		</div>
 		</p:panel>
 		<br /> 
-		<p:dataTable value="#{gerenciador.guias}" 
-						var="g" 
+		<p:dataTable value="#{gerenciador.guias}" var="g" rows="10" 
 						id="registrosGuias" 
-						resizableColumns="true" 
-						rows="10" sortBy="#{g.detalheGuia.dataRealizacao.time}"
+						resizableColumns="true"
+						sortBy="#{g.detalheGuia.dataRealizacao.time}"
 						paginator="true"
 						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 						rowsPerPageTemplate="5,10,15" >
@@ -194,6 +195,7 @@
 				</h:outputText>
 			</p:column>
 		</p:dataTable>
+		
 		<p:separator/>
 		<p:panelGrid id="totais" columns="2" layout="grid">
 			<p:panelGrid columns="2">
@@ -220,7 +222,7 @@
 		<p:separator/>
 	</h:form>
 	<h:form id="sairForm">
-		&nbsp;&nbsp;<p:commandButton value="Sair" icon="ui-icon-close" action="#{gerenciador.sair}"/>
+		&nbsp;&nbsp;<p:commandButton value="Sair" icon="ui-icon-close" action="home.faces"/>
 	</h:form>
 
 </h:body>
