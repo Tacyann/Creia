@@ -108,7 +108,7 @@ public class GerenciadorBean implements Serializable {
 	}
 
 	public String sair() {
-		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+		//FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 		limpar();
 		return "home?faces-redirect=true";
 	}

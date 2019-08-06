@@ -41,6 +41,11 @@ public class LoginBean implements Serializable{
 		}
 	}
 	
+	public String logof() {
+		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+		return "login?faces-redirect=true";
+	}
+	
 	public String logar() {
 		try {
 			NavigationHandler nh = context.getApplication().getNavigationHandler();

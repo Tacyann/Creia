@@ -11,6 +11,8 @@
 </h:head>
 <h:body>
 
+	<f:event type="preRenderView" listener="#{login.logado}"/>
+		
 	<h:graphicImage library="img" name="logoCreia.png" 
 		style="width: 70px; height: 20px;" />
 	<h:form id="form">
@@ -25,7 +27,7 @@
 				<f:ajax event="dialogReturn"></f:ajax>
 			</p:commandButton>
 			&nbsp;
-			<p:commandButton value="Sair" action="#{gerenciador.sair}" />
+			<p:commandButton value="Sair" action="home.faces" />
 		</div>
 		<br />
 		<p:dataTable value="#{usuario.usuarios}" var="u" id="cadastroUsuarios"

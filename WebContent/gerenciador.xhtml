@@ -80,6 +80,7 @@
 								value="#{gerenciador.dtInicial}" 
 								locale="pt_BR" 
 								required="true"
+								requiredMessage="Não é permitido consulta sem data inicial."
 								monthNavigator="true" 
 								showButtonBar="false" 
 								showIcon="true" 
@@ -92,6 +93,7 @@
 								value="#{gerenciador.dtFinal}" 
 								locale="pt_BR" 
 								required="true"
+								requiredMessage="Não é permitido consulta sem data final."
 								monthNavigator="true" 
 								showButtonBar="false" 
 								showIcon="true" 
@@ -222,7 +224,7 @@
 		<p:separator/>
 	</h:form>
 	<h:form id="sairForm">
-		&nbsp;&nbsp;<p:commandButton value="Sair" icon="ui-icon-close" action="home.faces"/>
+		&nbsp;&nbsp;<p:commandButton value="Sair" icon="ui-icon-close" action="#{gerenciador.sair}"/>
 	</h:form>
 
 </h:body>
