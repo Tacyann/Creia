@@ -24,7 +24,7 @@ public class UtilRelatorios implements Serializable {
 			facesContext.responseComplete();
 			ServletContext scontext = (ServletContext) facesContext.getExternalContext().getContext();
 			String path = scontext.getRealPath("/WEB-INF/relatorios/");
-			parametros.put("SUBREPORT_DIR", path + File.separator);
+			parametros.put("SUBREPORT_DIR", path + File.separator); 
 			JasperPrint jasperPrint = JasperFillManager.fillReport(scontext.getRealPath("/WEB-INF/relatorios/") + File.separator + nomeRelatorio + ".jasper", parametros, dataSource);
 			HttpServletResponse res = (HttpServletResponse) facesContext.getExternalContext().getResponse();
 			res.setContentType("application/pdf");

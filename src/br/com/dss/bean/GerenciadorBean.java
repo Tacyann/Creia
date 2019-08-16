@@ -113,7 +113,7 @@ public class GerenciadorBean implements Serializable {
 		return "home?faces-redirect=true";
 	}
 
-	public void gerarImpressao() {
+	public String gerarImpressao() {
 		try {
 			relatorios = geraDados.imprimir(clientes, descricao, getDtInicial(), getDtFinal()).get();
 			nomeClientes = geraDados.nomeClientes().get();
@@ -124,7 +124,8 @@ public class GerenciadorBean implements Serializable {
 			e.printStackTrace();
 		}
 		
-		imprimeRelatorio();			
+		imprimeRelatorio();		
+		return "relatorio?faces-redirect=true";
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

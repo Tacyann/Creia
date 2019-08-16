@@ -124,7 +124,7 @@
 				update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg,dtInicial,dtFinal" />
 			&nbsp;
 			<p:commandButton value="Imprimir" icon="ui-icon-print" ajax="false"
-					actionListener="#{gerenciador.gerarImpressao}" onclick="this.form.target='_blank';" update="msg"/>
+					actionListener="#{gerenciador.gerarImpressao}" update="msg" />
 		</div>
 		<div id="filtro" style="text-align: right;">
 			<p:selectCheckboxMenu id="procedimento" 
