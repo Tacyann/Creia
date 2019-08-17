@@ -29,7 +29,8 @@ public class UtilRelatorios implements Serializable {
 			HttpServletResponse res = (HttpServletResponse) facesContext.getExternalContext().getResponse();
 			res.setContentType("application/pdf");
 			int codigo = (int) (Math.random() * 1000);
-			res.setHeader("Content-disposition", "inline;filename=relatorio_" + codigo + ".pdf");
+//			res.setHeader("Content-disposition", "inline;filename=relatorio_" + codigo + ".pdf");
+			res.setHeader("Content-disposition", "attachment;filename=relatorio_" + codigo + ".pdf");
 			byte[] b = JasperExportManager.exportReportToPdf(jasperPrint);
 			res.getOutputStream().write(b);
 			res.getCharacterEncoding();
