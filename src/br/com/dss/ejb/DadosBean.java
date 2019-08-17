@@ -28,6 +28,7 @@ public class DadosBean implements DadosLocal {
 	List<Double> valoresGlosa = new ArrayList<>();
 	List<Double> valoresLiberados = new ArrayList<>();
 	List<String> clientesSelecionados = new ArrayList<>();
+	List<String> procedimentosSelecionados = new ArrayList<>();
 	Set<String> periodos = new HashSet<>();
 	Double valorTotal;
 	boolean existeUsuario;
@@ -40,12 +41,14 @@ public class DadosBean implements DadosLocal {
 		java.sql.Date dt1 = new java.sql.Date(dtIni.getTime());
 		java.sql.Date dt2 = new java.sql.Date(dtFim.getTime());
 		periodos.clear();
+		procedimentosSelecionados.clear();
 
 		@SuppressWarnings("unchecked")
 		var listagem = (List<Relatorio>) servico.Somar(sg, clientes, descricao, dt1, dt2);
 		for(var item : listagem) {
 			var r = new Relatorio();
-			var nome = item.getNomeProcedimento();
+			var nomeProcedimento = item.getNomeProcedimento();
+			var nomePaciente = item.getNomePaciente();
 			var qtd = item.getQuantidade();
 			var informado = item.getValorInformado();
 			var glosa = item.getValorGlosa();
@@ -54,7 +57,9 @@ public class DadosBean implements DadosLocal {
 			var periodo = item.getPeriodo();
 			periodos.add(periodo);
 
-			r.setNomeProcedimento(nome);
+			procedimentosSelecionados.add(nomeProcedimento.toUpperCase());
+			r.setNomeProcedimento(nomeProcedimento);
+			r.setNomePaciente(nomePaciente);
 			r.setQuantidade(qtd);
 			r.setValorInformado(informado * 54.5 / 100);
 			r.setValorGlosa(glosa * 54.5 / 100);
@@ -169,6 +174,25 @@ public class DadosBean implements DadosLocal {
 	}
 	
 	@Override
+	public Future<String> nomeProcedimentos() {
+		var procedimentos = getProcedimentosSelecionados();
+		Set<String> nProcedimentos = new HashSet<String>();
+		StringBuilder sb = new StringBuilder();
+		var count = 0;
+		for(var item : procedimentos) {
+			nProcedimentos.add(item);
+		}
+		for(var item : nProcedimentos) {
+			sb.append(item);
+			count++;
+			if(nProcedimentos.size() != count) {
+				sb.append("\n");
+			}
+		}
+		return new AsyncResult<String>(sb.toString());
+	}
+	
+	@Override
 	public Future<String> nomeClientes() {
 		var clientes = getClientesSelecionados();
 		Set<String> nCliente = new HashSet<String>();
@@ -218,6 +242,10 @@ public class DadosBean implements DadosLocal {
 		return clientesSelecionados;
 	}
 	
+	public List<String> getProcedimentosSelecionados() {
+		return procedimentosSelecionados;
+	}
+
 	public Set<String> getPeriodos() {
 		return periodos;
 	}

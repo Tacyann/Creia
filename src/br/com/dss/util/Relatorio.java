@@ -3,6 +3,7 @@ package br.com.dss.util;
 public class Relatorio {
 
 	private String nomeProcedimento;
+	private String nomePaciente;
 	private Integer quantidade;
 	private Double valorInformado;
 	private Double valorGlosa;
@@ -51,6 +52,12 @@ public class Relatorio {
 	}
 	public void setPeriodo(String periodo) {
 		this.periodo = periodo;
+	}
+	public String getNomePaciente() {
+		return nomePaciente;
+	}
+	public void setNomePaciente(String nomePaciente) {
+		this.nomePaciente = nomePaciente;
 	}
 	
 	@Override

@@ -30,7 +30,7 @@ public class GerenciadorBean implements Serializable {
 
 	private List<GuiaArgument> guias;
 	private static List<Relatorio> relatorios; 
-	private static String nomeClientes;
+	private static String nomeProcedimento;
 	private String[] clientes;
 	private String[] descricao;
 	private String selectProfissionais;
@@ -113,10 +113,10 @@ public class GerenciadorBean implements Serializable {
 		return "home?faces-redirect=true";
 	}
 
-	public String gerarImpressao() {
+	public void gerarImpressao() {
 		try {
 			relatorios = geraDados.imprimir(clientes, descricao, getDtInicial(), getDtFinal()).get();
-			nomeClientes = geraDados.nomeClientes().get();
+			nomeProcedimento = geraDados.nomeProcedimentos().get();
 			periodo = geraDados.periodoRealizacao().get();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -124,15 +124,15 @@ public class GerenciadorBean implements Serializable {
 			e.printStackTrace();
 		}
 		
-		imprimeRelatorio();		
-		return "relatorio?faces-redirect=true";
+		imprimeRelatorio();
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void imprimeRelatorio() {
 		HashMap parametros = new HashMap();
 		parametros.put("NOME_ESPECIALISTA", selectProfissionais);
-		parametros.put("NOME_CLIENTE", nomeClientes);
+//		parametros.put("NOME_CLIENTE", nomeClientes);
+		parametros.put("NOME_PROCEDIMENTO", nomeProcedimento);
 		parametros.put("TOTAL_PROFISSIONAL", valorProfissional);
 		parametros.put("PERIODO", periodo);
 		UtilRelatorios.imprimeRelatorio("especialistas", parametros, relatorios);
@@ -227,11 +227,11 @@ public class GerenciadorBean implements Serializable {
 	}
 	
 	public static String getNomeClientes() {
-		return nomeClientes;
+		return nomeProcedimento;
 	}
 	
 	public static void setNomeClientes(String nomeClientes) {
-		GerenciadorBean.nomeClientes = nomeClientes;
+		GerenciadorBean.nomeProcedimento = nomeClientes;
 	}
 	
 	public String getPeriodo() {

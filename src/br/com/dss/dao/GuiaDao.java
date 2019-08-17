@@ -156,7 +156,7 @@ public class GuiaDao {
 		String sql;
 		
 		if(listaCliente.length == 0 && listaProcedimento.length == 0) {
-			sql = "SELECT b.procedimento AS codigo, c.descricaoProcedimento AS descricao, SUM(b.valorInformado) AS valorInformado, "
+			sql = "SELECT b.procedimento AS codigo, c.descricaoProcedimento AS descricao, a.nomeBeneficiario AS paciente, SUM(b.valorInformado) AS valorInformado, "
 					+"SUM(b.qtdExecutada) AS qtdExecutada, SUM(b.valorProcessado) AS valorProcessado,SUM(b.valorLiberado) AS valorLiberado, "
 					+"SUM(CASE b.valorLiberado WHEN 0 THEN b.valorInformado ELSE 0 END) AS valorGlosa, "
 					+"DATE_FORMAT(MAX(b.dataRealizacao),'%m - %Y') AS periodo "
@@ -164,7 +164,8 @@ public class GuiaDao {
 					+"JOIN detalhesguia b ON a.numeroGuiaPrestador = b.numPrestador "
 					+"AND b.dataRealizacao >= '" + dtIni + "' AND b.dataRealizacao <= '" + dtFim + "' "
 					+"JOIN procedimento c ON b.procedimento = c.codigoProcedimento "
-					+"GROUP BY b.procedimento, c.descricaoProcedimento";
+					+"GROUP BY a.nomeBeneficiario,b.procedimento, c.descricaoProcedimento "
+					+"ORDER BY a.nomeBeneficiario";
 		}else {
 			int count = 0;
 			StringBuilder sbCliente = new StringBuilder();
@@ -178,7 +179,7 @@ public class GuiaDao {
 
 			var paramCliente = sbCliente.toString();
 			if(listaProcedimento.length == 0) {
-				sql = "SELECT b.procedimento AS codigo, c.descricaoProcedimento AS descricao, SUM(b.valorInformado) AS valorInformado, "
+				sql = "SELECT b.procedimento AS codigo, c.descricaoProcedimento AS descricao, a.nomeBeneficiario AS paciente, SUM(b.valorInformado) AS valorInformado, "
 						+"SUM(b.qtdExecutada) AS qtdExecutada, SUM(b.valorProcessado) AS valorProcessado,SUM(b.valorLiberado) AS valorLiberado, "
 						+"SUM(CASE b.valorLiberado WHEN 0 THEN b.valorInformado ELSE 0 END) AS valorGlosa, "
 						+"DATE_FORMAT(MAX(b.dataRealizacao),'%m - %Y') AS periodo "
@@ -187,7 +188,8 @@ public class GuiaDao {
 						+"AND b.dataRealizacao >= '" + dtIni + "' AND b.dataRealizacao <= '" + dtFim + "' "
 						+"JOIN procedimento c ON b.procedimento = c.codigoProcedimento "
 						+"WHERE a.nomeBeneficiario IN (" + paramCliente + ") "
-						+"GROUP BY b.procedimento, c.descricaoProcedimento";
+						+"GROUP BY a.nomeBeneficiario,b.procedimento, c.descricaoProcedimento "
+						+"ORDER BY a.nomeBeneficiario";
 			}else {
 				int countP = 0;
 				StringBuilder sbProcedimento = new StringBuilder();
@@ -200,24 +202,26 @@ public class GuiaDao {
 				}
 				var paramProcedimento = sbProcedimento.toString();
 
-				sql = "SELECT b.procedimento AS codigo, c.descricaoProcedimento AS descricao, SUM(b.valorInformado) AS valorInformado, "
+				sql = "SELECT b.procedimento AS codigo, c.descricaoProcedimento AS descricao, a.nomeBeneficiario AS paciente, SUM(b.valorInformado) AS valorInformado, "
 						+"SUM(b.qtdExecutada) AS qtdExecutada, SUM(b.valorProcessado) AS valorProcessado,SUM(b.valorLiberado) AS valorLiberado, "
 						+"SUM(CASE b.valorLiberado WHEN 0 THEN b.valorInformado ELSE 0 END) AS valorGlosa, "
 						+"DATE_FORMAT(MAX(b.dataRealizacao),'%m - %Y') AS periodo "
 						+"FROM guia a "
 						+"JOIN detalhesguia b ON a.numeroGuiaPrestador = b.numPrestador "
-						+"AND b.dataRealizacao >= '" + dtIni + "' AND b.dataRealizacao <= '" + dtFim + "'"
+						+"AND b.dataRealizacao >= '" + dtIni + "' AND b.dataRealizacao <= '" + dtFim + "' "
 						+"JOIN procedimento c ON b.procedimento = c.codigoProcedimento ";
 				if(listaCliente.length == 0) {							
 					sql +="WHERE b.procedimento IN (" + paramProcedimento + ") "
-						+"GROUP BY b.procedimento, c.descricaoProcedimento";
+						+"GROUP BY a.nomeBeneficiario,b.procedimento, c.descricaoProcedimento "
+						+"ORDER BY a.nomeBeneficiario";
 				}else {
 					sql +="WHERE a.nomeBeneficiario IN (" + paramCliente + ") AND b.procedimento IN (" + paramProcedimento + ") "
-						+"GROUP BY b.procedimento, c.descricaoProcedimento";
+						+"GROUP BY a.nomeBeneficiario,b.procedimento, c.descricaoProcedimento "
+						+"ORDER BY a.nomeBeneficiario";
 				}
 			}
 		}
-		
+		System.out.println(sql);
 		List<Relatorio> relatorios = new ArrayList<>();
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
@@ -227,6 +231,7 @@ public class GuiaDao {
 				var relatorio = new Relatorio();
 
 				relatorio.setNomeProcedimento(rs.getString("descricao"));
+				relatorio.setNomePaciente(rs.getString("paciente"));
 				relatorio.setValorInformado(rs.getDouble("valorInformado"));
 				relatorio.setValorProcessado(rs.getDouble("valorProcessado"));
 				relatorio.setValorLiberado(rs.getDouble("valorLiberado"));
