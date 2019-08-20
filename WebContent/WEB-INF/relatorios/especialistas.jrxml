@@ -61,7 +61,7 @@
 			<staticText>
 				<reportElement x="2" y="18" width="550" height="22" uuid="888c6c7e-84be-4da6-9217-a7b9cdebcb0d"/>
 				<textElement textAlignment="Center">
-					<font fontName="News701 BT" size="16" isBold="true"/>
+					<font fontName="SansSerif" size="16" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Demostrativo de Pagamento]]></text>
 			</staticText>
@@ -78,28 +78,28 @@
 			<staticText>
 				<reportElement x="2" y="32" width="68" height="18" uuid="4f2fef8c-89e5-4995-b749-c056dda74e29"/>
 				<textElement>
-					<font fontName="News701 BT" isBold="true"/>
+					<font fontName="SansSerif" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Especialista:]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="66" y="32" width="482" height="18" uuid="884a3964-6c15-4fbf-a3dd-591685dfee2d"/>
 				<textElement>
-					<font fontName="News701 BT"/>
+					<font fontName="SansSerif"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{NOME_ESPECIALISTA}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="2" y="6" width="120" height="18" uuid="ff4ea144-76c7-40c7-a6b2-fb6abed479fb"/>
 				<textElement>
-					<font fontName="News701 BT"/>
+					<font fontName="SansSerif"/>
 				</textElement>
 				<text><![CDATA[Periodo de Referencia:]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="108" y="6" width="210" height="18" uuid="6e349ec3-1776-4698-b9ff-a3971bb4817b"/>
 				<textElement>
-					<font fontName="News701 BT"/>
+					<font fontName="SansSerif"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{PERIODO}]]></textFieldExpression>
 			</textField>
@@ -119,7 +119,7 @@
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
-					<font fontName="News701 BT" size="10"/>
+					<font fontName="SansSerif" size="10"/>
 				</textElement>
 				<text><![CDATA[Vlr Informado]]></text>
 			</staticText>
@@ -128,7 +128,7 @@
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8a711e90-4e54-43c2-8dcc-1e9f3ad28d5b"/>
 				</reportElement>
 				<textElement textAlignment="Center">
-					<font fontName="News701 BT" size="10"/>
+					<font fontName="SansSerif" size="10"/>
 				</textElement>
 				<text><![CDATA[Qtd]]></text>
 			</staticText>
@@ -138,7 +138,7 @@
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
-					<font fontName="News701 BT" size="10"/>
+					<font fontName="SansSerif" size="10"/>
 				</textElement>
 				<text><![CDATA[Vlr Processado]]></text>
 			</staticText>
@@ -148,7 +148,7 @@
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
-					<font fontName="News701 BT" size="10"/>
+					<font fontName="SansSerif" size="10"/>
 				</textElement>
 				<text><![CDATA[Vlr Glosa]]></text>
 			</staticText>
@@ -158,7 +158,7 @@
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
-					<font fontName="News701 BT" size="10"/>
+					<font fontName="SansSerif" size="10"/>
 				</textElement>
 				<text><![CDATA[Vlr Liberado]]></text>
 			</staticText>
@@ -167,7 +167,7 @@
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a0851512-e970-4eda-993a-c9fb5f31b97a"/>
 				</reportElement>
 				<textElement>
-					<font fontName="News701 BT"/>
+					<font fontName="SansSerif"/>
 				</textElement>
 				<text><![CDATA[Paciente]]></text>
 			</staticText>
@@ -252,6 +252,9 @@
 		<band height="34" splitType="Stretch">
 			<textField pattern="dd MMMM yyyy">
 				<reportElement x="470" y="14" width="90" height="20" uuid="2b6a9aec-dc2a-4139-ad9b-0085fe939331"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 		</band>
@@ -266,22 +269,30 @@
 			</rectangle>
 			<textField pattern="¤#,##0.00;¤-#,##0.00">
 				<reportElement x="445" y="7" width="100" height="18" uuid="4aa42ea2-b1e6-49ab-ab90-408304798ab6"/>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$P{TOTAL_PROFISSIONAL}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="382" y="6" width="63" height="20" uuid="6647d486-7bd7-4986-a0d0-5b197d17d25f"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
 				<text><![CDATA[Total a pagar:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1" y="9" width="100" height="17" uuid="eaa44a32-dd4e-48d7-b991-8609eef047b5"/>
 				<textElement>
-					<font fontName="News701 BT"/>
+					<font fontName="SansSerif"/>
 				</textElement>
 				<text><![CDATA[Procedimentos:]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="0" y="26" width="554" height="164" uuid="13ebce99-d594-44bc-9bdc-55b80f745e3c"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$P{NOME_PROCEDIMENTO}]]></textFieldExpression>
 			</textField>
 		</band>
