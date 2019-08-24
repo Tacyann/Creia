@@ -1,5 +1,6 @@
 package br.com.dss.ejb;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -18,6 +19,8 @@ public interface DadosLocal {
 	public Future<List<GuiaArgument>> listar(String[] clientes, String[] descricao,java.util.Date dtIni, java.util.Date dtFim);
 	@Asynchronous
 	public Future<Double> valorTotal();
+	@Asynchronous
+	public Future<List<Calendar>> dataEmissao();
 	@Asynchronous
 	public Future<Double> valorGlosa();
 	@Asynchronous

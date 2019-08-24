@@ -22,8 +22,8 @@ public class LoteDao {
 
 	public boolean Adicionar(Lote lote) {
 		boolean adicionou;
-		String sql = "insert into lote(numeroLotePrestador,numeroProtocolo,dataProtocolo,situacaoProtocolo,valorInformadoProtocolo,valorProcessadoProtocolo,valorLiberadoProtocolo)"+
-				"values(?,?,?,?,?,?,?)";
+		String sql = "insert into lote(numeroLotePrestador,numeroProtocolo,dataProtocolo,situacaoProtocolo,valorInformadoProtocolo,valorProcessadoProtocolo,valorLiberadoProtocolo,dataEmissao)"+
+				"values(?,?,?,?,?,?,?,?)";
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
 
@@ -34,6 +34,7 @@ public class LoteDao {
 			stmt.setDouble(5, lote.getValorInformadoProtocolo());
 			stmt.setDouble(6, lote.getValorProcessadoProtocolo());
 			stmt.setDouble(7, lote.getValorLiberadoProtocolo());
+			stmt.setDate(8, new Date(lote.getDataEmissao().getTimeInMillis()));
 			
 			stmt.execute();
 			stmt.close();

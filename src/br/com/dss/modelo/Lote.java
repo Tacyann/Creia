@@ -6,6 +6,7 @@ import java.util.List;
 public class Lote {
 
 	private int id;
+	private Calendar dataEmissao;
 	private int numero;
 	private int protocolo;
 	private Calendar data;
@@ -20,6 +21,12 @@ public class Lote {
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	public Calendar getDataEmissao() {
+		return dataEmissao;
+	}
+	public void setDataEmissao(Calendar dataEmissao) {
+		this.dataEmissao = dataEmissao;
 	}
 	public int getNumero() {
 		return numero;

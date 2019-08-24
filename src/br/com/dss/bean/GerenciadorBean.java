@@ -1,6 +1,7 @@
 package br.com.dss.bean;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,7 @@ public class GerenciadorBean implements Serializable {
 	private DadosLocal geraDados;
 
 	private List<GuiaArgument> guias;
+	private List<Calendar> datas;
 	private static List<Relatorio> relatorios; 
 	private static String nomeProcedimento;
 	private String[] clientes;
@@ -40,6 +42,7 @@ public class GerenciadorBean implements Serializable {
 	private Double valorCreia = 0.0;
 	private Double valorProfissional = 0.0;
 	private static String periodo;
+	private Date dtEmissao;
 	private Date dtInicial;
 	private Date dtFinal;
 
@@ -106,6 +109,16 @@ public class GerenciadorBean implements Serializable {
 			valorProfissional = 0.0;
 		}
 	}
+	
+	public void dtEmissao() {
+		try {
+			datas = geraDados.dataEmissao().get();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public String sair() {
 		//FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
@@ -152,6 +165,14 @@ public class GerenciadorBean implements Serializable {
 
 	public void setGuias(List<GuiaArgument> guias) {
 		this.guias = guias;
+	}
+
+	public List<Calendar> getDatas() {
+		return datas;
+	}
+
+	public void setDatas(List<Calendar> datas) {
+		this.datas = datas;
 	}
 
 	public String[] getClientes() {
@@ -236,5 +257,13 @@ public class GerenciadorBean implements Serializable {
 	
 	public String getPeriodo() {
 		return periodo;
+	}
+
+	public Date getDtEmissao() {
+		return dtEmissao;
+	}
+
+	public void setDtEmissao(Date dtEmissao) {
+		this.dtEmissao = dtEmissao;
 	}
 }

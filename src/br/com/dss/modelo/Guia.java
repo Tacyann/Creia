@@ -12,6 +12,7 @@ public class Guia{
 	private int senha;
 	private Beneficiario beneficiario;
 	private Procedimento procedimento;
+	private Calendar dataEmissao;
 	private Calendar dataIni;
 	private Calendar dtRealizacao;
 	private int situacaoGuia;
@@ -55,6 +56,12 @@ public class Guia{
 	}
 	public void setBeneficiario(Beneficiario beneficiario) {
 		this.beneficiario = beneficiario;
+	}
+	public Calendar getDataEmissao() {
+		return dataEmissao;
+	}
+	public void setDataEmissao(Calendar dataEmissao) {
+		this.dataEmissao = dataEmissao;
 	}
 	public Calendar getDataIni() {
 		return dataIni;

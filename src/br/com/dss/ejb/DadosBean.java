@@ -1,6 +1,7 @@
 package br.com.dss.ejb;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -31,6 +32,7 @@ public class DadosBean implements DadosLocal {
 	List<String> procedimentosSelecionados = new ArrayList<>();
 	Set<String> periodos = new HashSet<>();
 	Double valorTotal;
+	Set<Calendar> dtEmissao = new HashSet<>();
 	boolean existeUsuario;
 
 	@Override
@@ -82,6 +84,7 @@ public class DadosBean implements DadosLocal {
 		valoresLiberados.clear();
 		valoresGlosa.clear();
 		clientesSelecionados.clear();
+		dtEmissao.clear();
 		
 		@SuppressWarnings("unchecked")
 		var listagemGuia = (List<Guia>) servico.Obter(sg, clientes, descricao, dt1, dt2);
@@ -89,6 +92,8 @@ public class DadosBean implements DadosLocal {
 			for(var item : listagemGuia) {
 				var guia = new GuiaArgument();
 				var detalhe = new DetalheGuia();
+				dtEmissao.add(item.getDataEmissao());
+				guia.setDataEmissao(item.getDataEmissao());
 				guia.setPrestador(item.getPrestador());
 				guia.setOperadora(item.getOperadora());
 				var cliente = item.getBeneficiario();
@@ -164,6 +169,15 @@ public class DadosBean implements DadosLocal {
 	}
 	
 	@Override
+	public Future<List<Calendar>> dataEmissao() {
+		List<Calendar> dataEmissao = new ArrayList<>();
+		for(var dt : dtEmissao) {
+			dataEmissao.add(dt);
+		}
+		return new AsyncResult<List<Calendar>>(dataEmissao);
+	}
+	
+	@Override
 	public Future<List<Beneficiario>> pacientes() {
 		Service servico = new Service();
 		ServiceBeneficiario sb = new ServiceBeneficiario();
@@ -230,6 +244,10 @@ public class DadosBean implements DadosLocal {
 		return valorTotal;
 	}
 	
+	public Set<Calendar> getDtEmissao() {
+		return dtEmissao;
+	}
+
 	public List<Double> getValoresGlosa() {
 		return valoresGlosa;
 	}

@@ -58,7 +58,8 @@ public class GuiaDao {
 		String sql;
 
 		if(listaCliente.length == 0 && listaProcedimento.length == 0) {
-			sql = "SELECT DISTINCT a.*, b.numPrestador, b.procedimento, c.descricaoProcedimento, b.dataRealizacao, b.valorInformado, b.qtdExecutada, b.valorProcessado, b.valorLiberado FROM guia a "
+			sql = "SELECT DISTINCT a.*, (SELECT dataEmissao FROM lote WHERE numeroLotePrestador = a.lote) AS dataEmissao, "
+					+"b.numPrestador, b.procedimento, c.descricaoProcedimento, b.dataRealizacao, b.valorInformado, b.qtdExecutada, b.valorProcessado, b.valorLiberado FROM guia a "
 					+"JOIN detalhesguia b ON a.numeroGuiaPrestador = b.numPrestador "
 					+"AND b.dataRealizacao >= '" + dtIni + "' AND b.dataRealizacao <= '" + dtFim + "'"
 					+"JOIN procedimento c ON b.procedimento = c.codigoProcedimento";
@@ -75,7 +76,8 @@ public class GuiaDao {
 
 			var paramCliente = sbCliente.toString();
 			if(listaProcedimento.length == 0) {
-				sql = "SELECT DISTINCT a.*, b.numPrestador, b.procedimento, c.descricaoProcedimento, b.dataRealizacao, b.valorInformado, b.qtdExecutada, b.valorProcessado, b.valorLiberado FROM guia a "
+				sql = "SELECT DISTINCT a.*, (SELECT dataEmissao FROM lote WHERE numeroLotePrestador = a.lote) AS dataEmissao, "
+						+"b.numPrestador, b.procedimento, c.descricaoProcedimento, b.dataRealizacao, b.valorInformado, b.qtdExecutada, b.valorProcessado, b.valorLiberado FROM guia a "
 						+"JOIN detalhesguia b ON a.numeroGuiaPrestador = b.numPrestador "
 						+"AND b.dataRealizacao >= '" + dtIni + "' AND b.dataRealizacao <= '" + dtFim + "'"
 						+"LEFT JOIN procedimento c ON b.procedimento = c.codigoProcedimento "
@@ -92,7 +94,8 @@ public class GuiaDao {
 				}
 				var paramProcedimento = sbProcedimento.toString();
 
-				sql = "SELECT DISTINCT a.*, b.numPrestador, b.procedimento, c.descricaoProcedimento, b.dataRealizacao, b.valorInformado, b.qtdExecutada, b.valorProcessado, b.valorLiberado FROM guia a "
+				sql = "SELECT DISTINCT a.*, (SELECT dataEmissao FROM lote WHERE numeroLotePrestador = a.lote) AS dataEmissao, "
+						+"b.numPrestador, b.procedimento, c.descricaoProcedimento, b.dataRealizacao, b.valorInformado, b.qtdExecutada, b.valorProcessado, b.valorLiberado FROM guia a "
 						+"JOIN detalhesguia b ON a.numeroGuiaPrestador = b.numPrestador "
 						+"AND b.dataRealizacao >= '" + dtIni + "' AND b.dataRealizacao <= '" + dtFim + "'"
 						+"JOIN procedimento c ON b.procedimento = c.codigoProcedimento ";

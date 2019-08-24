@@ -13,6 +13,7 @@ public class GuiaArgument {
 	private Beneficiario beneficiario;
 	private Procedimento procedimento;
 	private Calendar dataIni;
+	private Calendar dataEmissao;
 	private Calendar dataRealizacao;
 	private double valorInformado;
 	private double valorProcessado;
@@ -91,5 +92,11 @@ public class GuiaArgument {
 	}
 	public void setDataRealizacao(Calendar dataRealizacao) {
 		this.dataRealizacao = dataRealizacao;
+	}
+	public Calendar getDataEmissao() {
+		return dataEmissao;
+	}
+	public void setDataEmissao(Calendar dataEmissao) {
+		this.dataEmissao = dataEmissao;
 	}
 }

@@ -93,6 +93,7 @@ public class ArquivoDao {
 		SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
 		Integer numeroLotePrestador = 0;
 		Integer numeroProtocolo = 0;
+		Calendar dataEmissao = Calendar.getInstance();
 		Calendar dataProtocolo = Calendar.getInstance();
 		Integer situacaoProtocolo = 0;
 		Integer numeroGuiaPrestador = 0;
@@ -138,7 +139,8 @@ public class ArquivoDao {
 					String file = f.getPath() + "\\" + arquivo;
 					Document doc = dBuilder.parse(file);
 
-					NodeList nListLote = doc.getElementsByTagName("dadosProtocolo");
+//					NodeList nListLote = doc.getElementsByTagName("dadosProtocolo");
+					NodeList nListLote = doc.getElementsByTagName("demonstrativoAnaliseConta");
 
 					for(int i = 0; i < nListLote.getLength(); i++) {
 						Lote lote = new Lote();
@@ -147,6 +149,8 @@ public class ArquivoDao {
 
 						if(nNode.getNodeType() == Node.ELEMENT_NODE) {
 							Element eElement = (Element) nNode;
+							var dtEmis = formato.parse(eElement.getElementsByTagName("dataEmissao").item(0).getTextContent());
+							dataEmissao.setTime(dtEmis);
 							numeroLotePrestador = Integer.parseInt(eElement.getElementsByTagName("numeroLotePrestador").item(0).getTextContent());
 							numeroProtocolo = Integer.parseInt(eElement.getElementsByTagName("numeroProtocolo").item(0).getTextContent());
 							var dt = formato.parse(eElement.getElementsByTagName("dataProtocolo").item(0).getTextContent());
@@ -301,6 +305,7 @@ public class ArquivoDao {
 						}
 
 						lote.setGuia(guias);
+						lote.setDataEmissao(dataEmissao);
 						lote.setNumero(numeroLotePrestador);
 						lote.setProtocolo(numeroProtocolo);
 						lote.setData(dataProtocolo);

@@ -161,7 +161,12 @@
 						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 						rowsPerPageTemplate="5,10,15" >
 						
-			<p:column headerText="Data" style="width:70px; font-size:15px;" sortBy="#{g.detalheGuia.dataRealizacao.time}">
+			<p:column headerText="Data Emissao" style="width:70px; font-size:15px;" sortBy="#{g.detalheGuia.dataRealizacao.time}">
+				<h:outputText value="#{g.dataEmissao.time}" >
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Data Realizacao" style="width:70px; font-size:15px;" sortBy="#{g.detalheGuia.dataRealizacao.time}">
 				<h:outputText value="#{g.detalheGuia.dataRealizacao.time}" >
 					<f:convertDateTime pattern="dd/MM/yyyy" />
 				</h:outputText>
@@ -172,12 +177,14 @@
 						font-size:15px;">
 				<h:outputText value="#{g.beneficiario.nome}" />
 			</p:column>
-			<p:column headerText="Operadora" style="width:70px; font-size:15px;">
-				<h:outputText value="#{g.operadora}" />
-			</p:column>
-			<p:column headerText="Prestador" style="width:70px; font-size:15px;">
-				<h:outputText value="#{g.prestador}" />
-			</p:column>
+			<ui:remove>
+				<p:column headerText="Operadora" style="width:70px; font-size:15px;">
+					<h:outputText value="#{g.operadora}" />
+				</p:column>
+				<p:column headerText="Prestador" style="width:70px; font-size:15px;">
+					<h:outputText value="#{g.prestador}" />
+				</p:column>
+			</ui:remove>
 			<p:column headerText="Procedimento" style="font-size:15px;">
 				<h:outputText value="#{g.procedimento.descricao}" />
 			</p:column>
