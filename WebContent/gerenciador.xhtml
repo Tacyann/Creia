@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui" >
+
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 	<title>Gerenciador</title>
@@ -44,195 +46,191 @@
     }
     //]]>
 	</script>
- 	<ui:remove>
+
 	<style type="text/css">
-	    .value {
-	        font-weight: bold;
-	    }
+		.ui-widget {
+			font-size: 0.8em
+		}
+		
+		#form\:totais tbody{
+			box-shadow: 2px 2px 5px 2px #666;
+		}
+		 #form\:totais tbody td{
+			background: #D3D3D3;
+			border-radius: 5px;
+		}
+	
 	</style>
- 	</ui:remove>
+
 </h:head>
-<h:body >
-	<h:graphicImage library="img" name="logoCreia.png" style="width: 70px; height: 20px; margin-bottom: 0;"/>
-	<h1 style="text-align:center; color:black; text-shadow: 5px 3px 5px gray; margin-top: 0;">
-		Gerenciador das guias de atendimento
-	</h1>
-	<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+<h:body>
+
+	<h:graphicImage library="img" name="logoCreia.png"
+		style="width: 70px; height: 20px; margin-bottom: 0;" />
+	<h1
+		style="text-align: center; color: black; text-shadow: 5px 3px 5px gray; margin-top: 0;">
+		Gerenciador das guias de atendimento</h1>
+	<p:ajaxStatus onstart="PF('statusDialog').show()"
+		onsuccess="PF('statusDialog').hide()" />
 
 	<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
 		closable="false" resizable="false" showHeader="false">
 		<h:graphicImage library="img" name="ajaxloadingbar.gif" />
 	</p:dialog>
 
-	<f:event type="preRenderView" listener="#{login.logado}"/>
-	
+	<f:event type="preRenderView" listener="#{login.logado}" />
+
 	<h:form id="form">
-	<p:growl id="msg" showDetail="true" showSummary="false" globalOnly="true"/>
-	<ui:remove>
-	<p:messages id="msg" globalOnly="true" showDetail="true" />
-	</ui:remove>
+		<p:growl id="msg" showDetail="true" showSummary="false"
+			globalOnly="true" />
+		<ui:remove>
+			<p:messages id="msg" globalOnly="true" showDetail="true" />
+		</ui:remove>
 		<p:panel>
 			<div id="datas" style="float: left;">
-				<p:outputLabel for="dtInicial" 
-								value="Data Inicial:" /> 
+				<p:outputLabel for="dtInicial" value="Data Inicial:" />
 				&nbsp;
-				<p:datePicker id="dtInicial" 
-								value="#{gerenciador.dtInicial}" 
-								locale="pt_BR" 
-								required="true"
-								requiredMessage="Não é permitido consulta sem data inicial."
-								monthNavigator="true" 
-								showButtonBar="false" 
-								showIcon="true" 
-								pattern="dd/MM/yyyy"/>
-				
-				<p:outputLabel for="dtFinal" 
-								value="Data Final:" /> 
+				<p:datePicker id="dtInicial" value="#{gerenciador.dtInicial}"
+					locale="pt_BR" required="true"
+					requiredMessage="Não é permitido consulta sem data inicial."
+					monthNavigator="true" showButtonBar="false" showIcon="true"
+					pattern="dd/MM/yyyy" />
+
+				<p:outputLabel for="dtFinal" value="Data Final:" />
 				&nbsp;
-				<p:datePicker id="dtFinal" 
-								value="#{gerenciador.dtFinal}" 
-								locale="pt_BR" 
-								required="true"
-								requiredMessage="Não é permitido consulta sem data final."
-								monthNavigator="true" 
-								showButtonBar="false" 
-								showIcon="true" 
-								pattern="dd/MM/yyyy"/>
+				<p:datePicker id="dtFinal" value="#{gerenciador.dtFinal}"
+					locale="pt_BR" required="true"
+					requiredMessage="Não é permitido consulta sem data final."
+					monthNavigator="true" showButtonBar="false" showIcon="true"
+					pattern="dd/MM/yyyy" />
 			</div>
 			<div style="text-align: right;">
-				<p:outputLabel value="Relacionar o Profissional"/> &nbsp;
-				<p:selectOneMenu id="profissional" 
-									value="#{gerenciador.selectProfissionais}"
-									filter="true"
-									filterMatchMode="startsWith"
-									panelStyle="width:310px">
-					<f:selectItem noSelectionOption="true"/>
-					<f:selectItems value="#{profissional.profissionais}"
-									var="p"
-									itemLabel="#{p.nome}"
-									itemValue="#{p.nome}"/>
+				<p:outputLabel value="Relacionar o Profissional" />
+				&nbsp;
+				<p:selectOneMenu id="profissional"
+					value="#{gerenciador.selectProfissionais}" filter="true"
+					filterMatchMode="startsWith" panelStyle="width:310px">
+					<f:selectItem noSelectionOption="true" />
+					<f:selectItems value="#{profissional.profissionais}" var="p"
+						itemLabel="#{p.nome}" itemValue="#{p.nome}" />
 				</p:selectOneMenu>
-			</div>			
-		<p:separator />
-		<div id="botoes" style="float: left;">
-			<p:commandButton value="Consultar" action="#{gerenciador.registros}" 
-				icon="ui-icon-search" process="@all"
-				update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg,dtInicial,dtFinal" />
-			&nbsp;
-			<p:commandButton value="Limpar" icon="ui-icon-trash" process="@all"
-				action="#{gerenciador.limpar}"
-				update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg,dtInicial,dtFinal" />
-			&nbsp;
-			<p:commandButton value="Imprimir" icon="ui-icon-print" 
-								ajax="false" actionListener="#{gerenciador.gerarImpressao}" update="msg" />
-		</div>
-		<div id="filtro" style="text-align: right;">
-			<p:selectCheckboxMenu id="procedimento" 
-									value="#{gerenciador.descricao}" 
-									label="Procedimentos" 
-									filter="true" 
-									filterMatchMode="startsWith" 
-									panelStyle="width:310px">
-				<f:selectItems value="#{procedimento.procedimentos}" 
-								var="p" 
-								itemLabel="#{p.descricao}" 
-								itemValue="#{p.procedimento}"/>
-			</p:selectCheckboxMenu>
-			&nbsp;&nbsp;&nbsp;
-			<p:selectCheckboxMenu id="cliente" 
-									value="#{gerenciador.clientes}" 
-									label="Clientes" 
-									filter="true" 
-									filterMatchMode="startsWith" 
-									panelStyle="width:310px">
-				<f:selectItems value="#{cliente.beneficiarios}" 
-								var="c" 
-								itemLabel="#{c.nome}" 
-								itemValue="#{c.nome}" />
-			</p:selectCheckboxMenu>
-		</div>
+			</div>
+			<p:separator />
+			<div id="botoes" style="float: left;">
+				<p:commandButton value="Consultar" action="#{gerenciador.registros}"
+					icon="ui-icon-search" process="@all"
+					update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg,dtInicial,dtFinal" />
+				&nbsp;
+				<p:commandButton value="Limpar" icon="ui-icon-trash" process="@all"
+					action="#{gerenciador.limpar}"
+					update="registrosGuias,valorTotal,valorGlosa,valorCreia,valorProfissional,msg,dtInicial,dtFinal" />
+				&nbsp;
+				<p:commandButton value="Imprimir" icon="ui-icon-print" ajax="false"
+					actionListener="#{gerenciador.gerarImpressao}" update="msg" />
+				&nbsp;
+				<p:commandButton value="Sair" icon="ui-icon-close"
+					action="#{gerenciador.sair}" />
+			</div>
+			<div id="filtro" style="text-align: right;">
+				<p:selectCheckboxMenu id="procedimento"
+					value="#{gerenciador.descricao}" label="Procedimentos"
+					filter="true" filterMatchMode="startsWith" panelStyle="width:310px">
+					<f:selectItems value="#{procedimento.procedimentos}" var="p"
+						itemLabel="#{p.descricao}" itemValue="#{p.procedimento}" />
+				</p:selectCheckboxMenu>
+				&nbsp;&nbsp;&nbsp;
+				<p:selectCheckboxMenu id="cliente" value="#{gerenciador.clientes}"
+					label="Clientes" filter="true" filterMatchMode="startsWith"
+					panelStyle="width:310px">
+					<f:selectItems value="#{cliente.beneficiarios}" var="c"
+						itemLabel="#{c.nome}" itemValue="#{c.nome}" />
+				</p:selectCheckboxMenu>
+			</div>
 		</p:panel>
-		<br /> 
-		<p:dataTable value="#{gerenciador.guias}" var="g" rows="10" 
-						id="registrosGuias" 
-						resizableColumns="true"
-						sortBy="#{g.detalheGuia.dataRealizacao.time}"
-						paginator="true"
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" >
-						
-			<p:column headerText="Data Emissao" style="width:70px; font-size:15px;" sortBy="#{g.detalheGuia.dataRealizacao.time}">
-				<h:outputText value="#{g.dataEmissao.time}" >
+		<br />
+		<p:dataTable value="#{gerenciador.guias}" var="g" rows="10"
+			id="registrosGuias" resizableColumns="true"
+			sortBy="#{g.detalheGuia.dataRealizacao.time}" paginator="true"
+			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			rowsPerPageTemplate="5,10,15">
+
+			<p:column headerText="Dt Emissao" style="width:80px; font-size:12px;">
+				<h:outputText value="#{g.dataEmissao.time}">
 					<f:convertDateTime pattern="dd/MM/yyyy" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Data Realizacao" style="width:70px; font-size:15px;" sortBy="#{g.detalheGuia.dataRealizacao.time}">
-				<h:outputText value="#{g.detalheGuia.dataRealizacao.time}" >
+			<p:column headerText="Dt Realizacao"
+				style="width:80px; font-size:12px;"
+				sortBy="#{g.detalheGuia.dataRealizacao.time}">
+				<h:outputText value="#{g.detalheGuia.dataRealizacao.time}">
 					<f:convertDateTime pattern="dd/MM/yyyy" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Beneficiario" 
-						sortBy="#{g.beneficiario.nome}" 
-						style="width:290px; 
-						font-size:15px;">
+			<p:column headerText="Beneficiario" sortBy="#{g.beneficiario.nome}"
+				style="width:220px; 
+						font-size:12px;">
 				<h:outputText value="#{g.beneficiario.nome}" />
 			</p:column>
 			<ui:remove>
-				<p:column headerText="Operadora" style="width:70px; font-size:15px;">
+				<p:column headerText="Operadora" style="width:70px; font-size:12px;">
 					<h:outputText value="#{g.operadora}" />
 				</p:column>
-				<p:column headerText="Prestador" style="width:70px; font-size:15px;">
+				<p:column headerText="Prestador" style="width:70px; font-size:12px;">
 					<h:outputText value="#{g.prestador}" />
 				</p:column>
 			</ui:remove>
-			<p:column headerText="Procedimento" style="font-size:15px;">
+			<p:column headerText="Procedimento" style="font-size:12px;">
 				<h:outputText value="#{g.procedimento.descricao}" />
 			</p:column>
-			<p:column headerText="Vlr Informado" style="width:80px; font-size:15px;">
-				<h:outputText value="#{g.detalheGuia.valorInformado}" >
+			<p:column headerText="Vlr Informado"
+				style="width:80px; font-size:12px;">
+				<h:outputText value="#{g.detalheGuia.valorInformado}">
 					<f:convertNumber type="currency" lacale="pt_BR" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Vlr Glosa" style="width:80px; font-size:15px;">
-				<h:outputText value="#{g.detalheGuia.valorGlosa}" >
+			<p:column headerText="Vlr Glosa" style="width:80px; font-size:12px;">
+				<h:outputText value="#{g.detalheGuia.valorGlosa}">
 					<f:convertNumber type="currency" lacale="pt_BR" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Vlr Liberado" style="width:100px; font-size:15px;">
-				<h:outputText value="#{g.detalheGuia.valorLiberado}" >
+			<p:column headerText="Vlr Liberado"
+				style="width:100px; font-size:12px;">
+				<h:outputText value="#{g.detalheGuia.valorLiberado}">
 					<f:convertNumber type="currency" lacale="pt_BR" />
 				</h:outputText>
 			</p:column>
 		</p:dataTable>
-		
-		<p:separator/>
-		<p:panelGrid id="totais" columns="2" layout="grid">
-			<p:panelGrid columns="2">
-				<h:outputText value="Total Geral: " />
-				<h:outputText value="#{gerenciador.valorTotal}" id="valorTotal">
-					<f:convertNumber type="currency" lacale="pt_BR" />
-				</h:outputText>
-				<h:outputText value="Total da Creia: " />
-				<h:outputText value="#{gerenciador.valorCreia}" id="valorCreia">
-					<f:convertNumber type="currency" lacale="pt_BR" />
-				</h:outputText>
-				<h:outputText value="Total de Glosa: " />
-				<h:outputText value="#{gerenciador.valorGlosa}" id="valorGlosa">
-					<f:convertNumber type="currency" lacale="pt_BR" />
-				</h:outputText>
-				<h:outputText value="Total do Profissional: " />
-				<h:outputText value="#{gerenciador.valorProfissional}" 
-								id="valorProfissional">
-					<f:convertNumber type="currency" 
-									lacale="pt_BR" />
-				</h:outputText>
-			</p:panelGrid>
+
+		<p:separator />
+		<p:panelGrid id="totais" columns="2">
+			<h:outputText value="Total Geral: " />
+			<h:outputText value="#{gerenciador.valorTotal}" id="valorTotal">
+				<f:convertNumber type="currency" lacale="pt_BR" />
+			</h:outputText>
+			<h:outputText value="Total da Creia: " />
+			<h:outputText value="#{gerenciador.valorCreia}" id="valorCreia">
+				<f:convertNumber type="currency" lacale="pt_BR" />
+			</h:outputText>
+			<h:outputText value="Total de Glosa: " />
+			<h:outputText value="#{gerenciador.valorGlosa}" id="valorGlosa">
+				<f:convertNumber type="currency" lacale="pt_BR" />
+			</h:outputText>
+			<h:outputText value="Total do Profissional: " />
+			<h:outputText value="#{gerenciador.valorProfissional}"
+				id="valorProfissional">
+				<f:convertNumber type="currency" lacale="pt_BR" />
+			</h:outputText>
 		</p:panelGrid>
-		<p:separator/>
+
 	</h:form>
-	<h:form id="sairForm">
-		&nbsp;&nbsp;<p:commandButton value="Sair" icon="ui-icon-close" action="#{gerenciador.sair}"/>
-	</h:form>
+	<ui:remove>
+		<p:panelGrid id="totais" columns="2" layout="grid">
+		</p:panelGrid>
+		<h:form id="sairForm">
+		&nbsp;&nbsp;<p:commandButton value="Sair" icon="ui-icon-close"
+				action="#{gerenciador.sair}" />
+		</h:form>
+	</ui:remove>
 
 </h:body>
 </html>
